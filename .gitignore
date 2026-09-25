@@ -1,67 +1,59 @@
-# Python
+# Python bytecode and caches
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Virtual Environment
+# Virtual environments
 .venv/
 venv/
 ENV/
 env/
 
-# IDE & OS
-.idea/
+# IDE and OS
 .vscode/
+.idea/
 *.swp
 *.swo
 *~
 .DS_Store
 Thumbs.db
 
-# Machine Learning & Large Artifacts
-*.pkl
-*.joblib
-*.pt
-*.pth
-*.bin
-*.onnx
-models/**/checkpoint/
-models/**/checkpoints/
-data/chroma_db/
-data/raw/*.csv
-data/raw/*.json
-data/processed/*.csv
-data/processed/*.json
+# Secret and environment files
+.env
+.env.*
+*.pem
+*.key
+*.token
+*.secret
 
-# Testing & Coverage
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Node / Frontend
+# Node / frontend tooling
 node_modules/
 .next/
 out/
-.env
-.env.local
-.env.*.local
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Local package/build outputs if you do not want them in repo
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Optional: keep local generated caches out of GitHub
+.mypy_cache/
+.ruff_cache/
+.pyre/
+
+# Keep project datasets and trained checkpoints in Git if you want to push everything except secrets
+# (remove the lines below only if you intentionally want a slimmer repo)
+# data/chroma_db/
+# data/processed/
+# models/**/checkpoint/
+# *.pkl
+# *.joblib

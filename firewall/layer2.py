@@ -4,6 +4,7 @@ Performs classification based on 25-30 syntactic, structural, and semantic featu
 Handles inputs escalated from Layer 1.
 """
 import os
+import re
 import joblib
 import numpy as np
 import pandas as pd
@@ -49,6 +50,19 @@ class Layer2Classifier:
             }
         """
         feats = extract_features(text, top_similarity=top_similarity)
+
+        # Route semantic or domain-specific cases to Layer 3. Layer 2 is a
+        # fast feature filter and should not make a final allow decision when
+        # the prompt asks for a detailed exploit or embeds an instruction in a
+        # document, even if the keyword features are weak.
+        subtle_escalation = bool(re.search(
+            r"(step[- ]by[- ]step|detailed\s+technical|exploit\s+mechanism|"
+            r"bypass.*industrial\s+control|malware|ransomware|stuxnet|ics|scada|"
+            r"hidden\s+instruction|retrieved\s+(document|article|webpage)|"
+            r"document\s+(asks|instructs)|email\s+(asks|instructs))",
+            text,
+            re.IGNORECASE,
+        ))
         
         # If model is not yet trained/loaded, use feature heuristic proxy
         if self.model is None:
@@ -71,7 +85,28 @@ class Layer2Classifier:
             except Exception as e:
                 confidence = 0.5
 
-        if confidence >= self.block_threshold:
+        # Form-only signals such as length and punctuation must not block a
+        # normal support question. Require at least one attack-oriented cue for
+        # a high-confidence model prediction to become a Layer 2 block.
+        attack_cue_count = sum(
+            feats[name] > 0 for name in [
+                "role_claim_count", "urgency_word_count", "override_word_count",
+                "prompt_leak_cue_count", "sql_keyword_count", "has_code_block",
+                "has_delimiter_injection", "has_base64_cue", "has_url_or_path",
+            ]
+        )
+        attack_cue_count += int(bool(re.search(
+            r"\b(jailbreak|prompt\s+injection|system\s+prompt|safety\s+guardrail)\b",
+            text,
+            re.IGNORECASE,
+        )))
+        if attack_cue_count == 0 and confidence >= self.block_threshold:
+            confidence = min(confidence, self.allow_threshold - 0.01)
+
+        if subtle_escalation:
+            decision = "ESCALATE"
+            reason = "layer2_semantic_routing_to_layer3"
+        elif confidence >= self.block_threshold:
             decision = "BLOCK"
             reason = f"layer2_high_risk_confidence:{confidence:.3f}"
         elif confidence < self.allow_threshold:
