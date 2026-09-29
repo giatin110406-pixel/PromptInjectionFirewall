@@ -61,3 +61,4 @@ dist/
 # Layer 3 training snapshots are not required for inference
 models/layer3_distilbert/checkpoint/checkpoint-*/
 models/layer3_distilbert/checkpoint/**/optimizer.pt
+models/layer3_distilbert/checkpoint/model.safetensors
