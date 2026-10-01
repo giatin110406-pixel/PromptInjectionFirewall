@@ -10,7 +10,7 @@ class Layer3Classifier:
     def __init__(
         self,
         checkpoint_path: Optional[str] = None,
-        threshold: float = 0.65,
+        threshold: float = 0.60,
     ):
         self.threshold = threshold
         if checkpoint_path is None:
@@ -59,8 +59,9 @@ class Layer3Classifier:
             # Checks for multi-step reasoning, hypothetical framing, obfuscation
             subtle_indicators = [
                 "hypothetically", "fictional", "novel", "educational purpose only",
-                "for research", "movie script", "pretend you are", "roleplay",
-                "simulation mode", "without any restrictions", "unbounded"
+                "for research", "research paper", "movie script", "pretend you are", "roleplay",
+                "simulation mode", "without any restrictions", "unbounded",
+                "exploit mechanism", "scada", "malware", "industrial control", "step-by-step"
             ]
             lower_text = text.lower()
             hit_count = sum(1 for ind in subtle_indicators if ind in lower_text)

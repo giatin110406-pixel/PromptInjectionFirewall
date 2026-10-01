@@ -101,6 +101,23 @@ python models/layer2_xgboost/train.py
 python models/layer3_distilbert/train.py
 ```
 
+#### Train Layer 3 with BIPIA-GPT
+
+The BIPIA-GPT dataset is gated on Hugging Face and is not stored in this repository.
+After accepting its access conditions and downloading its JSONL file, prepare the
+Layer 3 CSV locally:
+
+```bash
+python data/scripts/prepare_real_datasets.py --bipia-gpt-layer3 dataset_for_huggingface.jsonl
+python models/layer3_distilbert/train.py
+```
+
+For Google Colab, select a GPU runtime, clone this repository, and copy
+`ground_truth_layer3.csv` from Google Drive to `data/processed/ground_truth_layer3.csv`.
+Install the training dependencies with `pip install transformers datasets accelerate scikit-learn pandas`,
+then run the Layer 3 training command above. Keep the dataset and trained checkpoint
+in Drive rather than committing them to Git.
+
 ### 7. Run the API
 
 ```bash

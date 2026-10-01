@@ -46,10 +46,6 @@ class FirewallOrchestrator:
 
         if r1["decision"] == "BLOCK":
             return self._build_response("BLOCK", 1, r1["reason"], trace, start_total)
-        
-        # If clearly safe and low similarity, pass immediately
-        if r1["decision"] == "PASS" and r1.get("confidence", 0.0) < 0.25:
-            return self._build_response("ALLOW", 1, "passed_prefilter", trace, start_total)
 
         # ---------------- LAYER 2: XGBoost Feature Classifier ----------------
         t1 = time.perf_counter()

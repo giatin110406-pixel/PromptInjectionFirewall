@@ -62,3 +62,8 @@ dist/
 models/layer3_distilbert/checkpoint/checkpoint-*/
 models/layer3_distilbert/checkpoint/**/optimizer.pt
 models/layer3_distilbert/checkpoint/model.safetensors
+
+# Large local BIPIA training data; upload through Drive when using Colab
+/dataset_for_huggingface.jsonl
+/archive.zip
+/data/processed/*.csv

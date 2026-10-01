@@ -4,6 +4,7 @@ The output schema is compatible with the existing feature builder:
 text,label,dataset_source,label_binary
 """
 import argparse
+import json
 import os
 import re
 from typing import Any, Dict, Iterable, List, Optional
@@ -13,6 +14,7 @@ import pandas as pd
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
 RAW_FILE = os.path.join(BASE_DIR, "data", "raw", "prompt_injections.csv")
+BIPIA_GPT_DATASET_ID = "MAlmasabi/Indirect-Prompt-Injection-BIPIA-GPT"
 
 
 def _first_value(record: Dict[str, Any], names: Iterable[str]) -> Any:
@@ -105,6 +107,78 @@ def _load_local_csv(path: str, source: str) -> pd.DataFrame:
     return _records_to_frame(frame.to_dict("records"), source)
 
 
+def _bipia_gpt_records_to_frame(records: Iterable[Dict[str, Any]]) -> pd.DataFrame:
+    rows: List[Dict[str, Any]] = []
+    for record in records:
+        context = _message_text(record.get("context"))
+        user_intent = _message_text(record.get("user_intent"))
+        label = _normalize_label(record.get("label"))
+        if not context or not user_intent or label is None:
+            continue
+
+        source = str(record.get("source") or "unknown").strip()
+        rows.append({
+            "text": f"User intent: {user_intent.strip()}\nExternal context:\n{context.strip()}",
+            "label": "SAFE" if label == 0 else "INJECTION_PROMPT",
+            "dataset_source": f"bipia_gpt:{source}",
+            "label_binary": label,
+            "attack_type": "safe" if label == 0 else "indirect_injection",
+        })
+    return pd.DataFrame(rows)
+
+
+def _load_bipia_gpt_jsonl(path: str) -> pd.DataFrame:
+    def records():
+        with open(path, "r", encoding="utf-8") as dataset_file:
+            for line_number, line in enumerate(dataset_file, start=1):
+                if not line.strip():
+                    continue
+                try:
+                    yield json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"Invalid JSON on line {line_number} of {path}") from exc
+
+    return _bipia_gpt_records_to_frame(records())
+
+
+def _deduplicate_unambiguous_prompts(frame: pd.DataFrame) -> pd.DataFrame:
+    label_counts = frame.groupby("text")["label_binary"].nunique()
+    ambiguous_texts = label_counts[label_counts > 1].index
+    if len(ambiguous_texts):
+        print(f"[WARN] Dropping {len(ambiguous_texts)} prompts with conflicting labels.")
+    frame = frame[~frame["text"].isin(ambiguous_texts)]
+    return frame.drop_duplicates(subset=["text"]).reset_index(drop=True)
+
+
+def prepare_bipia_gpt_layer3(jsonl_path: Optional[str] = None) -> None:
+    if jsonl_path:
+        if not os.path.isfile(jsonl_path):
+            raise FileNotFoundError(f"BIPIA JSONL file not found: {jsonl_path}")
+        frame = _load_bipia_gpt_jsonl(jsonl_path)
+    else:
+        from datasets import load_dataset
+
+        try:
+            dataset = load_dataset(BIPIA_GPT_DATASET_ID, token=True)
+        except Exception as exc:
+            raise RuntimeError(
+                "Could not access the gated BIPIA dataset. Accept its conditions on Hugging Face "
+                "and authenticate with `hf auth login`, then retry."
+            ) from exc
+
+        split_name = "train" if "train" in dataset else next(iter(dataset.keys()))
+        frame = _bipia_gpt_records_to_frame(dataset[split_name])
+    if frame.empty or frame["label_binary"].nunique() < 2:
+        raise ValueError("BIPIA-GPT data must contain valid examples from both labels.")
+
+    frame = _deduplicate_unambiguous_prompts(frame)
+    os.makedirs(PROCESSED_DIR, exist_ok=True)
+    output_path = os.path.join(PROCESSED_DIR, "ground_truth_layer3.csv")
+    frame.to_csv(output_path, index=False)
+    print(f"[SUCCESS] Layer 3 dataset: {len(frame)} rows saved to {output_path}")
+    print(f"[INFO] Labels:\n{frame['label_binary'].value_counts().to_string()}")
+
+
 def prepare(include_bipia: bool, safe_csv: Optional[str]) -> None:
     frames: List[pd.DataFrame] = []
 
@@ -161,6 +235,16 @@ def prepare(include_bipia: bool, safe_csv: Optional[str]) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--include-bipia", action="store_true", help="Attempt to download the indirect injection dataset")
+    parser.add_argument(
+        "--bipia-gpt-layer3",
+        nargs="?",
+        const="",
+        metavar="JSONL",
+        help="Prepare BIPIA + GPT-4o-mini for Layer 3 only (use a local JSONL path, or omit it to download)",
+    )
     parser.add_argument("--safe-csv", help="Optional CSV containing safe prompts")
     args = parser.parse_args()
-    prepare(include_bipia=args.include_bipia, safe_csv=args.safe_csv)
+    if args.bipia_gpt_layer3 is not None:
+        prepare_bipia_gpt_layer3(args.bipia_gpt_layer3 or None)
+    else:
+        prepare(include_bipia=args.include_bipia, safe_csv=args.safe_csv)
