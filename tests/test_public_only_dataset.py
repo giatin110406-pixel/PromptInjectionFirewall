@@ -3,7 +3,7 @@ import pandas as pd
 from data.scripts import prepare_real_datasets as prepare_mod
 
 
-def test_prepare_uses_only_public_dataset(monkeypatch):
+def test_prepare_uses_only_public_dataset(monkeypatch, tmp_path):
     calls = []
 
     def fake_load_huggingface(dataset_id, source, default_label=None):
@@ -31,6 +31,7 @@ def test_prepare_uses_only_public_dataset(monkeypatch):
     monkeypatch.setattr(prepare_mod, "_load_huggingface", fake_load_huggingface)
     monkeypatch.setattr(prepare_mod, "_load_local_csv", fail_local_csv)
     monkeypatch.setattr(prepare_mod.os.path, "exists", lambda path: path == prepare_mod.RAW_FILE)
+    monkeypatch.setattr(prepare_mod, "PROCESSED_DIR", str(tmp_path))
 
     prepare_mod.prepare(include_bipia=False, safe_csv=None)
 
