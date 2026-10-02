@@ -25,13 +25,17 @@ class Layer3Classifier:
         if os.path.exists(self.checkpoint_path):
             try:
                 import torch
-                from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
-                self.tokenizer = DistilBertTokenizer.from_pretrained(self.checkpoint_path)
-                self.model = DistilBertForSequenceClassification.from_pretrained(self.checkpoint_path)
+                from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+                self.tokenizer = AutoTokenizer.from_pretrained(self.checkpoint_path)
+                self.model = AutoModelForSequenceClassification.from_pretrained(self.checkpoint_path)
                 self.model.eval()
+                if torch.cuda.is_available():
+                    self.model.to("cuda")
             except Exception as e:
                 print(f"[WARN] Could not load DistilBERT checkpoint ({e}). Running in fallback mode.")
                 self.model = None
+                self.tokenizer = None
 
     def check(self, text: str) -> Dict[str, Any]:
         """
@@ -49,11 +53,19 @@ class Layer3Classifier:
 
         if self.model is not None and self.tokenizer is not None:
             import torch
-            inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=256)
+            device = next(self.model.parameters()).device
+            inputs = self.tokenizer(
+                text,
+                return_tensors="pt",
+                truncation=True,
+                max_length=256,
+                return_token_type_ids=False,
+            )
+            inputs = {key: value.to(device) for key, value in inputs.items()}
             with torch.no_grad():
                 outputs = self.model(**inputs)
                 probs = torch.softmax(outputs.logits, dim=-1)
-                malicious_prob = float(probs[0][1].item())
+                malicious_prob = float(probs[0][1].detach().cpu().item())
         else:
             # Fallback semantic heuristic for borderline cases
             # Checks for multi-step reasoning, hypothetical framing, obfuscation
