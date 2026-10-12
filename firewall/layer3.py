@@ -1,10 +1,11 @@
 """
-Layer 3: DistilBERT Deep Classifier.
+Layer 3: Deep Classifier (Multilingual Transformer / DistilBERT).
 Specialized for ambiguous, borderline, roleplay, and multi-step inputs
-escalated from Layer 2.
+escalated from Layer 2, with full support for both English and Vietnamese.
 """
 import os
 from typing import Dict, Any, Optional
+from data.scripts.vietnamese_norm import clean_text
 
 class Layer3Classifier:
     def __init__(
@@ -33,7 +34,7 @@ class Layer3Classifier:
                 if torch.cuda.is_available():
                     self.model.to("cuda")
             except Exception as e:
-                print(f"[WARN] Could not load DistilBERT checkpoint ({e}). Running in fallback mode.")
+                print(f"[WARN] Could not load Layer 3 checkpoint ({e}). Running in fallback mode.")
                 self.model = None
                 self.tokenizer = None
 
@@ -51,11 +52,31 @@ class Layer3Classifier:
                 "reason": "empty_input"
             }
 
+        norm_text = clean_text(text)
+
+        subtle_indicators = [
+            # English indicators
+            "hypothetically", "fictional", "novel", "educational purpose only",
+            "for research", "research paper", "movie script", "pretend you are", "roleplay",
+            "simulation mode", "without any restrictions", "unbounded",
+            "exploit mechanism", "scada", "malware", "industrial control", "step-by-step",
+            # Vietnamese indicators
+            "giả thuyết", "gia thuyet", "tiểu thuyết", "tieu thuyet",
+            "mục đích giáo dục", "muc dich giao duc", "nghiên cứu bảo mật", "nghien cuu bao mat",
+            "kịch bản phim", "kich ban phim", "đóng vai", "dong vai",
+            "chế độ mô phỏng", "che do mo phong", "không có bất kỳ giới hạn nào", "khong co bat ky gioi han nao",
+            "cơ chế khai thác", "co che khai thac", "mã độc", "ma doc",
+            "từng bước", "tung buoc", "chỉ dẫn ẩn", "chi dan an", "tài liệu yêu cầu", "tai lieu yeu cau"
+        ]
+        lower_text = norm_text.lower()
+        hit_count = sum(1 for ind in subtle_indicators if ind in lower_text)
+        heuristic_prob = min(0.95, 0.45 + (hit_count * 0.20)) if hit_count > 0 else 0.25
+
         if self.model is not None and self.tokenizer is not None:
             import torch
             device = next(self.model.parameters()).device
             inputs = self.tokenizer(
-                text,
+                norm_text,
                 return_tensors="pt",
                 truncation=True,
                 max_length=256,
@@ -65,22 +86,20 @@ class Layer3Classifier:
             with torch.no_grad():
                 outputs = self.model(**inputs)
                 probs = torch.softmax(outputs.logits, dim=-1)
-                malicious_prob = float(probs[0][1].detach().cpu().item())
+                model_prob = float(probs[0][1].detach().cpu().item())
+
+            # Hybrid defense: reinforce model confidence when strong exploit indicators are matched
+            if hit_count >= 2:
+                malicious_prob = max(model_prob, heuristic_prob)
+            elif hit_count == 1:
+                malicious_prob = max(model_prob, 0.5 * model_prob + 0.5 * heuristic_prob)
+            else:
+                malicious_prob = model_prob
         else:
-            # Fallback semantic heuristic for borderline cases
-            # Checks for multi-step reasoning, hypothetical framing, obfuscation
-            subtle_indicators = [
-                "hypothetically", "fictional", "novel", "educational purpose only",
-                "for research", "research paper", "movie script", "pretend you are", "roleplay",
-                "simulation mode", "without any restrictions", "unbounded",
-                "exploit mechanism", "scada", "malware", "industrial control", "step-by-step"
-            ]
-            lower_text = text.lower()
-            hit_count = sum(1 for ind in subtle_indicators if ind in lower_text)
-            malicious_prob = min(0.95, 0.45 + (hit_count * 0.20)) if hit_count > 0 else 0.25
+            malicious_prob = heuristic_prob
 
         decision = "BLOCK" if malicious_prob >= self.threshold else "ALLOW"
-        reason = f"layer3_distilbert_score:{malicious_prob:.3f}"
+        reason = f"layer3_deep_classifier_score:{malicious_prob:.3f}"
 
         return {
             "layer": 3,

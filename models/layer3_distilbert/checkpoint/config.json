@@ -15,6 +15,7 @@
   "model_type": "distilbert",
   "n_heads": 12,
   "n_layers": 6,
+  "output_past": true,
   "pad_token_id": 0,
   "problem_type": "single_label_classification",
   "qa_dropout": 0.1,
@@ -22,7 +23,7 @@
   "sinusoidal_pos_embds": false,
   "tie_weights_": true,
   "tie_word_embeddings": true,
-  "transformers_version": "5.16.1",
+  "transformers_version": "5.19.0",
   "use_cache": false,
-  "vocab_size": 30522
+  "vocab_size": 119547
 }

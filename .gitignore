@@ -67,3 +67,10 @@ models/layer3_distilbert/checkpoint/model.safetensors
 /dataset_for_huggingface.jsonl
 /archive.zip
 /data/processed/*.csv
+
+data/chroma_db/
+data/processed/
+data/raw/*.csv
+data/raw/*.jsonl
+models/layer2_xgboost/model.pkl
+models/layer3_distilbert/checkpoint/

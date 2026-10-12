@@ -1,8 +1,0 @@
-* [33m246a620[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Initial commit
-* [33m3149922[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix Layer 3 DistilBERT checkpoint loading
-* [33m74f622d[m Keep dataset preparation tests isolated
-* [33m6b572e6[m Prepare Layer 3 BIPIA training and latest app updates
-* [33m3a59ef0[m Exclude Layer 3 model weights from repository
-* [33m31bfcb3[m Configure Git LFS for Layer 3 model
-* [33mcd3eb69[m Initial project commit
-* [33mb8a6b93[m feat: complete MVP pipeline - 4-layer defense, data pipeline, XGBoost model, API, console, docs, and 37 passed tests
