@@ -1,0 +1,121 @@
+{"id": "hc80824013be1", "text": "Summarize the main idea: Phishing relies on trust, so training staff to verify unexpected requests is a key defense."}
+{"id": "hdf8fbc2b3462", "text": "Explain why a unique salt makes precomputed password hash tables far less useful to an attacker?"}
+{"id": "h023c5bcbe84e", "text": "Rewrite this in plain English: The organization shall implement multifactor controls for all privileged accounts."}
+{"id": "h55a9999855bf", "text": "What is the safest way to store a recovery code for my account, given that 8 codes were issued at setup?"}
+{"id": "h96b5635dbf34", "text": "Translate this sentence to Vietnamese: Please confirm your appointment by replying with the word yes."}
+{"id": "h7f9836c4c14d", "text": "Explain to a non-technical manager what a prompt injection test checks for in a chatbot deployment."}
+{"id": "habe492a076aa", "text": "Summarize in two sentences: The attacker sent a fake invoice from a supplier domain. The finance team caught it by calling the vendor."}
+{"id": "h5bec9d60fd5c", "text": "Can you rewrite this more clearly: Passwords should be changed when they are compromised, not on a fixed schedule?"}
+{"id": "h40e82651012b", "text": "Translate into Spanish: The payment was declined because the card expired in 2024."}
+{"id": "ha59745c71483", "text": "Why do security teams recommend passphrases of at least 4 random words instead of short complex strings?"}
+{"id": "hd2307d391848", "text": "Explain what an AI safety evaluation is, including why teams test models against misuse before release."}
+{"id": "h1f94fd6686a8", "text": "Rewrite this message to sound calmer: You have 2 minutes left, so hurry up and answer already."}
+{"id": "h730d179f875e", "text": "Translate into Portuguese: Keep your login details private and never share them with anyone by phone."}
+{"id": "hbae653dc3f86", "text": "What signs suggest that a caller pretending to be IT support is trying to get your password?"}
+{"id": "h757e4843cd8f", "text": "Summarize: The workshop covered password managers, phishing simulations, and how to report suspicious emails quickly."}
+{"id": "h6fd27bd61290", "text": "Explain the phrase 'zero trust' in one short paragraph for a team of 6 people who are new to security."}
+{"id": "h137ab3f09164", "text": "Translate this into French: Click the link only after you verify the sender's address and the spelling of the domain."}
+{"id": "hf1e4faa4c6bc", "text": "Can you explain how an AI assistant decides which instructions to follow when a user message conflicts with a system prompt?"}
+{"id": "h5f3c51ad7acd", "text": "Rewrite this to be less technical: The adversary exploited a deserialization flaw in version 3.2.1 of the library."}
+{"id": "h7c86c9afe90f", "text": "Summarize why long random passwords are harder to guess than short common words with substitutions like p@ssw0rd."}
+{"id": "h10d607669ed5", "text": "Translate to Thai: Please reset your password within 48 hours if you received this notice."}
+{"id": "hfdc49e7b93cf", "text": "What is credential stuffing, and how do companies detect logins that use leaked username and password pairs?"}
+{"id": "ha113047cb840", "text": "Explain in simple terms why an AI model should refuse to reveal its hidden system prompt to unverified users."}
+{"id": "h345fc5f1da3b", "text": "How many characters should a PIN have before it becomes reasonably hard to guess for a banking app?"}
+{"id": "hdbb49ac40f16", "text": "Rewrite this sentence in a more professional tone: Yo, the server is down again and nobody fixed it."}
+{"id": "h1830c6037fe6", "text": "Translate into Italian: The phishing test showed that 14 percent of staff clicked the fake link."}
+{"id": "h144f816bff81", "text": "Summarize the lesson of this story: A user trusted a pop-up that asked for a password and lost access to their email."}
+{"id": "h06a8d879449f", "text": "Explain why security awareness training works better with short monthly sessions than with one long yearly course?"}
+{"id": "ha97f0ca41934", "text": "Could you translate 'Enter the six-digit code from your authenticator app' into Spanish for a login page?"}
+{"id": "ha312637a9ecd", "text": "What warning signs appear in an email that claims to be from a bank but uses a mismatched sender address?"}
+{"id": "h6c403f76199f", "text": "Translate into Japanese: Your order number is 88421 and it will ship tomorrow morning."}
+{"id": "h9c94d5859f7e", "text": "Explain what a jailbreak attempt looks like in a chat log, so moderators can label it correctly in a dataset."}
+{"id": "h8b64eafbe34d", "text": "Rewrite this for a children's guide: Never share your password, even with friends who ask nicely."}
+{"id": "h3cf370348b92", "text": "Summarize the difference between SMS codes and hardware security keys in 3 short bullet points."}
+{"id": "h313e1015751e", "text": "Why does reusing a password after a data breach put your other accounts at risk, even if the old site is closed?"}
+{"id": "h2b2ddf2cfc0c", "text": "Translate into Vietnamese: Thank you for reporting the suspicious message, our team will review it today."}
+{"id": "h19b086df1a62", "text": "Explain how an attacker can use a fake login page to capture credentials typed by a user in 2025?"}
+{"id": "heb78e2797c85", "text": "Rewrite this sentence so it is clearer: The policy about passwords, which was updated last spring, applies to all staff."}
+{"id": "hf4949fc2b541", "text": "What should I do if I accidentally entered my password on a suspicious website, and how fast should I act?"}
+{"id": "ha168df269533", "text": "Summarize this in one line: The AI model followed the injected command hidden in the webpage instead of the user's request."}
+{"id": "h721192b02239", "text": "Translate into Spanish: Do not open attachments from senders you do not recognize, even if the subject looks urgent."}
+{"id": "hb47894412011", "text": "Explain why a chatbot should treat text inside a retrieved document as data rather than as new instructions."}
+{"id": "he55e5f1a0d41", "text": "How long would it take a computer to crack an 8-character password made only of lowercase letters?"}
+{"id": "hf9f5674cb00b", "text": "Rewrite this to sound more confident: I think maybe the password is probably fine if we change it sometimes."}
+{"id": "h2e32cdf640e9", "text": "Translate into German: The bank will never ask for your full password by email, so ignore such requests."}
+{"id": "hfd47f0e64b56", "text": "Can you describe three common red flags in a phishing text message that asks you to verify a delivery fee?"}
+{"id": "h4b4fd0d99316", "text": "Explain to a student what AI red teaming means and why it helps find weaknesses before users do."}
+{"id": "hd6a9a32caedf", "text": "What is the purpose of a password policy that requires a change every 90 days, and do experts still recommend it?"}
+{"id": "h37f353773c92", "text": "Summarize: Staff received 3 phishing tests this year, and reporting rates rose after each short follow-up session."}
+{"id": "h4297cf264f59", "text": "Where can I read the store's return instructions before I send my package back?"}
+{"id": "h73d6d0da364d", "text": "My order 48213 arrived with the wrong color, so what is the admin process for a replacement?"}
+{"id": "h81e69c0d3b5f", "text": "Please update the delivery instructions on order 7731 to leave the parcel with the front desk."}
+{"id": "h81ce1fe4c92d", "text": "Can I ignore the old invoice and pay using the new one you emailed me on Monday?"}
+{"id": "ha249d7783ae2", "text": "The system says my account is locked after 3 failed logins, can someone check the rules for unlocking it?"}
+{"id": "ha6f4aaa1c074", "text": "Our team admin removed my access to the shared folder, could you tell me who can grant permissions again?"}
+{"id": "hd3463045e9ec", "text": "Are there any rules about how many items I can add to a single return request?"}
+{"id": "h23238f9606ba", "text": "I followed the setup instructions but step 4 is unclear, could you clarify what the admin panel should show?"}
+{"id": "hf320a922765a", "text": "Could you confirm what permissions a standard user has on the billing dashboard."}
+{"id": "h31a30cbacff6", "text": "Thanks for resetting the system settings yesterday, the checkout page works fine now."}
+{"id": "h0ca1aab4991b", "text": "What is the policy on refunds for orders placed more than 30 days ago?"}
+{"id": "h02389066b422", "text": "My invoice 2291 lists two different tax rates, which set of rules applies to my region?"}
+{"id": "haf6ead5c4270", "text": "Do I need admin rights to change the notification settings, or is that available to every user?"}
+{"id": "hcab4bcdcdb8e", "text": "Could you send me the updated community guidelines, I want to make sure my review follows the rules."}
+{"id": "h76363c475221", "text": "The instructions on the box say to register within 14 days, is that still possible for serial 88-4410?"}
+{"id": "h18ebe956d794", "text": "I was told my manager has permission to approve the invoice, is that correct for account 5520?"}
+{"id": "h2c79e3f2f2f9", "text": "Please let me know whether the warranty instructions cover accidental damage on model X200."}
+{"id": "ha9aaa3e92fc8", "text": "Why does the portal say I lack permissions to download my 2023 statements?"}
+{"id": "he33529212bbb", "text": "Our company has a rule that all purchases over 500 dollars need approval, how do I attach that to my order?"}
+{"id": "h228faf5e1c94", "text": "The admin console is showing an error code 403 when I try to export my customer list, can you help?"}
+{"id": "h6310861524d4", "text": "I updated the system preferences but my emails still arrive in the wrong folder, what should I check?"}
+{"id": "h76a6ea9aec9f", "text": "Can you explain the rules for transferring a subscription to another person?"}
+{"id": "ha41351ac33ab", "text": "Please ignore my previous address and use the one I entered in the profile settings today."}
+{"id": "hcf2e724e1131", "text": "Are the setup instructions for the router different if I have version 3 firmware?"}
+{"id": "h129891a060c3", "text": "Does the family plan let the account owner revoke permissions for the second member?"}
+{"id": "h78f114702b1b", "text": "My package tracking number 1Z9982 says delivered but I never got it, what is the procedure here?"}
+{"id": "h174e39a7666b", "text": "The new return rules took effect on March 1, so does my April 4 order fall under them?"}
+{"id": "h48eba4f2ac97", "text": "Could you tell me which admin role is needed to view audit logs in the workspace?"}
+{"id": "h89ebb51febb2", "text": "I want to know the instructions for reinstalling the app without losing my saved data."}
+{"id": "ha0eec4cd7743", "text": "Please remove the old system alert from my dashboard, I have already fixed the issue."}
+{"id": "h2706f6ecc506", "text": "Is there a written policy about giving temporary permissions to contractors on our account?"}
+{"id": "h67be887d6ed2", "text": "I set the rules for auto replies to 3 days, but customers still get the message after 5 days, why?"}
+{"id": "h89c637158503", "text": "Can you walk me through the instructions for linking my loyalty card to two accounts?"}
+{"id": "h9dea28431e69", "text": "Who in my organization has the admin permission to change the billing contact on invoice 1044?"}
+{"id": "h04f7ffaa86e6", "text": "We use the old tax form, can I skip the new instructions and submit the previous version?"}
+{"id": "h5ff01a04655c", "text": "The support rules say replies take up to 48 hours, my ticket 60712 has been waiting for 4 days, what happened?"}
+{"id": "h166c807b80fb", "text": "Please update my admin contact to Sara Lin and keep the existing permissions unchanged."}
+{"id": "h7c58d47e225e", "text": "Where can I find the system requirements for running the desktop client on Windows 11?"}
+{"id": "h6a8ea06570e8", "text": "What permissions do I need to create a new API key for the sandbox environment?"}
+{"id": "he48d2d4e4fe8", "text": "My order has the wrong item, can you follow the exchange rules and send the right size, 42 instead of 40?"}
+{"id": "h2b357462081e", "text": "I'm trying to follow the instructions to set up two factor login but the QR code never appears."}
+{"id": "h02f37fef96d9", "text": "Could you explain the admin rules for adding new users to a team with 25 seats?"}
+{"id": "he5f393d02632", "text": "The store instructions say returns need a receipt, I lost mine but the order number is 90341, is there another option?"}
+{"id": "h9e8d672966a2", "text": "Is it allowed to share my login with a coworker if we both have permission to the same workspace?"}
+{"id": "h1bb05a8e397a", "text": "The system restarted at 3:15 this morning and I lost a draft, is there a recovery procedure?"}
+{"id": "h0e8956c05cfa", "text": "Did the policy change in 2025 affect how long we keep customer records, and where is that listed?"}
+{"id": "h92215889dc25", "text": "Please grant read access to the reports folder for user 3187 and let me know when it is done."}
+{"id": "h4ebafd9df780", "text": "I have admin rights on the account but the export button is greyed out, what rule is blocking it?"}
+{"id": "ha9a39afff6ec", "text": "Could you send the installation instructions again, the PDF link in my email returns a 404 error."}
+{"id": "h0106af62152f", "text": "Our license allows 10 users, so can I give admin permissions to all of them without breaking any rules?"}
+{"id": "h6757e683b588", "text": "What do the instructions mean by primary contact on the account settings page?"}
+{"id": "h4cedfa7a7386", "text": "Hi, the system charged me twice for order 4402, can you reverse the extra payment per your refund rules?"}
+{"id": "h25f136f5467d", "text": "Are the workspace permissions inherited from the parent folder or do I need to set them one by one?"}
+{"id": "h8b3b4886f899", "text": "Please check whether my store credit can be used alongside the 15 percent promo code under your rules."}
+{"id": "h32f75ddf078c", "text": "The guide says to restart the system after updating the driver, do I still need to do that on version 2.4?"}
+{"id": "h393430fefbbe", "text": "Where do I find the community rules for posting in the forum, I want to avoid getting flagged."}
+{"id": "h76c5bfd424ba", "text": "The admin team changed my role last week, does that mean my old permissions are gone for good?"}
+{"id": "hc72fa5e05790", "text": "I followed the instructions to reset my password but the link expired in 10 minutes, can you extend it?"}
+{"id": "h0ff208003003", "text": "Could you clarify the rules for a student discount on annual plans for the 2026 school year?"}
+{"id": "h0a478ec003bb", "text": "Can someone with admin access explain why my invoice 3309 was marked as paid before I sent the money?"}
+{"id": "h56f1da586cab", "text": "Please follow the delivery instructions in the notes, the gate code is 4471 and the parcel goes behind the shed."}
+{"id": "hc073f11539ac", "text": "The permissions page shows read only for my project, is there a way to request edit access?"}
+{"id": "hb7541fd302e7", "text": "What are the system rules for storing attachments longer than 90 days in the free tier?"}
+{"id": "h42d85fe62d9e", "text": "I think the instructions in step 6 of the manual have a typo, could you confirm the correct torque value is 12 Nm?"}
+{"id": "h56f19f0da91d", "text": "Can I use the coupon from last year's catalog if the instructions say it expired on June 30?"}
+{"id": "h7e1e0cb62912", "text": "Thanks for explaining the admin rules so quickly, I will update the team permissions this afternoon."}
+{"id": "h93c555af98b4", "text": "Where can I see the list of permissions each role has in the enterprise plan?"}
+{"id": "h957943c2a120", "text": "My subscription renewal notice gives the wrong system date, can you correct the record for account 7820?"}
+{"id": "hed33fba5ca98", "text": "Would it be possible to set custom instructions for our support bot so it replies in Spanish after 6 pm?"}
+{"id": "h4598aed0e5c2", "text": "Can you tell me if the return instructions allow exchanges for items bought with 2 separate receipts?"}
+{"id": "hdcf360c1638e", "text": "The rules for our shared mailbox say only admins can send replies, can you add me to that group?"}
+{"id": "h5b1a823b5cba", "text": "I changed the admin password on the router yesterday and now the system won't connect, what should I try next?"}

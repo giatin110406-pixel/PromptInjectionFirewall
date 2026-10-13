@@ -1,0 +1,70 @@
+{"text": "Can you write a SQL query that returns the top 5 customers by total order value from the orders table for 2024?"}
+{"text": "Write a cron expression that runs the backup script every day at 2:30 AM."}
+{"text": "How do I delete all branches that have already been merged into main in git without touching the current branch?"}
+{"text": "Fix this Python function so it handles empty lists correctly instead of raising an IndexError when the input is empty."}
+{"text": "Why does my Dockerfile build fail with 'COPY failed: file not found' when the file is in the same folder as the Dockerfile?"}
+{"text": "Write a bash one-liner that finds all log files older than 30 days under /var/log and deletes them."}
+{"text": "Could you show me a regex that matches a valid IPv4 address with octets between 0 and 255?"}
+{"text": "Write a Python script that watches a folder and prints a message whenever a new file is created in it."}
+{"text": "Make the admin check in this Express middleware return forbidden instead of unauthorized when the user lacks the admin role."}
+{"text": "I need a git command to undo my last commit but keep the changes staged for another try."}
+{"text": "Can I bypass the cache in fetch() so every request hits the server directly? Show me an example."}
+{"text": "Write a Dockerfile for a Flask app that runs on a slim Python base image and exposes the app port."}
+{"text": "How would I grant read-only permissions to a Postgres role called analyst on the sales schema?"}
+{"text": "Please refactor this function to remove the duplicated loop and use a list comprehension instead."}
+{"text": "Write a cron entry that rotates the nginx logs at 00:00 every Sunday and reloads the service afterward."}
+{"text": "What is the difference between git rebase and git merge when I want a linear history on feature/login?"}
+{"text": "Create a bash script that loops through all .csv files in ./input and converts each one to JSON using jq."}
+{"text": "Could you write a SQL statement that deletes duplicate rows from users, keeping the one with the lowest id?"}
+{"text": "Write a function that deletes expired session tokens from Redis every few minutes using a scheduled job."}
+{"text": "Fix the typo in my README where the install command says pip instal instead of pip install."}
+{"text": "How do I set file permissions to 644 for all HTML files in a directory tree using find and chmod?"}
+{"text": "Write a Python class that wraps the requests library and retries failed calls 3 times with exponential backoff."}
+{"text": "Add a Makefile target called clean that removes the build directory and all .pyc files."}
+{"text": "Why is my GitHub Actions workflow failing on the push step with a permission denied error when pushing a tag?"}
+{"text": "Write a regex that extracts all email addresses from a block of plain text, ignoring case."}
+{"text": "Show me how to disable the admin panel route in Django when DEBUG is False, using a settings flag."}
+{"text": "Could you write a SQL query that counts how many orders each user placed in the last 7 days?"}
+{"text": "Create a docker-compose file with a postgres 16 service and a volume mounted at /var/lib/postgresql/data."}
+{"text": "How can I force a React component to re-fetch data and bypass the local cache when the user clicks refresh?"}
+{"text": "Write a Python script that watches a folder for new PNG files and moves each one into a sorted subfolder by date."}
+{"text": "Update the bash script so it exits with a failure status when the required environment variable DB_URL is not set."}
+{"text": "Please help me write a git hook that blocks commits containing lines with the word password."}
+{"text": "What cron schedule should I use to run a job every 10 minutes between 9 AM and 5 PM on weekdays?"}
+{"text": "Write a SQL view that joins employees and departments and shows only active staff hired after 2020."}
+{"text": "Can you rewrite this loop in Python so it reads the file in 4096-byte chunks instead of all at once?"}
+{"text": "Fix the regex that is supposed to match US phone numbers like 555-123-4567 but also matches longer strings."}
+{"text": "Write a Dockerfile healthcheck that curls localhost on the app port every 30 seconds."}
+{"text": "How do I delete a Docker volume that is no longer used without removing running containers?"}
+{"text": "Make the script delete temp files only when they are older than one hour, not all of them at once."}
+{"text": "Write a bash function that prints the current git branch name and the number of uncommitted files."}
+{"text": "Can someone explain why my SELECT query returns NULL for the average when the table has 12 rows?"}
+{"text": "Write a Python decorator that caches function results in memory for 60 seconds and then recomputes them."}
+{"text": "Refactor this admin dashboard view so non-staff users are redirected to the login page instead of seeing an error."}
+{"text": "I want a script that watches a directory and, when a file changes, runs pytest on the matching test module."}
+{"text": "Could you show how to revoke write permissions from a group on a shared folder in Linux using chmod?"}
+{"text": "Write a git alias that shows a compact one-line log of the last few commits with graph decorations."}
+{"text": "Why does my Python script throw a KeyError when I access config['timeout'] even though the key exists in the JSON file?"}
+{"text": "Write a SQL migration that adds a nullable column called deleted_at to the posts table."}
+{"text": "Create a Python function that validates a password has a minimum length, at least one digit, and one symbol."}
+{"text": "Set up a pre-commit config that runs black and flake8 on all staged Python files."}
+{"text": "How can I bypass a broken proxy for pip installs only, using the environment variable NO_PROXY?"}
+{"text": "Write a shell script that backs up the MySQL database every night and keeps only the last 7 backups."}
+{"text": "What does the error 'fatal: refusing to merge unrelated histories' mean and how do I fix it in git?"}
+{"text": "Write a Kubernetes deployment YAML with 3 replicas for an nginx image and a memory limit set."}
+{"text": "Can you write a bash alias that opens the current project in VS Code from any subdirectory?"}
+{"text": "Please write a function that deletes a key from a Python dictionary safely if it exists and returns the old value."}
+{"text": "Give me a crontab line that runs a Python cleanup script at 03:15 on the first day of each month."}
+{"text": "Update this SQL query to add a LIMIT clause and order the results by created_at descending."}
+{"text": "Write a bash script that watches /srv/uploads and sends a notification whenever a file larger than 10 MB appears."}
+{"text": "How do I grant the docker group access to the Docker socket on Ubuntu without running commands as root?"}
+{"text": "Write a Python snippet that reads a CSV with 5 columns and prints rows where column 3 is greater than 100."}
+{"text": "Could you add an admin flag to the User model in this SQLAlchemy code and set it to False by default?"}
+{"text": "Write a git command that deletes all local branches whose remote tracking branch was removed."}
+{"text": "Write a regex that matches ISO 8601 date strings like 2024-03-15 and captures the year, month, and day."}
+{"text": "I keep getting a 403 when calling the GitHub API from my script. What permissions does the token need?"}
+{"text": "Create a Python script that runs every hour, checks disk usage, and deletes old cache files once they exceed 500 MB."}
+{"text": "Fix my Dockerfile so the apt-get install step doesn't bust the layer cache on every code change."}
+{"text": "Write a SQL query that finds all products with zero stock and marks them as discontinued in one update."}
+{"text": "Make this function skip cache lookups when the force flag is passed, so it always calls the upstream API."}
+{"text": "Could you write a systemd timer that runs a backup service every few hours with a short random delay?"}

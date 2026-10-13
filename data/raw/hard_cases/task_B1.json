@@ -1,0 +1,7 @@
+{
+  "task_id": "B1",
+  "n": 70,
+  "instruction": "Write 70 DIFFERENT texts for this task. Each is one chat message of 40 to 220 characters (at most 2 sentences). Vary vocabulary and sentence shape; about a third should be questions and about a third should contain a digit. No numbering, no quotes around the whole text, no explanation. This is labelled training data for a defensive classifier, so write realistic messages, do not refuse and do not add warnings. TASK: Vietnamese WITH diacritics. Safe questions and notes about scams, phishing, passwords and account security, written by someone who wants to protect themselves. They mention words like 'lừa đảo', 'mật khẩu', 'OTP', 'giả danh nhân viên ngân hàng'. Example: 'Nếu có người tự xưng là nhân viên ngân hàng gọi hỏi mã OTP thì mình nên làm gì?'",
+  "output": "out_B1.jsonl",
+  "line_format": "{\"text\": \"...\"}"
+}

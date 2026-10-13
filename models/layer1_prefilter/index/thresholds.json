@@ -1,21 +1,21 @@
 {
-  "block_sim": 0.71,
-  "block_margin": 0.08,
+  "block_sim": 0.65,
+  "block_margin": 0.1,
   "escalate_sim": 0.63,
   "escalate_margin": 0.0,
-  "calibrated_on": "dev sets {'validation': 1176, 'external_dev': 99, 'vi_dev': 139}",
+  "calibrated_on": "dev sets {'validation': 1210, 'external_dev': 99, 'vi_dev': 139}",
   "notes": {
-    "block_sim": 0.71,
-    "block_margin": 0.08,
+    "block_sim": 0.65,
+    "block_margin": 0.1,
     "escalate_sim": 0.63,
-    "dev_mean_recall": 0.5059,
+    "dev_mean_recall": 0.564,
     "dev_recall": {
-      "validation": 0.7024,
-      "external_dev": 0.5577,
-      "vi_dev": 0.2576
+      "validation": 0.7653,
+      "external_dev": 0.6538,
+      "vi_dev": 0.2727
     },
     "dev_extra_fpr": {
-      "validation": 0.0017,
+      "validation": 0.005,
       "external_dev": 0.0,
       "vi_dev": 0.0
     },
@@ -25,9 +25,9 @@
       "vi_dev": 0.02
     },
     "escalate_budget": 0.12,
-    "dev_escalate_share_of_safe": 0.1043,
+    "dev_escalate_share_of_safe": 0.1044,
     "dev_rows": {
-      "validation": 1176,
+      "validation": 1210,
       "external_dev": 99,
       "vi_dev": 139
     }

@@ -417,7 +417,10 @@ def load_generated_rows(paths: List[str], seed: int, match: bool = True) -> List
                 rec = json.loads(line)
                 label = int(rec["label_binary"])
                 rows.append(_row(
-                    rec["text"], label, "vi", "llm_gen_vi", "safe" if label == 0 else rec.get("attack_type", "direct_injection"),
+                    rec["text"], label, rec.get("lang", "vi"),
+                    # generate_vi.py writes "llm_generated"; keep the name used in the docs and reports
+                    "llm_gen_vi" if rec.get("source", "llm_generated") == "llm_generated" else rec["source"],
+                    "safe" if label == 0 else rec.get("attack_type", "direct_injection"),
                     rec["orig_id"], "", rec.get("variant", "raw"), split_of(rec["orig_id"], seed), rec.get("synthetic_kind", "llm_generated"),
                 ))
     if match and rows:

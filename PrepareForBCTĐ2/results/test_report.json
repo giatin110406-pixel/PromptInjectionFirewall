@@ -1,0 +1,153 @@
+{
+  "generated": "2026-10-14 01:40",
+  "total": {
+    "passed": 701,
+    "failed": 0,
+    "skipped": 1
+  },
+  "per_layer": {
+    "L4 Action Firewall": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_action_gate.py",
+        "test_layer4.py"
+      ]
+    },
+    "API (end-to-end)": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_api.py",
+        "test_smoke.py"
+      ]
+    },
+    "Dữ liệu (dựng dataset, audit, sinh VI)": {
+      "passed": 109,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_audit_leakage.py",
+        "test_bipia_gpt_dataset.py",
+        "test_build_dataset_v2.py",
+        "test_eda.py",
+        "test_generate_vi.py",
+        "test_public_only_dataset.py",
+        "test_review_vi_test.py",
+        "test_validate_vi_test.py"
+      ]
+    },
+    "L1 Chữ ký (regex)": {
+      "passed": 100,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_baseline.py",
+        "test_layer1.py",
+        "test_layer1_vi_regression.py"
+      ]
+    },
+    "Legacy v1 (XGBoost, không còn trong pipeline)": {
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_features.py",
+        "test_layer2.py"
+      ]
+    },
+    "Phản hồi (feedback): tổng hợp, hạt giống, kiểm tra lại": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_feedback_report.py"
+      ]
+    },
+    "L3 LLM judge": {
+      "passed": 43,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_judge.py"
+      ]
+    },
+    "L2 Bộ phân loại (chuẩn bị dữ liệu)": {
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_l2_chunking.py",
+        "test_l2_metrics.py"
+      ]
+    },
+    "L1 Chữ ký (chỉ mục + danh mục tình huống)": {
+      "passed": 121,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_layer1_shipped.py",
+        "test_signature_index.py"
+      ]
+    },
+    "L0 Chuẩn hóa": {
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_normalize.py"
+      ]
+    },
+    "Orchestrator (4 quyết định, fail-closed)": {
+      "passed": 48,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_orchestrator.py",
+        "test_types.py"
+      ]
+    },
+    "L5 Output Guard": {
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_output_guard.py"
+      ]
+    },
+    "Chất lượng mã nguồn": {
+      "passed": 72,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_source_hygiene.py"
+      ]
+    },
+    "Spotlighting + taint": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_spotlight.py"
+      ]
+    },
+    "Công tắc layer + judge chỉ chạy khi được yêu cầu": {
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test_toggles.py"
+      ]
+    },
+    "L1/L2 tiếng Việt (end-to-end)": {
+      "passed": 19,
+      "failed": 0,
+      "skipped": 1,
+      "files": [
+        "test_vietnamese_firewall.py"
+      ]
+    }
+  }
+}

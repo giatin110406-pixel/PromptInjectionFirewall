@@ -1,0 +1,59 @@
+{
+  "info": {
+    "machine": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "python": "3.11.9",
+    "torch": "2.14.0+cu130",
+    "device": "cpu",
+    "gpu": null
+  },
+  "tag": "cpu",
+  "L1_signatures_short": {
+    "n": 150,
+    "mean_ms": 21.74,
+    "p50_ms": 15.39,
+    "p95_ms": 48.85,
+    "max_ms": 68.75
+  },
+  "L2_classifier_short": {
+    "n": 150,
+    "mean_ms": 114.29,
+    "p50_ms": 109.45,
+    "p95_ms": 153.53,
+    "max_ms": 174.88
+  },
+  "L2_classifier_long_docs": {
+    "n": 30,
+    "mean_ms": 820.07,
+    "p50_ms": 648.49,
+    "p95_ms": 1572.04,
+    "max_ms": 1607.62
+  },
+  "pipeline_input_short": {
+    "n": 150,
+    "mean_ms": 89.34,
+    "p50_ms": 107.56,
+    "p95_ms": 196.01,
+    "max_ms": 210.89
+  },
+  "pipeline_input_long_docs": {
+    "n": 30,
+    "mean_ms": 709.22,
+    "p50_ms": 598.08,
+    "p95_ms": 1638.33,
+    "max_ms": 2445.37
+  },
+  "context_scan_3_chunks": {
+    "n": 30,
+    "mean_ms": 322.53,
+    "p50_ms": 347.75,
+    "p95_ms": 454.98,
+    "max_ms": 589.3
+  },
+  "action_gate": {
+    "n": 100,
+    "mean_ms": 0.01,
+    "p50_ms": 0.01,
+    "p95_ms": 0.01,
+    "max_ms": 0.02
+  }
+}

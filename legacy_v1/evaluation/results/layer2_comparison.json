@@ -1,0 +1,22 @@
+{
+  "dataset_size": 738,
+  "baseline_regex": {
+    "accuracy": 0.5325,
+    "precision": 1.0,
+    "recall": 0.3693,
+    "f1_score": 0.5394
+  },
+  "layer1_layer2_combined": {
+    "accuracy": 0.5501,
+    "precision": 1.0,
+    "recall": 0.3931,
+    "f1_score": 0.5643,
+    "layer1_stopped_count": 738,
+    "layer2_handled_count": 0
+  },
+  "improvements": {
+    "accuracy_delta": 0.0176,
+    "recall_delta": 0.0238,
+    "f1_delta": 0.0249
+  }
+}

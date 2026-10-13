@@ -1,16 +1,7 @@
 import React from 'react';
 import PipelineFlow from './PipelineFlow';
 
-export default function CallGraph({ incident, onSelectLayer }) {
-  if (!incident) {
-    return <PipelineFlow activeLayer={null} isBlocked={false} onSelectLayer={onSelectLayer} />;
-  }
-
-  return (
-    <PipelineFlow 
-      activeLayer={incident.blocked_by_layer} 
-      isBlocked={true} 
-      onSelectLayer={onSelectLayer} 
-    />
-  );
+// Kept for older imports: the call graph is the pipeline map, lit at the layer that decided the incident.
+export default function CallGraph({ incident, counts, health }) {
+  return <PipelineFlow activeLayer={incident ? incident.blocked_by_layer : null} counts={counts} health={health} />;
 }

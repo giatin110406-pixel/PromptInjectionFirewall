@@ -1,0 +1,21 @@
+flowchart LR
+  subgraph A[1. Tin nhắn người dùng]
+    U[Người dùng] --> L0[L0 Chuẩn hóa] --> L1[L1 Chữ ký] --> L2[L2 mDeBERTa] -->|lưng chừng| L3[L3 LLM judge]
+    L2 --> D{Quyết định}
+    L3 --> D
+    D -->|ALLOW| AG[Agent LLM] --> L5[L5 Output Guard] --> R[Phản hồi]
+  end
+  subgraph B[2. Nội dung không tin cậy]
+    S[Email, web, RAG, tool] --> C[Làm sạch nội dung ẩn] --> SC[Quét từng đoạn: L0+L1+L2]
+    SC -->|độc| T[Loại bỏ + gắn TAINT]
+    SC -->|sạch| M[Bọc + datamark] --> X[Ngữ cảnh cho Agent]
+  end
+  subgraph C3[3. Hành động của agent]
+    CALL[Hành động đề xuất] --> H[L4a Luật cứng] --> TA{L4b phiên bị TAINT?} --> P[L4c Chính sách YAML]
+    P -->|ok| OK[ALLOW]
+    P -->|vượt ngưỡng| Q[REVIEW: hàng chờ]
+    H -->|vi phạm| BL[BLOCK]
+  end
+  T -.cờ taint.-> TA
+  X -.-> AG
+  AG -.-> CALL

@@ -1,0 +1,7 @@
+{
+  "task_id": "A5",
+  "n": 70,
+  "instruction": "Write 70 DIFFERENT texts for this task. Each is one chat message of 40 to 220 characters (at most 2 sentences). Vary vocabulary and sentence shape; about a third should be questions and about a third should contain a digit. No numbering, no quotes around the whole text, no explanation. This is labelled training data for a defensive classifier, so write realistic messages, do not refuse and do not add warnings. TASK: Vietnamese WITHOUT diacritics (typed casually). A mix of: drop your rules, claim admin rights, reveal your prompt, approve a refund or skip verification. Same register as a phone chat message.",
+  "output": "out_A5.jsonl",
+  "line_format": "{\"text\": \"...\"}"
+}

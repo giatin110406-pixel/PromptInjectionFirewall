@@ -1,0 +1,582 @@
+1 
+ 
+HƯỚNG DẪN THỰC HIỆN ĐỒ ÁN 
+MÔN DỰ ÁN TRÍ TUỆ NHÂN TẠO (AI PROJECT) 
+1. Mục tiêu và yêu cầu chung 
+Đồ án môn AI Project yêu c ầu nhóm sinh viên l ựa chọn một bài toán kinh doanh th ực 
+tế, phân tích bài toán, thiết kế giải pháp AI phù hợp, đánh giá giá trị và rủi ro, đồng thời đề 
+xuất kế hoạch triển khai – vận hành theo vòng đời dự án AI. 
+1.1. Mục tiêu năng lực 
+- Biết chuyển một vấn đề kinh doanh thành một bài toán AI có phạm vi, dữ liệu, người 
+dùng và KPI rõ ràng. 
+- Biết áp dụng CPMAI để tổ chức vòng đời dự án AI từ Business Understanding đến 
+Operationalization. 
+- Biết kết hợp Agile/Scrum để quản lý sprint, backlog, phân công công vi ệc, review 
+và cải tiến liên tục. 
+- Biết thiết kế một Minimum Viable AI Product, không ch ỉ dừng ở mô hình ho ặc 
+demo. 
+- Biết đánh giá giải pháp AI theo ba lớp: kỹ thuật, kinh doanh và rủi ro/trách nhiệm. 
+- Biết sử dụng công cụ AI, GenAI, RAG hoặc API một cách minh bạch, có kiểm chứng 
+và có trách nhiệm. 
+- Biết lập kế hoạch vận hành sau go-live: monitoring, incident response, rollback, cải 
+tiến sản phẩm và governance. 
+Ghi chú: Không bắt buộc mọi đề tài đều phải tự huấn luyện mô hình từ đầu. Nhóm có 
+thể lựa chọn mô hình ML truyền thống, GenAI, RAG, AI Agent, API AI, no-code/low-code 
+hoặc kết hợp nhiều công cụ. Tuy nhiên, nhóm ph ải giải thích rõ l ựa chọn theo giá tr ị kinh 
+doanh, dữ liệu, chi phí, rủi ro và khả năng vận hành. 
+1.2. Nguyên tắc 
+Nguyên tắc Diễn giải 
+Business first Bắt đầu từ vấn đề kinh doanh, quyết định cần hỗ trợ và KPI 
+cần cải thiện, không bắt đầu bằng thuật toán. 
+Data readiness Không có dữ liệu phù hợp thì chưa thể khẳng định dự án AI 
+khả thi. Cần kiểm tra nguồn dữ liệu, ground truth, chất lượng, 
+quyền sử dụng và rủi ro dữ liệu. 
+Baseline first Mỗi nhóm phải có baseline để chứng minh giải pháp AI có cải 
+thiện so với cách làm đơn giản hoặc hiện tại. 
+Product thinking Go-live không phải là kết thúc. Sản phẩm AI cần người dùng, 
+owner, monitoring, roadmap và cải tiến liên tục. 
+Responsible AI Cần xem xét privacy, bias, fairness, explainability, 
+hallucination, human oversight và rủi ro vận hành. 
+Evidence-based Mọi kết luận quan trọng phải có dữ liệu, thử nghiệm, tài liệu, 
+nguồn tham khảo hoặc phản hồi người dùng hỗ trợ. 
+2 
+ 
+2. Lập nhóm và chọn đề tài 
+2.1. Lập nhóm:  
+Lập 8 nhóm, mỗi nhóm có 1 nhóm trư ởng. Nhóm cần phân công vai trò rõ ràng theo 
+từng sprint. Mỗi thành viên có thể đảm nhiệm nhiều vai trò, nhưng mọi thành viên phải có 
+đóng góp thực chất vào cả nội dung dự án và sản phẩm nộp. Không nên chỉ chia mỗi người 
+một chương báo cáo. 
+Vai trò gợi ý Trách nhiệm chính 
+Project Manager / 
+Scrum Master 
+Theo dõi tiến độ, sprint planning, backlog, biên bản họp, rủi 
+ro dự án. 
+Product Owner / 
+Business Lead 
+Xác định người dùng, pain point, KPI, product vision, 
+business case và roadmap. 
+Data Lead Data audit, data dictionary, EDA, data quality, ground truth, 
+privacy và data governance. 
+AI/ML/GenAI Lead Baseline, model/API/RAG/agent design, thử nghiệm, đánh giá 
+kỹ thuật. 
+UX/Prototype Lead Mockup, giao diện, demo scenario, user workflow, 
+brochure/product one-pager. 
+Governance & 
+Evaluation Lead 
+Risk register, fairness, explainability, AI system card, AI use 
+disclosure, evaluation report. 
+Nếu kết quả đồ án tốt (>=8.5), nhóm điền đầy đủ thông tin và có đ ầy đủ các biên bản, 
+tài liệu, trang giới thiệu nhóm, nhóm phân công rõ ràng h ợp lý, tiến độ đảm bảo (có nghĩa 
+là việc quản lý dự án tốt) thì trưởng nhóm sẽ có điểm cộng. 
+2.2. Đề tài:  
+Nhóm chọn một bài toán kinh doanh th ực tế và thiết kế giải pháp AI theo quy trình 
+CPMAI, kết hợp Agile/Scrum và tư duy phát triển sản phẩm. Nhóm cần so sánh với các sản 
+phẩm AI tương tự hoặc các cách làm hiện có để rút ra ưu điểm, hạn chế và định hướng khác 
+biệt của sản phẩm nhóm. 
+2.3. Nhóm đề tài gợi ý 
+Nhóm đề tài Ví dụ 
+Traditional ML for 
+Business 
+Churn prediction, demand forecasting, recommendation, 
+fraud detection, customer segmentation, lead scoring… 
+GenAI/RAG for 
+Business 
+Chatbot hỏi đáp tài liệu nội bộ, trợ lý tư vấn học vụ/tuyển 
+sinh, trợ lý phân tích phản hồi khách hàng, trợ lý tạo báo 
+cáo quản trị có trích nguồn. 
+AI Agent / Workflow 
+Automation 
+Agent tạo ticket và phân loại yêu cầu, trợ lý BA/PM tổng 
+hợp yêu cầu, agent hỗ trợ lập kế hoạch nội dung, agent 
+kiểm tra tài liệu theo checklist. 
+3 
+ 
+AI-driven Innovation / 
+AI Product 
+Dịch vụ mới dựa trên AI, tối ưu quy trình bằng AI, mô hình 
+kinh doanh mới nhờ AI, AI-enabled startup MVP. 
+2.4. Điều kiện đề tài được chấp nhận 
+- Có vấn đề kinh doanh hoặc nhu cầu người dùng cụ thể, không chỉ là ý tưởng công 
+nghệ chung chung. 
+- Có dữ liệu thật, dữ liệu mở, dữ liệu mẫu hợp lý hoặc kế hoạch mô phỏng dữ liệu có 
+giải thích rõ. 
+- Có thể xác định KPI kỹ thuật và KPI kinh doanh tối thiểu. 
+- Có baseline để so sánh. 
+- Có phạm vi vừa đủ cho 8–9 tuần thực hiện. 
+- Có xem xét rủi ro dữ liệu, rủi ro mô hình, đạo đức, chi phí và vận hành. 
+- Có thể tạo prototype, dashboard, demo workflow, RAG demo, notebook hoặc bằng 
+chứng thử nghiệm. 
+3. Cách tiếp cận thực hiện đồ án 
+3.1. Từ dự án AI đến sản phẩm AI 
+Đồ án cần được quản lý như m ột dự án hữu hạn để có mục tiêu, phạm vi, timeline và 
+sản phẩm nộp rõ ràng. Tuy nhiên, gi ải pháp AI cần được thiết kế như một sản phẩm sống: 
+sau go-live vẫn cần theo dõi, cải tiến, kiểm soát rủi ro và đo lường giá trị. 
+Tư duy dự án Tư duy sản phẩm AI 
+Go-live là xong Go-live là bắt đầu học từ dữ liệu thật và người dùng 
+thật 
+Tập trung bàn giao output Tập trung tạo outcome và giá trị sử dụng 
+Đo scope, timeline, chi phí Đo adoption, ROI, hiệu quả vận hành, rủi ro 
+Đội dự án có thể giải thể Cần Product Owner/MLOps/Ops tiếp tục vận hành 
+Báo cáo cuối kỳ Dashboard, feedback loop và roadmap cải tiến 
+3.2. Minimum Viable AI Product 
+Mục tiêu tối thiểu của đồ án là thiết kế một Minimum Viable AI Product hoặc Minimum 
+Viable AI System, gồm các thành phần sau: 
+Thành phần Yêu cầu tối thiểu 
+Người dùng và quy 
+trình 
+Xác định ai dùng, dùng trong bước nào, quyết định/hành động 
+nào được hỗ trợ. 
+Dữ liệu Nguồn dữ liệu, data dictionary, EDA, ground truth hoặc 
+knowledge base rõ ràng. 
+AI approach ML, GenAI, RAG, Agent, API hoặc hybrid, có giải thích lựa 
+chọn. 
+Baseline Có cách so sánh với phương pháp đơn giản hoặc hiện tại. 
+Evaluation Có đánh giá kỹ thuật, kinh doanh và rủi ro. 
+4 
+ 
+Prototype Có mockup, dashboard, demo, notebook, RAG workflow hoặc 
+video minh họa. 
+Governance Có risk register, human oversight, AI use disclosure, 
+privacy/bias/hallucination kiểm soát phù hợp. 
+Operationalization Có kế hoạch monitoring, cải tiến, incident response, rollback 
+hoặc product roadmap. 
+3.3. Build vs Buy vs API vs RAG 
+Nhóm phải giải thích vì sao chọn cách xây dựng giải pháp. Không mặc định mọi đề tài 
+phải tự train model. 
+Cách làm Khi phù hợp Rủi ro cần nêu 
+Build model Có dữ liệu riêng, bài toán rõ, 
+cần mô hình chuyên biệt. 
+Thiếu dữ liệu, overfitting, chi 
+phí train, khó vận hành. 
+Buy SaaS Nhu cầu phổ biến, không 
+muốn tự vận hành kỹ thuật. 
+Phụ thuộc nhà cung cấp, chi phí, 
+khó tùy biến. 
+API foundation 
+model 
+Cần năng lực ngôn ngữ/tạo 
+sinh nhanh. 
+Chi phí token, privacy, 
+hallucination, vendor lock-in. 
+RAG Cần hỏi đáp/tạo nội dung 
+dựa trên tài liệu nội bộ có 
+nguồn. 
+Tài liệu lỗi thời, retrieval sai, 
+trích nguồn sai, phân quyền dữ 
+liệu. 
+Fine-tune Có dữ liệu chuyên biệt và 
+cần style/task riêng. 
+Chi phí, dữ liệu nhạy cảm, đánh 
+giá khó. 
+AI Agent Cần AI dùng tool để hỗ trợ 
+quy trình. 
+Excessive agency, tool misuse, 
+cần human approval và audit 
+log. 
+4. Quản lý dự án 
+4.1. Quy trình thực hiện 
+Nhóm quản lý dự án theo Agile/Scrum, chia th ời gian thực hiện thành các sprint. M ỗi 
+sprint gồm một vòng lặp nhỏ của CPMAI. Độ chi tiết tăng dần qua từng sprint. 
+4.2. Yêu cầu quản lý dự án 
+- Có backlog và cập nhật backlog sau mỗi buổi feedback. 
+- Có sprint planning, sprint review và retrospective. 
+- Có biên bản họp nhóm theo sprint. 
+- Có RACI hoặc bảng phân công trách nhiệm. 
+- Có risk register và cập nhật rủi ro qua từng sprint. 
+- Có b ằng ch ứng ti ến đ ộ: commit, tài li ệu, mockup, notebook, demo, dashboard, 
+prompt/version hoặc biên bản. 
+- Có trang gi ới thiệu nhóm trên Notion, Google Sites, GitHub Pages ho ặc nền tảng 
+tương tự. 
+- Có repository chung trên GitHub/GitLab/Drive phù hợp với nội dung dự án. 
+5 
+ 
+4.3. Trang giới thiệu nhóm 
+Trang giới thiệu nhóm cần trình bày ng ắn gọn, dễ theo dõi và c ập nhật thường xuyên. 
+Nội dung tối thiểu: 
+- Tên đề tài, mô tả ngắn và vấn đề kinh doanh. 
+- Danh sách thành viên, vai trò, thông tin liên hệ nội bộ. 
+- Thỏa thuận thành lập nhóm 
+- Product vision, target users, demo scenario. 
+- Timeline/sprint plan, backlog, biên bản họp, RACI. 
+- Link repository, link demo/prototype/dashboard nếu có. 
+- AI Canvas, Project Charter, Data Audit, Risk Register, AI System Card bản cập nhật. 
+- Poster, brochure, video hoặc product one-pager nếu có. 
+5. Sản phẩm nộp 
+5.1. Các sản phẩm cần nộp 
+Sản phẩm Bắt 
+buộc 
+Ghi chú 
+Final Report Có Theo cấu trúc tại Mục 7. 
+Final Slides Có Dùng để pitching sản phẩm AI trong buổi báo cáo 
+cuối kỳ. 
+README Có Tên đề tài, thành viên, cấu trúc file, URL trang 
+nhóm, URL repository, hướng dẫn chạy demo nếu 
+có. 
+Project 
+Website/Notion 
+Có Trang quản lý dự án và truyền thông sản phẩm. 
+Repository Có Code/notebook/prompt/config/dữ liệu mẫu hoặc tài 
+liệu kỹ thuật liên quan. 
+AI Canvas Có Bản cuối cùng. 
+Project Charter Có 1–2 trang. 
+Data Audit Report Có Kể cả khi dùng dữ liệu mô phỏng hoặc RAG 
+knowledge base. 
+Baseline & 
+Evaluation Report 
+Có Chứng minh giải pháp tốt hơn baseline hoặc cách 
+làm hiện tại. 
+AI System Card Có Mô tả mục đích, dữ liệu, mô hình/API, metric, rủi 
+ro, kiểm soát, owner. 
+AI Risk Register Có Theo NIST AI RMF mức cơ bản: Govern – Map – 
+Measure – Manage. 
+AI Use Disclosure 
+Log 
+Có Nhật ký dùng AI: prompt, output, kiểm chứng, 
+chỉnh sửa. 
+6 
+ 
+Demo video Nên có 3–5 phút, mô tả workflow và kết quả. 
+Brochure/Product 
+one-pager 
+Nên có Giới thiệu sản phẩm: người dùng, lợi ích, AI nằm 
+ở đâu, giá trị kinh doanh. 
+5.2. Yêu cầu slide thuyết trình 
+File thuyết trình nên trình bày theo logic pitching s ản phẩm AI, không ch ỉ đọc lại báo 
+cáo. 
+- Vấn đề kinh doanh và người dùng mục tiêu. 
+- Product vision và điểm khác biệt so với giải pháp hiện có. 
+- AI Canvas và Project Charter rút gọn. 
+- Dữ liệu/knowledge base và kết quả data audit. 
+- Thiết kế giải pháp AI: ML, GenAI, RAG, Agent, API hoặc hybrid. 
+- Baseline và kết quả đánh giá. 
+- Demo/prototype/user workflow. 
+- Giá trị kinh doanh, ROI/cost-benefit hoặc impact ước tính. 
+- Rủi ro, governance, human oversight, AI use disclosure. 
+- Kế hoạch triển khai, monitoring và product roadmap. 
+6. Báo cáo định kỳ 
+6.1. Báo cáo tiến độ lần 1 
+Trọng tâm: Business Understanding + Product Definition + Project Charter. Không bắt 
+buộc dùng slide, nhóm trình bày trực tiếp trên tài liệu đã làm. 
+- AI Canvas v1. 
+- Project Charter. 
+- Product Vision và Target Users. 
+- Stakeholder Map. 
+- KPI Tree. 
+- Competitor/Product Comparison. 
+- Data Source Plan. 
+- Risk Register v1. 
+- Backlog + Sprint Plan. 
+- Mockup hoặc user workflow sơ bộ. 
+6.2. Báo cáo tiến độ lần 2 
+Trọng tâm: Data + Baseline + Evaluation v1. Không b ắt buộc dùng slide , nhóm trình 
+bày trực tiếp trên tài liệu đã làm. 
+- Data Audit Report. 
+- Data Dictionary hoặc Knowledge Base Audit. 
+- EDA hoặc phân tích tài liệu nguồn. 
+- Ground Truth Definition hoặc Citation Policy đối với RAG. 
+- Data Leakage Check. 
+- Baseline model/baseline process. 
+- Model Selection Matrix hoặc Build/Buy/API/RAG Justification. 
+- Metrics v1. 
+- Risk Register v2. 
+7 
+ 
+- Với RAG/GenAI: prompt/retrieval test set và kiểm tra hallucination/citation sơ bộ. 
+6.3. Báo cáo cuối kỳ 
+Trọng tâm: Final AI Product Proposal + Prototype + Evaluation + Governance. 
+- Final report. 
+- Final slides. 
+- Prototype/demo/video. 
+- AI System Card. 
+- Evaluation Report. 
+- Deployment & Monitoring Plan. 
+- AI Risk Register. 
+- Product Roadmap. 
+- README. 
+- AI Use Disclosure Log. 
+7. Cấu trúc báo cáo đồ án 
+Báo cáo trình bày bằng tiếng Việt, có thể dùng một số thuật ngữ tiếng Anh khi cần. Báo 
+cáo cần cô đọng, có minh chứng, có trích dẫn nguồn và có phụ lục đầy đủ. 
+Chương Nội dung chính 
+Chương 1. Giới thiệu, bối 
+cảnh và định hướng sản 
+phẩm 
+Lý do chọn đề tài, problem statement, target users, 
+product vision, mục tiêu, phạm vi, điểm mới/đóng góp 
+của sản phẩm AI. 
+Chương 2. Business 
+Understanding & Project 
+Charter 
+Bối cảnh kinh doanh, pain point, root cause, 
+stakeholder map, KPI tree, AI Canvas bản cuối, Project 
+Charter, Business Case sơ bộ. 
+Chương 3. Data 
+Understanding, Data 
+Audit & Governance 
+Nguồn dữ liệu, data dictionary, EDA, ground truth, data 
+quality, data leakage check, privacy, bias, governance, 
+với RAG: knowledge base audit. 
+Chương 4. AI System 
+Design & Modeling 
+Loại dự án AI, Build/Buy/API/RAG justification, 
+baseline, model/system design, feature engineering 
+hoặc prompt/retrieval design, Model Card/AI System 
+Card v1, giới hạn. 
+Chương 5. Evaluation: 
+Technical, Business & 
+Risk 
+Technical evaluation, business evaluation, cost-
+benefit/ROI, fairness/explainability/risk, với 
+GenAI/RAG: groundedness, hallucination, citation 
+correctness, Go/No-Go decision. 
+Chương 6. Prototype, 
+Demo & User Workflow 
+Giao diện/prototype, luồng người dùng, luồng dữ liệu, 
+demo scenario, so sánh với sản phẩm hiện có, phản hồi 
+người dùng nếu có. 
+Chương 7. 
+Operationalization, 
+Deployment plan, monitoring dashboard plan, 
+retraining/update plan, incident response, 
+8 
+ 
+MLOps/LLMOps & 
+Productization 
+rollback/decommissioning, product roadmap, owner sau 
+go-live. 
+Chương 8. Project 
+Management 
+CPMAI x Agile/Scrum, sprint plan, backlog, RACI, 
+velocity/burndown nếu có, risk register, biên bản họp, 
+thay đổi scope. 
+Chương 9. Ethics, AI 
+Governance & 
+Responsible AI 
+NIST AI RMF mapping, privacy, bias/fairness, 
+explainability/transparency, human oversight, AI use 
+disclosure, với LLM: risk checklist. 
+Chương 10. Kết luận và 
+hướng phát triển 
+Kết quả đạt được, hạn chế, bài học quản lý dự án, 
+hướng phát triển sản phẩm, đánh giá đóng góp thành 
+viên. 
+Phụ lục AI Use Disclosure Log, prompt chính, dữ liệu mẫu, 
+bảng metric, biên bản họp, tài liệu thiết kế, tài liệu kiểm 
+thử, tài liệu khác. 
+8. Các biểu mẫu bắt buộc 
+8.1. Project Charter 
+Mục Nội dung cần điền 
+Tên dự án Tên tiếng Việt và tiếng Anh. 
+Business problem Vấn đề kinh doanh/người dùng cần giải quyết. 
+Objective Mục tiêu định lượng hoặc định tính rõ ràng. 
+Scope / Out of 
+scope 
+Làm gì và không làm gì trong đồ án. 
+Stakeholders Sponsor giả định, người dùng, data owner, IT/security, 
+legal/compliance nếu có. 
+Data Nguồn dữ liệu, loại dữ liệu, ground truth hoặc knowledge base. 
+AI approach ML, GenAI, RAG, Agent, API, no-code/low-code hoặc 
+hybrid. 
+Success criteria Tiêu chí thành công kỹ thuật, kinh doanh và vận hành. 
+Major risks Rủi ro chính và cách giảm thiểu ban đầu. 
+Timeline Sprint plan, milestone, ngày báo cáo. 
+8.2. Data Audit Report 
+Mục Yêu cầu 
+Nguồn dữ liệu Dữ liệu tự thu thập, open data, Kaggle, API, dữ liệu mô phỏng 
+hoặc tài liệu nội bộ giả định. 
+Data dictionary Mô tả trường/cột/tài liệu/metadata. 
+9 
+ 
+Ground truth Nhãn đến từ đâu, có đáng tin không, có bị trễ hoặc nhiễu 
+không. 
+Data quality Missing, duplicate, outlier, imbalance, freshness, consistency. 
+Data leakage Kiểm tra có dùng thông tin tương lai hoặc thông tin không có 
+tại thời điểm dự đoán không. 
+Privacy Có PII/dữ liệu nhạy cảm không, cách ẩn danh hoặc hạn chế sử 
+dụng. 
+Bias Nhóm nào bị thiếu đại diện hoặc bị ảnh hưởng bất lợi. 
+Data limitation Dữ liệu chưa phản ánh điều gì, điều kiện không nên dùng. 
+Data governance Ai sở hữu, ai truy cập, lưu ở đâu, cập nhật thế nào. 
+8.3. Baseline & Evaluation 
+Loại đề tài Baseline gợi ý Metric gợi ý 
+Churn Dự đoán tất cả “không churn” 
+hoặc rule đơn giản. 
+Recall, precision, F1, AUC, lift, 
+ROI campaign. 
+Forecasting Giá trị kỳ trước hoặc trung bình 
+trượt. 
+MAE, RMSE, MAPE, 
+stockout/waste impact. 
+Recommendation Top sản phẩm phổ biến. Hit rate@k, conversion giả 
+định, user rating. 
+Fraud/Risk Rule-based theo ngưỡng. Recall, precision, PR-AUC, 
+cost-sensitive evaluation. 
+RAG chatbot Keyword search trong tài liệu. Answer relevance, 
+groundedness, citation 
+correctness, hallucination rate. 
+GenAI content Quy trình thủ công của con 
+người. 
+Human rating, time saving, 
+quality checklist, cost per 
+output. 
+AI Agent Quy trình thủ công hiện tại. Task success rate, human 
+approval rate, error rate, 
+auditability, cost. 
+8.4. AI Risk Register 
+Risk Loại Impact Likelihood Mitigation Owner 
+Dữ liệu thiếu 
+nhãn 
+Data Cao Trung bình Dùng proxy label, 
+đổi bài toán hoặc thu 
+thập bổ sung. 
+Data Lead 
+Model bias Ethics Cao Trung bình Kiểm tra theo nhóm, 
+giải thích giới hạn. 
+Governance 
+Lead 
+10 
+ 
+Hallucination GenAI Cao Cao RAG + citation + 
+refusal + human 
+review. 
+AI Lead 
+Prompt 
+injection 
+Security Cao Trung bình Input filter, 
+guardrail, giới hạn 
+tool. 
+Tech Lead 
+Chi phí API 
+cao 
+Cost Trung 
+bình 
+Cao Cache, cost cap, 
+model routing. 
+PM 
+Người dùng 
+không sử dụng 
+Adoption Cao Trung bình User testing, 
+training, cải tiến UX. 
+Product 
+Owner 
+8.5. AI System Card 
+Mục Nội dung cần mô tả 
+Tên hệ thống Tên sản phẩm/giải pháp AI. 
+Người dùng mục 
+tiêu 
+Ai dùng, bối cảnh dùng. 
+Mục đích sử dụng Hỗ trợ quyết định/hành động nào. 
+Không nên dùng 
+cho 
+Các bối cảnh ngoài phạm vi hoặc rủi ro cao. 
+Dữ liệu Nguồn dữ liệu, knowledge base, ground truth. 
+Mô hình/API Thuật toán, API, RAG, Agent, công cụ. 
+Metric kỹ thuật Các metric chính và kết quả. 
+Metric kinh doanh ROI, time saving, cost saving, adoption, satisfaction. 
+Rủi ro Data, model, bias, privacy, hallucination, security, cost. 
+Biện pháp kiểm 
+soát 
+Human oversight, guardrail, monitoring, rollback. 
+Monitoring Theo dõi gì, tần suất, owner. 
+Owner sau go-live Ai chịu trách nhiệm vận hành/cập nhật. 
+9. Quy định sử dụng AI và chống đạo văn 
+9.1. Nguyên tắc chống đạo văn 
+Sinh viên được tham khảo tài liệu, mã nguồn mở, tutorial, notebook mẫu và công cụ AI, 
+nhưng phải trích dẫn rõ nguồn, chỉ rõ phần nào do nhóm tự làm, phần nào tham khảo, phần 
+nào do AI hỗ trợ. Không được nộp lại nguyên văn báo cáo, slide, code ho ặc sản phẩm của 
+nhóm khác, khóa trước hoặc nguồn trên Internet như sản phẩm của mình. 
+- Mọi hình ảnh, bảng biểu, dữ liệu, đoạn mã, bi ểu mẫu, ý tưởng hoặc mô t ả lấy từ 
+nguồn khác phải có trích dẫn. 
+- Không copy báo cáo, slide, source code, notebook hoặc demo của nhóm khác. 
+11 
+ 
+- Không dùng AI đ ể tạo toàn b ộ báo cáo mà không ki ểm chứng, chỉnh sửa và ch ịu 
+trách nhiệm nội dung. 
+- Khi dùng dữ liệu có thông tin cá nhân, ph ải ẩn danh hoặc chỉ dùng dữ liệu mẫu/an 
+toàn. 
+- Báo cáo cần có danh mục tài liệu tham khảo theo APA, IEEE hoặc Harvard. 
+9.2. AI Use Disclosure Log 
+Mỗi nhóm phải có phụ lục nhật ký sử dụng AI. Bảng sau là mẫu tối thiểu: 
+Công cụ AI Mục 
+đích 
+Prompt 
+chính 
+Output 
+nhận 
+được 
+Kiểm 
+chứng 
+thế nào 
+Phần sử 
+dụng/chỉnh 
+sửa 
+Ví dụ: 
+ChatGPT/Gemini/Copilot 
+Gợi ý 
+cấu trúc 
+risk 
+register 
+... Danh 
+sách rủi 
+ro 
+So với 
+bài giảng 
+và nguồn 
+tham 
+khảo 
+Chọn 6 rủi 
+ro, viết lại 
+theo đề tài 
+nhóm 
+9.3. Yêu cầu riêng với GenAI/RAG/Agent 
+- Với RAG: phải nêu tài liệu nguồn, cách chunking, metadata, retrieval, citation policy 
+và cách xử lý khi không tìm thấy thông tin. 
+- Với GenAI: ph ải có prompt template, prompt version, tiêu chí ki ểm tra output, 
+human review, kiểm tra hallucination và chi phí ước tính. 
+- Với AI Agent: phải nêu agent được phép làm gì, không được làm gì, tool permission, 
+audit log, human approval và rollback plan. 
+- Không để AI tự động đưa ra quy ết định nhạy cảm mà không có cơ ch ế human-in-
+the-loop. 
+10. Kế hoạch Sprint tham khảo 
+Sprint Thời gian Trọng tâm Deliverables 
+Sprint 1 Tuần 2–3 Xác định bài toán và 
+sản phẩm 
+AI Canvas v1, Project Charter, 
+Product Vision, KPI Tree, 
+Stakeholder Map, Data Source 
+Plan, Risk Register v1, mockup sơ 
+bộ. 
+Sprint 2 Tuần 4–5 Dữ liệu và baseline Data Audit Report, Data 
+Dictionary, EDA, Ground Truth, 
+Leakage Check, Baseline, Metrics 
+v1, Model Selection Matrix. 
+Sprint 3 Tuần 6–7 Cải thiện giải pháp và 
+đánh giá 
+Model/API/RAG/Agent cải tiến, 
+evaluation, ROI/cost-benefit, 
+fairness/risk, explainability hoặc 
+citation/hallucination test, 
+deployment plan v1. 
+12 
+ 
+Sprint 4 Tuần 8–9 Hoàn thiện sản phẩm 
+và trình bày 
+Prototype/dashboard/demo, final 
+report, final slides, AI System 
+Card, Risk Register final, Product 
+Roadmap, README, AI Use 
+Disclosure Log. 
+ 
+11. Quy định nộp bài 
+- Thời hạn nộp: trong ngày báo cáo cuối kỳ, theo thông báo cụ thể trên LMS/courses. 
+- Tên file: <Tên nhóm>_Report.pdf/docx , <Tên nhóm>_Slides.pptx/pdf , <Tên 
+nhóm>_README.pdf/txt. 
+- Báo cáo, slide, README và các biểu mẫu chính nộp trên LMS. 
+- Dữ liệu l ớn, video, source code ho ặc demo có th ể dẫn link 
+Drive/GitHub/GitLab/Cloud nhưng phải cấp quyền truy cập. 
+- README phải ghi rõ cấu trúc thư mục, cách xem demo, cách ch ạy notebook/code 
+nếu có, URL trang nhóm và repository. 
+- Nhóm chịu trách nhiệm đảm bảo link hoạt động đến hết thời gian chấm điểm. 
+ 
+ 

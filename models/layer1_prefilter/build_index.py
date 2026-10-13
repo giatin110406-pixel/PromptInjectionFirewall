@@ -62,13 +62,14 @@ def collect_entries(train: pd.DataFrame, patterns: List[str], doc_sentences: int
         add(pattern, ATTACK, "patterns")
 
     attacks = train[train["label_binary"] == 1]
-    for row in attacks[attacks["variant"].isin(["pure_attack", "raw"])].itertuples():
+    # "hard_*" = chat-sized hard cases written for L1/L2 (data/scripts/hard_cases.py), both labels, train split only
+    for row in attacks[attacks["variant"].isin(["pure_attack", "raw"]) | attacks["variant"].str.startswith("hard_")].itertuples():
         add(row.text, ATTACK, f"attack:{row.source}")
     for sentence in attacks[attacks["variant"].str.startswith("attack_insert")]["insert_text"].dropna().unique():
         add(sentence, ATTACK, "attack:inserted")
 
     safes = train[train["label_binary"] == 0]
-    short = safes[(safes["variant"].isin(["clean", "raw"])) & (safes["source"] != "doc_base")]
+    short = safes[(safes["variant"].isin(["clean", "raw"]) | safes["variant"].str.startswith("hard_")) & (safes["source"] != "doc_base")]
     for row in short.itertuples():
         add(row.text, BENIGN, f"benign:{row.source}")
     # The harmless notes inserted into benign_insert rows come from ONE bank shared by every split

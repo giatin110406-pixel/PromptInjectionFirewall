@@ -1,0 +1,38 @@
+{
+  "dataset_v2_rows": {
+    "train": 9954,
+    "validation": 1210,
+    "test": 1108
+  },
+  "dataset_v2_total": 12272,
+  "dataset_v2_by_source": {
+    "chat_bank": 226,
+    "doc_base": 9260,
+    "hard_cases": 544,
+    "llm_gen_vi": 662,
+    "tmdeptrai": 1580
+  },
+  "layer1_index": {
+    "entries": 3590,
+    "attack": 1632,
+    "benign": 1958
+  },
+  "layer2_windows": {
+    "train": {
+      "windows": 12244,
+      "attack": 6122
+    },
+    "validation": {
+      "windows": 2376,
+      "attack": 723
+    },
+    "test": {
+      "windows": 2401,
+      "attack": 704
+    }
+  },
+  "eval_sets": {
+    "vi_test_v1": 300,
+    "tmdeptrai_external_test": 200
+  }
+}

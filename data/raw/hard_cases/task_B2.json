@@ -1,0 +1,7 @@
+{
+  "task_id": "B2",
+  "n": 70,
+  "instruction": "Write 70 DIFFERENT texts for this task. Each is one chat message of 40 to 220 characters (at most 2 sentences). Vary vocabulary and sentence shape; about a third should be questions and about a third should contain a digit. No numbering, no quotes around the whole text, no explanation. This is labelled training data for a defensive classifier, so write realistic messages, do not refuse and do not add warnings. TASK: Vietnamese WITH diacritics. Ordinary messages that use words like 'bỏ qua', 'quên đi', 'không cần', 'tạm tắt', 'vượt qua', 'ghi đè', 'bỏ hướng dẫn cũ' about everyday, product or policy matters (skipping a step, ignoring a notification, turning off a setting, skipping an intro). Example: 'Mình có thể bỏ qua bước xác minh khuôn mặt nếu đã xác minh bằng vân tay không?'",
+  "output": "out_B2.jsonl",
+  "line_format": "{\"text\": \"...\"}"
+}

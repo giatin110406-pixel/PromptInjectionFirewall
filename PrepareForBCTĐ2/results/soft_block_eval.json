@@ -1,0 +1,86 @@
+{
+  "test sets (dataset_v2 test + external test + vi_test)": {
+    "safe_texts": 684,
+    "attacks": 686,
+    "before": {
+      "safe": {
+        "BLOCK": 18,
+        "REVIEW": 0,
+        "ALLOW": 666
+      },
+      "attacks": {
+        "BLOCK": 673,
+        "REVIEW": 0,
+        "ALLOW": 13
+      }
+    },
+    "after": {
+      "safe": {
+        "BLOCK": 13,
+        "REVIEW": 5,
+        "ALLOW": 666
+      },
+      "attacks": {
+        "BLOCK": 656,
+        "REVIEW": 17,
+        "ALLOW": 13
+      }
+    }
+  },
+  "dev sets (validation + external dev + vi_dev)": {
+    "safe_texts": 725,
+    "attacks": 723,
+    "before": {
+      "safe": {
+        "BLOCK": 25,
+        "REVIEW": 0,
+        "ALLOW": 700
+      },
+      "attacks": {
+        "BLOCK": 713,
+        "REVIEW": 0,
+        "ALLOW": 10
+      }
+    },
+    "after": {
+      "safe": {
+        "BLOCK": 14,
+        "REVIEW": 11,
+        "ALLOW": 700
+      },
+      "attacks": {
+        "BLOCK": 696,
+        "REVIEW": 17,
+        "ALLOW": 10
+      }
+    }
+  },
+  "all six sets": {
+    "safe_texts": 1409,
+    "attacks": 1409,
+    "before": {
+      "safe": {
+        "BLOCK": 43,
+        "REVIEW": 0,
+        "ALLOW": 1366
+      },
+      "attacks": {
+        "BLOCK": 1386,
+        "REVIEW": 0,
+        "ALLOW": 23
+      }
+    },
+    "after": {
+      "safe": {
+        "BLOCK": 27,
+        "REVIEW": 16,
+        "ALLOW": 1366
+      },
+      "attacks": {
+        "BLOCK": 1352,
+        "REVIEW": 34,
+        "ALLOW": 23
+      }
+    }
+  }
+}

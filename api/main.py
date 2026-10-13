@@ -52,9 +52,10 @@ def health_check():
         "engine": engine["layers"],
         "layers": {
             "layer1": "Regex + Vector Prefilter",
-            "layer2": "XGBoost Feature Classifier",
-            "layer3": "DistilBERT Sequence Classifier",
-            "layer4": "Pydantic Policy Validator"
+            "layer2": "Multilingual mDeBERTa Classifier",
+            "layer3": "LLM judge (optional)",
+            "layer4": "Action Firewall (policy, taint, review queue)",
+            "layer5": "Output Guard (canary, PII, exfiltration)"
         }
     }
 

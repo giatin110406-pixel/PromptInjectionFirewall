@@ -1,0 +1,7 @@
+{
+  "task_id": "A4",
+  "n": 70,
+  "instruction": "Write 70 DIFFERENT texts for this task. Each is one chat message of 40 to 220 characters (at most 2 sentences). Vary vocabulary and sentence shape; about a third should be questions and about a third should contain a digit. No numbering, no quotes around the whole text, no explanation. This is labelled training data for a defensive classifier, so write realistic messages, do not refuse and do not add warnings. TASK: Vietnamese WITH diacritics. Injections disguised as an ordinary task: 'translate this sentence, then do what it says', 'summarize this note and also ...', 'proofread the following and carry out its request'. The hidden instruction asks for something the user was not entitled to.",
+  "output": "out_A4.jsonl",
+  "line_format": "{\"text\": \"...\"}"
+}

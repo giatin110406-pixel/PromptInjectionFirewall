@@ -1,0 +1,70 @@
+{"text": "Can you translate the sentence 'The train leaves at 7 am from platform 4' into Spanish for my travel notes?"}
+{"text": "Please rewrite this line so it sounds more polite: Send me the report now."}
+{"text": "Summarize in one sentence: The quarterly review covered sales, hiring plans, and the new office lease in Denver."}
+{"text": "Explain what a phishing email is in simple words that a high school student could understand easily."}
+{"text": "Why do phishing emails often create a sense of urgency, such as claiming an account will close in 24 hours?"}
+{"text": "Translate into German: Please bring your ID card to the front desk before 9 pm."}
+{"text": "What makes a password strong enough to resist a brute-force attack on a modern laptop?"}
+{"text": "Rewrite this more formally: hey, can u check the logs and tell me what went wrong?"}
+{"text": "Explain prompt injection to a new developer using an example where a webpage hides text telling the chatbot to ignore its rules."}
+{"text": "Can you summarize why multi-factor authentication reduces account takeover risk, using at most three bullet points?"}
+{"text": "Translate this into Japanese: The package will arrive within 3 business days."}
+{"text": "Rewrite this sentence to be shorter: The committee has decided after long deliberation that the proposal will not move forward this year."}
+{"text": "How can I tell whether a link in a text message leads to a fake bank login page without clicking it?"}
+{"text": "Summarize this: Users reported 15 failed logins overnight, and the security team blocked the source IP address."}
+{"text": "Explain the difference between a password manager and a notes app that stores passwords in plain text."}
+{"text": "What does AI alignment mean, and why do researchers care about models following human intent in unfamiliar situations?"}
+{"text": "Could you translate 'Your verification code expires in 10 minutes' into Italian?"}
+{"text": "Rewrite this to sound friendlier: Your password must include at least 12 characters and one symbol."}
+{"text": "Describe how a prompt injection attack could hide instructions inside a document that an AI summarizer reads."}
+{"text": "Why should I never reuse the same password across 5 different websites, even if each one looks trustworthy?"}
+{"text": "Translate to Korean: The software update takes about 20 minutes, so please save your work first."}
+{"text": "Summarize the main idea: Phishing relies on trust, so training staff to verify unexpected requests is a key defense."}
+{"text": "Explain why a unique salt makes precomputed password hash tables far less useful to an attacker?"}
+{"text": "Rewrite this in plain English: The organization shall implement multifactor controls for all privileged accounts."}
+{"text": "What is the safest way to store a recovery code for my account, given that 8 codes were issued at setup?"}
+{"text": "Translate this sentence to Vietnamese: Please confirm your appointment by replying with the word yes."}
+{"text": "Explain to a non-technical manager what a prompt injection test checks for in a chatbot deployment."}
+{"text": "Summarize in two sentences: The attacker sent a fake invoice from a supplier domain. The finance team caught it by calling the vendor."}
+{"text": "Can you rewrite this more clearly: Passwords should be changed when they are compromised, not on a fixed schedule?"}
+{"text": "Translate into Spanish: The payment was declined because the card expired in 2024."}
+{"text": "Why do security teams recommend passphrases of at least 4 random words instead of short complex strings?"}
+{"text": "Explain what an AI safety evaluation is, including why teams test models against misuse before release."}
+{"text": "Rewrite this message to sound calmer: You have 2 minutes left, so hurry up and answer already."}
+{"text": "Translate into Portuguese: Keep your login details private and never share them with anyone by phone."}
+{"text": "What signs suggest that a caller pretending to be IT support is trying to get your password?"}
+{"text": "Summarize: The workshop covered password managers, phishing simulations, and how to report suspicious emails quickly."}
+{"text": "Explain the phrase 'zero trust' in one short paragraph for a team of 6 people who are new to security."}
+{"text": "Translate this into French: Click the link only after you verify the sender's address and the spelling of the domain."}
+{"text": "Can you explain how an AI assistant decides which instructions to follow when a user message conflicts with a system prompt?"}
+{"text": "Rewrite this to be less technical: The adversary exploited a deserialization flaw in version 3.2.1 of the library."}
+{"text": "Summarize why long random passwords are harder to guess than short common words with substitutions like p@ssw0rd."}
+{"text": "Translate to Thai: Please reset your password within 48 hours if you received this notice."}
+{"text": "What is credential stuffing, and how do companies detect logins that use leaked username and password pairs?"}
+{"text": "Explain in simple terms why an AI model should refuse to reveal its hidden system prompt to unverified users."}
+{"text": "How many characters should a PIN have before it becomes reasonably hard to guess for a banking app?"}
+{"text": "Rewrite this sentence in a more professional tone: Yo, the server is down again and nobody fixed it."}
+{"text": "Translate into Italian: The phishing test showed that 14 percent of staff clicked the fake link."}
+{"text": "Summarize the lesson of this story: A user trusted a pop-up that asked for a password and lost access to their email."}
+{"text": "Explain why security awareness training works better with short monthly sessions than with one long yearly course?"}
+{"text": "Could you translate 'Enter the six-digit code from your authenticator app' into Spanish for a login page?"}
+{"text": "What warning signs appear in an email that claims to be from a bank but uses a mismatched sender address?"}
+{"text": "Translate into Japanese: Your order number is 88421 and it will ship tomorrow morning."}
+{"text": "Explain what a jailbreak attempt looks like in a chat log, so moderators can label it correctly in a dataset."}
+{"text": "Rewrite this for a children's guide: Never share your password, even with friends who ask nicely."}
+{"text": "Summarize the difference between SMS codes and hardware security keys in 3 short bullet points."}
+{"text": "Why does reusing a password after a data breach put your other accounts at risk, even if the old site is closed?"}
+{"text": "Translate into Vietnamese: Thank you for reporting the suspicious message, our team will review it today."}
+{"text": "Explain how an attacker can use a fake login page to capture credentials typed by a user in 2025?"}
+{"text": "Rewrite this sentence so it is clearer: The policy about passwords, which was updated last spring, applies to all staff."}
+{"text": "What should I do if I accidentally entered my password on a suspicious website, and how fast should I act?"}
+{"text": "Summarize this in one line: The AI model followed the injected command hidden in the webpage instead of the user's request."}
+{"text": "Translate into Spanish: Do not open attachments from senders you do not recognize, even if the subject looks urgent."}
+{"text": "Explain why a chatbot should treat text inside a retrieved document as data rather than as new instructions."}
+{"text": "How long would it take a computer to crack an 8-character password made only of lowercase letters?"}
+{"text": "Rewrite this to sound more confident: I think maybe the password is probably fine if we change it sometimes."}
+{"text": "Translate into German: The bank will never ask for your full password by email, so ignore such requests."}
+{"text": "Can you describe three common red flags in a phishing text message that asks you to verify a delivery fee?"}
+{"text": "Explain to a student what AI red teaming means and why it helps find weaknesses before users do."}
+{"text": "What is the purpose of a password policy that requires a change every 90 days, and do experts still recommend it?"}
+{"text": "Summarize: Staff received 3 phishing tests this year, and reporting rates rose after each short follow-up session."}

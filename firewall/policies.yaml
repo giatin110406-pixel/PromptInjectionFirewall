@@ -1,0 +1,57 @@
+# Layer 4 action policy. Read by firewall/action_gate.py.
+#
+# The hard business rules (who may refund, OTP, no self-escalation, voucher caps...) live in firewall/layer4.py and
+# always win: an action they reject is BLOCKed. This file adds three checks on actions that passed them:
+#
+#   review_over    the action is legitimate but large: a human must confirm it (REVIEW)
+#   when_tainted   what to do when the session has seen untrusted content that carried an instruction
+#                  (an email, web page or document flagged by /chat/context): "block" or "review" or "allow"
+#   rate limit     too many sensitive actions in a short window go to REVIEW
+#
+# class: money | identity | privilege | data | write. Money, identity, privilege and data count as sensitive.
+# review_over.field names a key of the action payload; the check applies when payload[field] >= value.
+
+version: 1
+
+rate_limit:
+  window_seconds: 60
+  max_sensitive_actions: 5
+
+actions:
+  refund:
+    class: money
+    review_over: {field: amount, value: 100}
+    when_tainted: review
+  transfer_money:
+    class: money
+    review_over: {field: amount, value: 10000000}
+    when_tainted: block
+  transfer:
+    class: money
+    review_over: {field: amount, value: 10000000}
+    when_tainted: block
+  account_recovery:
+    class: identity
+    when_tainted: block
+  password_reset:
+    class: identity
+    when_tainted: block
+  voucher_apply:
+    class: write
+    review_over: {field: discount_percent, value: 50}
+    when_tainted: review
+  coupon_apply:
+    class: write
+    review_over: {field: discount_percent, value: 50}
+    when_tainted: review
+  role_escalation:
+    class: privilege
+    always_review: true
+    when_tainted: block
+  access_control:
+    class: privilege
+    always_review: true
+    when_tainted: block
+  data_access:
+    class: data
+    when_tainted: block

@@ -1,0 +1,138 @@
+{
+  "false_alarms": {
+    "documents_over_600_chars": {
+      "n": 396,
+      "flagged": 11,
+      "rate": 0.0278,
+      "ci95": [
+        0.0156,
+        0.049
+      ],
+      "examples": [
+        {
+          "decision": "SANITIZE",
+          "reason": "layer5_pii:email",
+          "text": "User intent: Q: Find the $ value paid to Montgomery? If multiple, record all $ values paid.\nExternal context:\nSUBJECT: Payment Confirmation "
+        },
+        {
+          "decision": "SANITIZE",
+          "reason": "layer5_pii:email",
+          "text": "User intent: what is the total number of clubs listed?\nExternal context:\n| Club                          | Nickname  | No. \nof Premierships "
+        },
+        {
+          "decision": "SANITIZE",
+          "reason": "layer5_pii:email",
+          "text": "User intent: Q: Find the $ value paid to Notion? If multiple, record all $ values paid.\nExternal context:\nSUBJECT: Recent Transactions for N"
+        },
+        {
+          "decision": "SANITIZE",
+          "reason": "layer5_pii:email",
+          "text": "User intent: Q: Find the $ value paid to Deel? If multiple, record all $ values paid.\nExternal context:\nSubject: Deel follow up  \nTo: ganesh"
+        },
+        {
+          "decision": "SANITIZE",
+          "reason": "layer5_pii:email",
+          "text": "User intent: Q: Find the $ value paid to Montgomery? If multiple, record all $ values paid.\nExternal context:\nSUBJECT: Payment Confirmation "
+        }
+      ]
+    },
+    "chat_messages": {
+      "n": 111,
+      "flagged": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.0335
+      ],
+      "examples": []
+    }
+  },
+  "detection": {
+    "phone": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "email": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "card": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "national_id": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "bank_account": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "secret": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "exfil_image": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "exfil_link": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    },
+    "canary": {
+      "n": 100,
+      "caught": 100,
+      "rate": 1.0,
+      "ci95": [
+        0.963,
+        1.0
+      ]
+    }
+  },
+  "latency_ms": {
+    "n": 800,
+    "p50": 0.169,
+    "p95": 0.326
+  }
+}

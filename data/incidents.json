@@ -1,20 +1,26 @@
 [
   {
-    "id": "inc_d25442bb",
-    "timestamp": "2026-10-12T10:02:39.754849+00:00",
-    "session_id": "default",
-    "user_id": "anon",
-    "input_text": "Action: refund - {'user_id': 'u1', 'order_id': 'o1', 'amount': 1000.0, 'order_value': 50.0, 'user_role': 'support_agent'}",
+    "id": "inc_812fa55e",
+    "timestamp": "2026-10-13T18:38:20.410391+00:00",
+    "session_id": "inc-1",
+    "user_id": "u_finance_001",
+    "input_text": "Action: refund - {'user_id': 'u1', 'order_id': 'o1', 'amount': 150.0, 'order_value': 500.0, 'user_role': 'finance_lead'}",
     "blocked_by_layer": 4,
-    "reason": "1 validation error for RefundRequest\n  Value error, Refund amount $1000.00 exceeds policy limit of 110% of order value ($55.00) [type=value_error, input_value={'user_id': 'u1', 'order_..._role': 'support_agent'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.14/v/value_error",
+    "decision": "REVIEW",
+    "reason": "policy:amount_150_reaches_review_limit_100",
     "confidence": 1.0,
-    "total_latency_ms": 0.27,
+    "total_latency_ms": 1.95,
     "trace": [
       {
         "layer": 4,
-        "decision": "BLOCK",
-        "reason": "1 validation error for RefundRequest\n  Value error, Refund amount $1000.00 exceeds policy limit of 110% of order value ($55.00) [type=value_error, input_value={'user_id': 'u1', 'order_..._role': 'support_agent'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.14/v/value_error",
-        "latency_ms": 0.27
+        "decision": "REVIEW",
+        "validated_data": null,
+        "reason": "policy:amount_150_reaches_review_limit_100",
+        "tainted": false,
+        "review_id": "a53398404239",
+        "skipped": [],
+        "check": "policy",
+        "latency_ms": 1.95
       }
     ]
   }

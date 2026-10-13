@@ -1,0 +1,35 @@
+{
+  "model": "RegexBaseline",
+  "dataset_size": 738,
+  "accuracy": 0.5325,
+  "precision": 1.0,
+  "recall": 0.3693,
+  "f1_score": 0.5394,
+  "classification_report": {
+    "SAFE": {
+      "precision": 0.35634328358208955,
+      "recall": 1.0,
+      "f1-score": 0.5254470426409904,
+      "support": 191.0
+    },
+    "MALICIOUS": {
+      "precision": 1.0,
+      "recall": 0.3692870201096892,
+      "f1-score": 0.5393858477970628,
+      "support": 547.0
+    },
+    "accuracy": 0.532520325203252,
+    "macro avg": {
+      "precision": 0.6781716417910448,
+      "recall": 0.6846435100548446,
+      "f1-score": 0.5324164452190265,
+      "support": 738.0
+    },
+    "weighted avg": {
+      "precision": 0.8334167576750394,
+      "recall": 0.532520325203252,
+      "f1-score": 0.53577837925396,
+      "support": 738.0
+    }
+  }
+}

@@ -1,88 +1,89 @@
 {
   "seed": 0,
-  "n_rows": 11960,
+  "n_rows": 12272,
   "rows_by_split": {
-    "train": 9708,
-    "validation": 1176,
-    "test": 1076
+    "train": 9954,
+    "validation": 1210,
+    "test": 1108
   },
   "label_by_split": {
     "test": {
-      "0": 538,
-      "1": 538
+      "0": 554,
+      "1": 554
     },
     "train": {
-      "0": 4854,
-      "1": 4854
+      "0": 4977,
+      "1": 4977
     },
     "validation": {
-      "0": 588,
-      "1": 588
+      "0": 605,
+      "1": 605
     }
   },
   "rows_by_source": {
-    "doc_base": 9490,
-    "tmdeptrai": 1626,
-    "llm_gen_vi": 589,
-    "chat_bank": 255
+    "doc_base": 9260,
+    "tmdeptrai": 1580,
+    "llm_gen_vi": 662,
+    "hard_cases": 544,
+    "chat_bank": 226
   },
   "rows_by_lang": {
-    "en": 7108,
-    "mixed": 3304,
-    "vi": 1548
+    "en": 7168,
+    "mixed": 3266,
+    "vi": 1838
   },
-  "dataset_sha256": "82cb33ad1d60007f3e97c725c25102a18aa746344695fb93a5aea5308b243642",
+  "dataset_sha256": "77a9de8dddcb0593958043f8082cf9a2afa3868d2f31343e38740d7299d20573",
   "balance": {
-    "dropped": 3132,
+    "dropped": 3210,
     "residual_imbalance": {}
   },
   "label_by_split_and_lang": {
     "test/en": {
-      "0": 307,
-      "1": 307
+      "0": 310,
+      "1": 310
     },
     "test/mixed": {
       "1": 173,
       "0": 173
     },
     "test/vi": {
-      "0": 58,
-      "1": 58
+      "0": 71,
+      "1": 71
     },
     "train/en": {
-      "0": 2885,
-      "1": 2885
+      "0": 2907,
+      "1": 2907
     },
     "train/mixed": {
-      "1": 1326,
-      "0": 1326
+      "1": 1311,
+      "0": 1311
     },
     "train/vi": {
-      "0": 643,
-      "1": 643
+      "0": 759,
+      "1": 759
     },
     "validation/en": {
-      "0": 362,
-      "1": 362
+      "0": 367,
+      "1": 367
     },
     "validation/mixed": {
-      "1": 153,
-      "0": 153
+      "1": 149,
+      "0": 149
     },
     "validation/vi": {
-      "0": 73,
-      "1": 73
+      "1": 89,
+      "0": 89
     }
   },
   "validation_problems": [],
   "regex_coverage_of_templates": {
     "templates": 108,
-    "caught_by_regex": 10,
-    "share_needing_classifier": 0.907,
+    "caught_by_regex": 12,
+    "share_needing_classifier": 0.889,
     "by_split": {
       "test": {
         "templates": 14,
-        "caught_by_regex": 1
+        "caught_by_regex": 2
       },
       "validation": {
         "templates": 14,
@@ -90,80 +91,80 @@
       },
       "train": {
         "templates": 80,
-        "caught_by_regex": 7
+        "caught_by_regex": 8
       }
     }
   },
   "audit": {
     "all": {
       "name": "dataset_v2",
-      "n": 11960,
+      "n": 12272,
       "label_counts": {
-        "0": 5980,
-        "1": 5980
+        "0": 6136,
+        "1": 6136
       },
       "single_label": false,
       "duplicate_texts_within": 2,
       "length": {
         "0": {
-          "mean": 1011.6,
-          "median": 874.0,
-          "p95": 2564.1
+          "mean": 963.1,
+          "median": 837.0,
+          "p95": 2542.2
         },
         "1": {
-          "mean": 977.2,
-          "median": 862.0,
-          "p95": 2488.3
+          "mean": 943.1,
+          "median": 835.0,
+          "p95": 2465.0
         }
       },
-      "length_auc": 0.5115045133723337,
-      "style_auc": 0.514315178241854,
-      "style_auc_noise_floor": 0.504777155736513,
+      "length_auc": 0.5052975132120437,
+      "style_auc": 0.5090128029123441,
+      "style_auc_noise_floor": 0.5052916859315745,
       "language": {
         "detected": {
-          "en": 7419,
-          "mixed": 2497,
-          "vi": 2044
+          "en": 7565,
+          "mixed": 2486,
+          "vi": 2221
         },
         "foreign_rate": 0.003,
         "foreign_rate_by_label": {
           "0": 0.003,
-          "1": 0.004
+          "1": 0.003
         }
       },
-      "dataset_sha256": "82cb33ad1d60007f3e97c725c25102a18aa746344695fb93a5aea5308b243642",
+      "dataset_sha256": "77a9de8dddcb0593958043f8082cf9a2afa3868d2f31343e38740d7299d20573",
       "flags": [],
       "leaky": false
     },
     "train": {
       "name": "dataset_v2:train",
-      "n": 9708,
+      "n": 9954,
       "label_counts": {
-        "0": 4854,
-        "1": 4854
+        "0": 4977,
+        "1": 4977
       },
       "single_label": false,
       "duplicate_texts_within": 1,
       "length": {
         "0": {
-          "mean": 1000.1,
-          "median": 867.0,
-          "p95": 2522.7
+          "mean": 950.4,
+          "median": 828.0,
+          "p95": 2486.2
         },
         "1": {
-          "mean": 968.1,
-          "median": 855.0,
-          "p95": 2431.0
+          "mean": 933.7,
+          "median": 826.0,
+          "p95": 2378.4
         }
       },
-      "length_auc": 0.5111090993389333,
-      "style_auc": 0.5145776237626116,
-      "style_auc_noise_floor": 0.5032024102558619,
+      "length_auc": 0.5043558415728627,
+      "style_auc": 0.5033561455227702,
+      "style_auc_noise_floor": 0.5104081426763231,
       "language": {
         "detected": {
-          "en": 5998,
-          "mixed": 2038,
-          "vi": 1672
+          "en": 6118,
+          "mixed": 2030,
+          "vi": 1806
         },
         "foreign_rate": 0.004,
         "foreign_rate_by_label": {
@@ -171,39 +172,39 @@
           "1": 0.004
         }
       },
-      "dataset_sha256": "229eb0cb55dfc0585aefd5815eb6254589b12c547a77abb93a8c1c466af46ac0",
+      "dataset_sha256": "168857f5798af414c7f3a6416277b3bfd0e0edd98f5502242a9493411b23d128",
       "flags": [],
       "leaky": false
     },
     "validation": {
       "name": "dataset_v2:validation",
-      "n": 1176,
+      "n": 1210,
       "label_counts": {
-        "0": 588,
-        "1": 588
+        "0": 605,
+        "1": 605
       },
       "single_label": false,
       "duplicate_texts_within": 0,
       "length": {
         "0": {
-          "mean": 1022.6,
-          "median": 867.0,
-          "p95": 2568.2
+          "mean": 973.9,
+          "median": 824.0,
+          "p95": 2563.4
         },
         "1": {
-          "mean": 963.6,
-          "median": 855.5,
-          "p95": 2511.1
+          "mean": 929.8,
+          "median": 833.0,
+          "p95": 2498.6
         }
       },
-      "length_auc": 0.5173972650284604,
-      "style_auc": 0.5094029108241936,
-      "style_auc_noise_floor": 0.5125451200888518,
+      "length_auc": 0.5111822962912369,
+      "style_auc": 0.5087849190629056,
+      "style_auc_noise_floor": 0.509964619903012,
       "language": {
         "detected": {
-          "en": 766,
-          "mixed": 209,
-          "vi": 201
+          "en": 781,
+          "vi": 223,
+          "mixed": 206
         },
         "foreign_rate": 0.0,
         "foreign_rate_by_label": {
@@ -211,39 +212,39 @@
           "1": 0.0
         }
       },
-      "dataset_sha256": "7dbd37d49ce00750407c12a1c1abca2d1901f8a2b3c1bf9dd2f38bceb021d39f",
+      "dataset_sha256": "814d2499cc2f339c0edf835fe21e657aff542983f69d658d763c3c22f3c63d65",
       "flags": [],
       "leaky": false
     },
     "test": {
       "name": "dataset_v2:test",
-      "n": 1076,
+      "n": 1108,
       "label_counts": {
-        "0": 538,
-        "1": 538
+        "0": 554,
+        "1": 554
       },
       "single_label": false,
       "duplicate_texts_within": 0,
       "length": {
         "0": {
-          "mean": 1103.8,
-          "median": 949.5,
-          "p95": 2851.1
+          "mean": 1064.6,
+          "median": 916.0,
+          "p95": 2826.5
         },
         "1": {
-          "mean": 1074.3,
-          "median": 953.5,
-          "p95": 2797.3
+          "mean": 1041.4,
+          "median": 916.0,
+          "p95": 2787.0
         }
       },
-      "length_auc": 0.5067059603930294,
-      "style_auc": 0.5012299443070163,
-      "style_auc_noise_floor": 0.5169642486975029,
+      "length_auc": 0.5049573824759869,
+      "style_auc": 0.5056595289916459,
+      "style_auc_noise_floor": 0.5169714188898592,
       "language": {
         "detected": {
-          "en": 655,
+          "en": 666,
           "mixed": 250,
-          "vi": 171
+          "vi": 192
         },
         "foreign_rate": 0.0,
         "foreign_rate_by_label": {
@@ -251,38 +252,38 @@
           "1": 0.0
         }
       },
-      "dataset_sha256": "f186f110a26b4388d9d14661a5676e7c243b66822f37088354b5475fd9d13cda",
+      "dataset_sha256": "58ae7680358be0aba6d140be0ebfb986c085675ee7e367ab620ba7513e89b06d",
       "flags": [],
       "leaky": false
     },
     "source:chat_bank": {
       "name": "dataset_v2:chat_bank",
-      "n": 255,
+      "n": 226,
       "label_counts": {
-        "1": 174,
-        "0": 81
+        "1": 146,
+        "0": 80
       },
       "single_label": false,
       "duplicate_texts_within": 0,
       "length": {
         "0": {
-          "mean": 98.2,
-          "median": 90.0,
-          "p95": 165.0
+          "mean": 99.1,
+          "median": 90.5,
+          "p95": 165.1
         },
         "1": {
-          "mean": 97.2,
-          "median": 93.0,
+          "mean": 99.2,
+          "median": 98.0,
           "p95": 146.0
         }
       },
-      "length_auc": 0.5059599829714773,
-      "style_auc": 0.6480771959699163,
-      "style_auc_noise_floor": 0.5548744146445296,
+      "length_auc": 0.5075770547945205,
+      "style_auc": 0.7212328767123288,
+      "style_auc_noise_floor": 0.5412756849315068,
       "language": {
         "detected": {
-          "vi": 130,
-          "en": 121,
+          "en": 120,
+          "vi": 102,
           "mixed": 4
         },
         "foreign_rate": 0.0,
@@ -291,39 +292,39 @@
           "1": 0.0
         }
       },
-      "dataset_sha256": "f7bc1f29ce2f2260932b093d2b568727b91a1abcfd18774481556e94f62450de",
+      "dataset_sha256": "9934d3f1eec7fa69daed15a8d15f8348fbcbbac4068d8f969daaffa368c474b2",
       "flags": [],
       "leaky": false
     },
     "source:doc_base": {
       "name": "dataset_v2:doc_base",
-      "n": 9490,
+      "n": 9260,
       "label_counts": {
-        "0": 4896,
-        "1": 4594
+        "0": 4740,
+        "1": 4520
       },
       "single_label": false,
       "duplicate_texts_within": 2,
       "length": {
         "0": {
-          "mean": 1211.3,
-          "median": 999.0,
-          "p95": 2751.2
+          "mean": 1214.5,
+          "median": 998.0,
+          "p95": 2768.2
         },
         "1": {
-          "mean": 1237.0,
-          "median": 1034.0,
-          "p95": 2697.4
+          "mean": 1239.4,
+          "median": 1033.0,
+          "p95": 2715.4
         }
       },
-      "length_auc": 0.5188936185234506,
-      "style_auc": 0.5043905395927055,
-      "style_auc_noise_floor": 0.5045962506864594,
+      "length_auc": 0.5186432312086927,
+      "style_auc": 0.5044049652738882,
+      "style_auc_noise_floor": 0.5059410309547815,
       "language": {
         "detected": {
-          "en": 6579,
-          "mixed": 2431,
-          "vi": 480
+          "en": 6543,
+          "mixed": 2420,
+          "vi": 297
         },
         "foreign_rate": 0.004,
         "foreign_rate_by_label": {
@@ -331,38 +332,38 @@
           "1": 0.005
         }
       },
-      "dataset_sha256": "00a8a5b27bb32690109458fbebc6e9d1f6dfaa69ce8611387919f573ba152ca3",
+      "dataset_sha256": "ffe7017c9e8ddc27135aa985dab48dbee6f7ec2749c3467fa5cb20b94192ac60",
       "flags": [],
       "leaky": false
     },
-    "source:llm_gen_vi": {
-      "name": "dataset_v2:llm_gen_vi",
-      "n": 589,
+    "source:hard_cases": {
+      "name": "dataset_v2:hard_cases",
+      "n": 544,
       "label_counts": {
-        "0": 298,
-        "1": 291
+        "0": 327,
+        "1": 217
       },
       "single_label": false,
       "duplicate_texts_within": 0,
       "length": {
         "0": {
-          "mean": 85.7,
-          "median": 84.0,
-          "p95": 112.1
+          "mean": 107.4,
+          "median": 102.0,
+          "p95": 148.7
         },
         "1": {
-          "mean": 88.7,
-          "median": 90.0,
-          "p95": 112.0
+          "mean": 110.3,
+          "median": 116.0,
+          "p95": 151.4
         }
       },
-      "length_auc": 0.5826356696418276,
-      "style_auc": 0.6540741253257686,
-      "style_auc_noise_floor": 0.5248691159851472,
+      "length_auc": 0.5626558998858496,
+      "style_auc": 0.7338674445806733,
+      "style_auc_noise_floor": 0.5448723910990854,
       "language": {
         "detected": {
-          "vi": 530,
-          "en": 59
+          "vi": 388,
+          "en": 156
         },
         "foreign_rate": 0.0,
         "foreign_rate_by_label": {
@@ -370,16 +371,55 @@
           "1": 0.0
         }
       },
-      "dataset_sha256": "bc86dc1c55d3ecc5f0bb65aad6c29360127d3e372868147b32e6fac92ca469b7",
+      "dataset_sha256": "c8bcd77b9b15f226501ab31df24c055841d6f992ba0fe8b88cead054c9b28cc5",
+      "flags": [],
+      "leaky": false
+    },
+    "source:llm_gen_vi": {
+      "name": "dataset_v2:llm_gen_vi",
+      "n": 662,
+      "label_counts": {
+        "1": 376,
+        "0": 286
+      },
+      "single_label": false,
+      "duplicate_texts_within": 0,
+      "length": {
+        "0": {
+          "mean": 84.5,
+          "median": 83.0,
+          "p95": 113.8
+        },
+        "1": {
+          "mean": 91.3,
+          "median": 91.0,
+          "p95": 113.0
+        }
+      },
+      "length_auc": 0.6489175717899123,
+      "style_auc": 0.6933120071417944,
+      "style_auc_noise_floor": 0.5272011233447402,
+      "language": {
+        "detected": {
+          "vi": 574,
+          "en": 88
+        },
+        "foreign_rate": 0.0,
+        "foreign_rate_by_label": {
+          "0": 0.0,
+          "1": 0.0
+        }
+      },
+      "dataset_sha256": "0aafc4d82d6fdc91702c8f4a1f6cc9d823a5420d720cf0b21111c80c013915c9",
       "flags": [],
       "leaky": false
     },
     "source:tmdeptrai": {
       "name": "dataset_v2:tmdeptrai",
-      "n": 1626,
+      "n": 1580,
       "label_counts": {
-        "1": 921,
-        "0": 705
+        "1": 877,
+        "0": 703
       },
       "single_label": false,
       "duplicate_texts_within": 0,
@@ -387,21 +427,21 @@
         "0": {
           "mean": 121.5,
           "median": 125.0,
-          "p95": 227.8
+          "p95": 227.9
         },
         "1": {
-          "mean": 128.6,
-          "median": 125.0,
-          "p95": 220.0
+          "mean": 127.6,
+          "median": 124.0,
+          "p95": 220.2
         }
       },
-      "length_auc": 0.531135598832598,
-      "style_auc": 0.624121175718653,
-      "style_auc_noise_floor": 0.5237384588136547,
+      "length_auc": 0.5260011256530491,
+      "style_auc": 0.6435848319062627,
+      "style_auc_noise_floor": 0.5169832498284758,
       "language": {
         "detected": {
-          "vi": 904,
-          "en": 660,
+          "vi": 860,
+          "en": 658,
           "mixed": 62
         },
         "foreign_rate": 0.0,
@@ -410,7 +450,7 @@
           "1": 0.0
         }
       },
-      "dataset_sha256": "e5f0c4b12c1c8f53b4e4cfb3af86f282437742c7a98015ec6c55dc131cca24c2",
+      "dataset_sha256": "43617d36ccd59f141da1fbc1ecf0a74bc24693e0d0f5c67f2a8895eb47ac4a39",
       "flags": [],
       "leaky": false
     }

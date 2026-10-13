@@ -186,6 +186,20 @@ class AccessControlRequest(BaseModel):
         return self
 
 
+def _clean_error(exc: Exception) -> str:
+    """One readable sentence for a rejected action (pydantic's own text carries input dumps and a docs URL)."""
+    errors = getattr(exc, "errors", None)
+    if callable(errors):
+        try:
+            messages = [str(e.get("msg", "")).removeprefix("Value error, ").strip() for e in errors()]
+            messages = [m for m in messages if m]
+            if messages:
+                return "; ".join(messages)
+        except Exception:
+            pass
+    return str(exc)
+
+
 class Layer4Validator:
     """Policy Validator enforcing strict boundary and business rule checks."""
 
@@ -288,5 +302,5 @@ class Layer4Validator:
             return {
                 "layer": 4,
                 "decision": "BLOCK",
-                "reason": str(e)
+                "reason": _clean_error(e)
             }

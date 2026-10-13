@@ -120,6 +120,44 @@ class AnthropicProvider(LLMProvider):
         return "".join(block.get("text", "") for block in data.get("content", []) if block.get("type") == "text")
 
 
+class GeminiProvider(LLMProvider):
+    """
+    Google AI Studio (Gemini API), REST. Needs GEMINI_API_KEY (or GOOGLE_API_KEY): a free key from
+    https://aistudio.google.com. Nothing is sent unless a key is set. Model names change often, so the
+    default can be overridden with GEMINI_MODEL.
+    """
+    name = "gemini"
+
+    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None,
+                 base_url: str = "https://generativelanguage.googleapis.com", timeout: float = 30.0, retries: int = 1,
+                 opener: Optional[Callable] = None):
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY", "") or os.environ.get("GOOGLE_API_KEY", "")
+        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        self.base_url, self.timeout, self.retries, self.opener = base_url.rstrip("/"), timeout, retries, opener
+        if not self.api_key:
+            raise LLMError("GEMINI_API_KEY is not set (put it in .env or the environment, never in git)")
+
+    def complete(self, prompt, system=None, max_tokens=1024, temperature=0.7):
+        generation: Dict[str, Any] = {"temperature": temperature, "maxOutputTokens": max_tokens,
+                                      "responseMimeType": "application/json"}
+        if self.model.startswith("gemini-2.5"):
+            generation["thinkingConfig"] = {"thinkingBudget": 0}   # otherwise thinking tokens eat max_tokens
+        payload: Dict[str, Any] = {"contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                                   "generationConfig": generation}
+        if system:
+            payload["systemInstruction"] = {"parts": [{"text": system}]}
+        data = _post_json(f"{self.base_url}/v1beta/models/{self.model}:generateContent", payload,
+                          {"x-goog-api-key": self.api_key}, self.timeout, self.retries, opener=self.opener)
+        candidates = data.get("candidates") or []
+        if not candidates:
+            raise LLMError(f"Gemini returned no candidates: {str(data)[:200]}")
+        parts = (candidates[0].get("content") or {}).get("parts") or []
+        text = "".join(part.get("text", "") for part in parts)
+        if not text:
+            raise LLMError(f"Gemini returned an empty answer (finishReason={candidates[0].get('finishReason')})")
+        return text
+
+
 class OpenAICompatProvider(LLMProvider):
     name = "openai"
     reasoning_headroom = 0  # extra tokens for models that "think" before answering
@@ -289,6 +327,8 @@ def get_provider(name: str, model: Optional[str] = None, manual_dir: Optional[st
     name = name.lower()
     if name == "ollama":
         provider: LLMProvider = OllamaProvider(model=model or "qwen2.5:7b")
+    elif name == "gemini":
+        provider = GeminiProvider(model=model)
     elif name == "anthropic":
         provider = AnthropicProvider(model=model)
     elif name == "openai":
@@ -300,5 +340,5 @@ def get_provider(name: str, model: Optional[str] = None, manual_dir: Optional[st
             raise LLMError("manual provider needs --manual-dir")
         provider = ManualProvider(manual_dir)
     else:
-        raise LLMError(f"unknown provider '{name}' (ollama, anthropic, openai, deepseek, manual)")
+        raise LLMError(f"unknown provider '{name}' (ollama, gemini, anthropic, openai, deepseek, manual)")
     return BudgetedProvider(provider, max_calls) if max_calls else provider

@@ -75,3 +75,19 @@ data/raw/*.csv
 data/raw/*.jsonl
 models/layer2_xgboost/model.pkl
 models/layer3_distilbert/checkpoint/
+
+# Layer 2 training outputs (checkpoint is ~1 GB; share via Drive)
+models/l2_multilingual/artifacts/checkpoint/
+l2_colab_bundle.zip
+data/processed_backup_tmp/
+
+# legacy_v1 snapshot: keep the 259 MB L3 weights out of git
+legacy_v1/models/layer3_distilbert/checkpoint/model.safetensors
+legacy_v1/models/layer3_distilbert/checkpoint/training_args.bin
+l2_artifacts*.zip
+data/processed_backup_tmp2/
+models/l2_multilingual/artifacts_old/
+data/review_queue.json
+data/api_dev.log
+data/console_dev.log
+data/feedback/

@@ -1,0 +1,29 @@
+answers missing: 46
+validation     judged  16 | attacks blocked 597/605 -> 598 (+0 held, 7 allowed) | safe blocked 13/605 -> 10 (+3 held)
+external_dev   judged   4 | attacks blocked 52/52 -> 51 (+1 held, 0 allowed) | safe blocked 7/47 -> 5 (+2 held)
+vi_dev         judged  12 | attacks blocked 64/66 -> 64 (+1 held, 1 allowed) | safe blocked 5/73 -> 4 (+1 held)
+test           judged  13 | attacks blocked 547/554 -> 547 (+2 held, 5 allowed) | safe blocked 8/554 -> 8 (+1 held)
+external_test  judged   5 | attacks blocked 48/48 -> 48 (+0 held, 0 allowed) | safe blocked 4/53 -> 4 (+3 held)
+vi_test        judged  14 | attacks blocked 78/84 -> 78 (+3 held, 3 allowed) | safe blocked 6/77 -> 6 (+1 held)
+{
+ "allow": {
+  "items": 14,
+  "attacks": 7,
+  "safe": 7,
+  "said_attack_on_attacks": 1,
+  "said_benign_on_safe": 2,
+  "said_attack_on_safe": 0,
+  "said_benign_on_attacks": 0,
+  "unsure": 0
+ },
+ "block": {
+  "items": 50,
+  "attacks": 34,
+  "safe": 16,
+  "said_attack_on_attacks": 7,
+  "said_benign_on_safe": 6,
+  "said_attack_on_safe": 1,
+  "said_benign_on_attacks": 1,
+  "unsure": 0
+ }
+}

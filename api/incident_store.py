@@ -40,7 +40,8 @@ class IncidentStore:
         total_latency_ms: float,
         trace: List[Dict[str, Any]],
         session_id: str = "default",
-        user_id: str = "anon"
+        user_id: str = "anon",
+        decision: str = "BLOCK",
     ) -> Dict[str, Any]:
         incident = {
             "id": f"inc_{uuid.uuid4().hex[:8]}",
@@ -49,6 +50,7 @@ class IncidentStore:
             "user_id": user_id,
             "input_text": input_text,
             "blocked_by_layer": blocked_by_layer,
+            "decision": decision,
             "reason": reason,
             "confidence": round(confidence, 4),
             "total_latency_ms": round(total_latency_ms, 2),
@@ -63,10 +65,13 @@ class IncidentStore:
 
     def get_stats(self) -> Dict[str, Any]:
         total = len(self.incidents)
-        layer_counts = {1: 0, 2: 0, 3: 0, 4: 0}
+        layer_counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+        decision_counts = {"BLOCK": 0, "REVIEW": 0, "SANITIZE": 0}
         for inc in self.incidents:
             layer = inc.get("blocked_by_layer", 1)
             layer_counts[layer] = layer_counts.get(layer, 0) + 1
+            decision = inc.get("decision", "BLOCK")
+            decision_counts[decision] = decision_counts.get(decision, 0) + 1
 
         avg_latency = (
             sum(inc.get("total_latency_ms", 0.0) for inc in self.incidents) / max(total, 1)
@@ -74,6 +79,7 @@ class IncidentStore:
         return {
             "total_incidents": total,
             "by_layer": layer_counts,
+            "by_decision": decision_counts,
             "avg_latency_ms": round(avg_latency, 2)
         }
 

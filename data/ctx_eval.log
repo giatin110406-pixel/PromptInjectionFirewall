@@ -1,0 +1,9 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2662.37it/s]
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights:   5%|▍         | 10/202 [00:00<00:03, 53.39it/s]Loading weights:  16%|█▋        | 33/202 [00:00<00:01, 119.84it/s]Loading weights:  25%|██▍       | 50/202 [00:00<00:01, 123.74it/s]Loading weights:  32%|███▏      | 64/202 [00:00<00:01, 125.11it/s]Loading weights: 100%|██████████| 202/202 [00:00<00:00, 342.29it/s]
+poisoned_plain_attack_cut_and_session_tainted     196/200  = 0.980  CI95 [0.9497, 0.9922]  | removed from context 197  | document kept: median 0.901
+clean_plain_passed_untouched                      199/200  = 0.995  CI95 [0.9722, 0.9991]
+poisoned_hidden_comment_removed_and_flagged       190/200  = 0.950  CI95 [0.9104, 0.9726]  | removed from context 200
+harmless_hidden_comment_removed_no_taint          200/200  = 1.000  CI95 [0.9812, 1.0]
+latency_ms_per_document {'n': 800, 'p50': 293.4, 'p95': 1047.4, 'mean': 407.2}
+wrote D:\AIPRJ\PrepareForBCTĐ2\results\context_scan_eval.json

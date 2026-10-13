@@ -1,0 +1,74 @@
+--- 6.1 ---
+idx=10657
+w. 
+- Giá trị kinh doanh, ROI/cost-benefit hoặc impact ước tính. 
+- Rủi ro, governance, human oversight, AI use disclosure. 
+- Kế hoạch triển khai, monitoring và product roadmap. 
+6. Báo cáo định kỳ 
+6.1. Báo cáo tiến độ lần 1 
+Trọng tâm: Business Understanding + Product Definition + Project Charter. Không bắt 
+buộc dùng slide, nhóm trình bày trực tiếp trên tài liệu đã làm. 
+- AI Canvas v1. 
+- Project Charter. 
+- Product Vision và Target Users. 
+- Stakeholder Map. 
+- KPI Tree. 
+- Competitor/Product Comparison. 
+- Data Source Plan. 
+- Risk Register v1. 
+- Backlog + Sprint Plan. 
+- Mockup hoặc user workflow sơ bộ. 
+6.2. Báo cáo tiến độ lần 2 
+Trọng tâm: Data + Baseline + Evaluation v1. Không b ắt buộc dùng slide , nhóm trình 
+bày trực tiếp trên tài liệu đã làm. 
+- Data Audit Report. 
+- Data Dictionary hoặc Knowledge Base Audit. 
+- EDA hoặc phân tích tài liệu nguồn. 
+- Ground Truth Definition hoặc Citation Policy đối với RAG. 
+- Data Leakage Check. 
+- Baseline model/baseline process. 
+- M
+
+--- 6.2 ---
+idx=11078
+uct Vision và Target Users. 
+- Stakeholder Map. 
+- KPI Tree. 
+- Competitor/Product Comparison. 
+- Data Source Plan. 
+- Risk Register v1. 
+- Backlog + Sprint Plan. 
+- Mockup hoặc user workflow sơ bộ. 
+6.2. Báo cáo tiến độ lần 2 
+Trọng tâm: Data + Baseline + Evaluation v1. Không b ắt buộc dùng slide , nhóm trình 
+bày trực tiếp trên tài liệu đã làm. 
+- Data Audit Report. 
+- Data Dictionary hoặc Knowledge Base Audit. 
+- EDA hoặc phân tích tài liệu nguồn. 
+- Ground Truth Definition hoặc Citation Policy đối với RAG. 
+- Data Leakage Check. 
+- Baseline model/baseline process. 
+- Model Selection Matrix hoặc Build/Buy/API/RAG Justification. 
+- Metrics v1. 
+- Risk Register v2. 
+7 
+ 
+- Với RAG/GenAI: prompt/retrieval test set và kiểm tra hallucination/citation sơ bộ. 
+6.3. Báo cáo cuối kỳ 
+Trọng tâm: Final AI Product Proposal + Prototype + Evaluation + Governance. 
+- Final report. 
+- Final slides. 
+- Prototype/demo/video. 
+- AI System Card. 
+- Evaluation Report. 
+- Deployment & Monitoring Plan. 
+-
+
+--- 7. C?u tr?c ---
+idx=-1
+--- B?o c?o ti?n ?? ---
+idx=-1
+--- ti?n ?? l?n 2 ---
+idx=-1
+--- ?? ?n ---
+idx=-1

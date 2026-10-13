@@ -1,0 +1,321 @@
+{
+  "answers_missing": 46,
+  "per_set": {
+    "validation": {
+      "n_attacks": 605,
+      "n_safe": 605,
+      "judged_items": 16,
+      "without_judge": {
+        "attacks_blocked": {
+          "n": 605,
+          "hits": 597,
+          "rate": 0.9868,
+          "ci95": [
+            0.9741,
+            0.9933
+          ]
+        },
+        "safe_blocked": {
+          "n": 605,
+          "hits": 13,
+          "rate": 0.0215,
+          "ci95": [
+            0.0126,
+            0.0364
+          ]
+        }
+      },
+      "with_judge": {
+        "attacks_blocked": {
+          "n": 605,
+          "hits": 598,
+          "rate": 0.9884,
+          "ci95": [
+            0.9763,
+            0.9944
+          ]
+        },
+        "attacks_held_for_review": 0,
+        "attacks_allowed": 7,
+        "safe_blocked": {
+          "n": 605,
+          "hits": 10,
+          "rate": 0.0165,
+          "ci95": [
+            0.009,
+            0.0302
+          ]
+        },
+        "safe_held_for_review": 3,
+        "safe_allowed": 592
+      }
+    },
+    "external_dev": {
+      "n_attacks": 52,
+      "n_safe": 47,
+      "judged_items": 4,
+      "without_judge": {
+        "attacks_blocked": {
+          "n": 52,
+          "hits": 52,
+          "rate": 1.0,
+          "ci95": [
+            0.9312,
+            1.0
+          ]
+        },
+        "safe_blocked": {
+          "n": 47,
+          "hits": 7,
+          "rate": 0.1489,
+          "ci95": [
+            0.0741,
+            0.2769
+          ]
+        }
+      },
+      "with_judge": {
+        "attacks_blocked": {
+          "n": 52,
+          "hits": 51,
+          "rate": 0.9808,
+          "ci95": [
+            0.8988,
+            0.9966
+          ]
+        },
+        "attacks_held_for_review": 1,
+        "attacks_allowed": 0,
+        "safe_blocked": {
+          "n": 47,
+          "hits": 5,
+          "rate": 0.1064,
+          "ci95": [
+            0.0463,
+            0.2259
+          ]
+        },
+        "safe_held_for_review": 2,
+        "safe_allowed": 40
+      }
+    },
+    "vi_dev": {
+      "n_attacks": 66,
+      "n_safe": 73,
+      "judged_items": 12,
+      "without_judge": {
+        "attacks_blocked": {
+          "n": 66,
+          "hits": 64,
+          "rate": 0.9697,
+          "ci95": [
+            0.8961,
+            0.9917
+          ]
+        },
+        "safe_blocked": {
+          "n": 73,
+          "hits": 5,
+          "rate": 0.0685,
+          "ci95": [
+            0.0296,
+            0.1505
+          ]
+        }
+      },
+      "with_judge": {
+        "attacks_blocked": {
+          "n": 66,
+          "hits": 64,
+          "rate": 0.9697,
+          "ci95": [
+            0.8961,
+            0.9917
+          ]
+        },
+        "attacks_held_for_review": 1,
+        "attacks_allowed": 1,
+        "safe_blocked": {
+          "n": 73,
+          "hits": 4,
+          "rate": 0.0548,
+          "ci95": [
+            0.0215,
+            0.1326
+          ]
+        },
+        "safe_held_for_review": 1,
+        "safe_allowed": 68
+      }
+    },
+    "test": {
+      "n_attacks": 554,
+      "n_safe": 554,
+      "judged_items": 13,
+      "without_judge": {
+        "attacks_blocked": {
+          "n": 554,
+          "hits": 547,
+          "rate": 0.9874,
+          "ci95": [
+            0.9742,
+            0.9939
+          ]
+        },
+        "safe_blocked": {
+          "n": 554,
+          "hits": 8,
+          "rate": 0.0144,
+          "ci95": [
+            0.0073,
+            0.0282
+          ]
+        }
+      },
+      "with_judge": {
+        "attacks_blocked": {
+          "n": 554,
+          "hits": 547,
+          "rate": 0.9874,
+          "ci95": [
+            0.9742,
+            0.9939
+          ]
+        },
+        "attacks_held_for_review": 2,
+        "attacks_allowed": 5,
+        "safe_blocked": {
+          "n": 554,
+          "hits": 8,
+          "rate": 0.0144,
+          "ci95": [
+            0.0073,
+            0.0282
+          ]
+        },
+        "safe_held_for_review": 1,
+        "safe_allowed": 545
+      }
+    },
+    "external_test": {
+      "n_attacks": 48,
+      "n_safe": 53,
+      "judged_items": 5,
+      "without_judge": {
+        "attacks_blocked": {
+          "n": 48,
+          "hits": 48,
+          "rate": 1.0,
+          "ci95": [
+            0.9259,
+            1.0
+          ]
+        },
+        "safe_blocked": {
+          "n": 53,
+          "hits": 4,
+          "rate": 0.0755,
+          "ci95": [
+            0.0297,
+            0.1786
+          ]
+        }
+      },
+      "with_judge": {
+        "attacks_blocked": {
+          "n": 48,
+          "hits": 48,
+          "rate": 1.0,
+          "ci95": [
+            0.9259,
+            1.0
+          ]
+        },
+        "attacks_held_for_review": 0,
+        "attacks_allowed": 0,
+        "safe_blocked": {
+          "n": 53,
+          "hits": 4,
+          "rate": 0.0755,
+          "ci95": [
+            0.0297,
+            0.1786
+          ]
+        },
+        "safe_held_for_review": 3,
+        "safe_allowed": 46
+      }
+    },
+    "vi_test": {
+      "n_attacks": 84,
+      "n_safe": 77,
+      "judged_items": 14,
+      "without_judge": {
+        "attacks_blocked": {
+          "n": 84,
+          "hits": 78,
+          "rate": 0.9286,
+          "ci95": [
+            0.8528,
+            0.9669
+          ]
+        },
+        "safe_blocked": {
+          "n": 77,
+          "hits": 6,
+          "rate": 0.0779,
+          "ci95": [
+            0.0362,
+            0.1598
+          ]
+        }
+      },
+      "with_judge": {
+        "attacks_blocked": {
+          "n": 84,
+          "hits": 78,
+          "rate": 0.9286,
+          "ci95": [
+            0.8528,
+            0.9669
+          ]
+        },
+        "attacks_held_for_review": 3,
+        "attacks_allowed": 3,
+        "safe_blocked": {
+          "n": 77,
+          "hits": 6,
+          "rate": 0.0779,
+          "ci95": [
+            0.0362,
+            0.1598
+          ]
+        },
+        "safe_held_for_review": 1,
+        "safe_allowed": 70
+      }
+    }
+  },
+  "judge_verdicts_by_side": {
+    "allow": {
+      "items": 14,
+      "attacks": 7,
+      "safe": 7,
+      "said_attack_on_attacks": 1,
+      "said_benign_on_safe": 2,
+      "said_attack_on_safe": 0,
+      "said_benign_on_attacks": 0,
+      "unsure": 0
+    },
+    "block": {
+      "items": 50,
+      "attacks": 34,
+      "safe": 16,
+      "said_attack_on_attacks": 7,
+      "said_benign_on_safe": 6,
+      "said_attack_on_safe": 1,
+      "said_benign_on_attacks": 1,
+      "unsure": 0
+    }
+  }
+}
