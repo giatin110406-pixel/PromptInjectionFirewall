@@ -1,0 +1,43 @@
+{
+  "ok": false,
+  "errors": [
+    "300 rows have no reviewer yet"
+  ],
+  "warnings": [],
+  "stats": {
+    "rows": 300,
+    "label_counts": {
+      "0": 150,
+      "1": 150
+    },
+    "per_author": {
+      "Claude": 300
+    },
+    "per_attack_type": {
+      "action_abuse": 24,
+      "privilege_escalation": 22,
+      "subtle_redirect": 22,
+      "direct_injection": 22,
+      "data_exfiltration": 20,
+      "jailbreak_roleplay": 20,
+      "prompt_leaking": 20
+    },
+    "per_style": {
+      "plain": 220,
+      "mixed": 32,
+      "noaccent": 26,
+      "teencode": 22
+    },
+    "length_auc": 0.649,
+    "overlap_with_training": {
+      "exact_rate": 0.0,
+      "near_duplicate_rate": 0.0033
+    },
+    "style_share": {
+      "noaccent_or_teencode": 0.16,
+      "mixed": 0.107
+    },
+    "hard_benign_share": 0.2,
+    "hard_attack_share": 0.353
+  }
+}

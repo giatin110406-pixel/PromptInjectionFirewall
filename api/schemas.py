@@ -9,6 +9,21 @@ class ChatRequest(BaseModel):
     session_id: Optional[str] = "session_default"
     user_id: Optional[str] = "user_anon"
 
+class AuthUser(BaseModel):
+    user_id: str
+    username: str
+    roles: List[str] = Field(default_factory=list)
+    permissions: List[str] = Field(default_factory=list)
+
+class AuthLoginRequest(BaseModel):
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
+
+class AuthTokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: AuthUser
+
 class LayerTraceItem(BaseModel):
     layer: int
     decision: str
@@ -18,8 +33,8 @@ class LayerTraceItem(BaseModel):
     matched_pattern: Optional[str] = None
 
 class ChatResponse(BaseModel):
-    status: str = Field(..., description="'allowed' or 'blocked'")
-    decision: str = Field(..., description="ALLOW or BLOCK")
+    status: str = Field(..., description="'allowed', 'sanitized', 'review' or 'blocked'")
+    decision: str = Field(..., description="ALLOW, SANITIZE, REVIEW or BLOCK")
     stopped_at_layer: int
     final_reason: str
     total_latency_ms: float

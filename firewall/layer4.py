@@ -8,6 +8,9 @@ Independent of language (validates structured JSON schemas).
 from typing import Dict, Any, Optional
 from pydantic import BaseModel, Field, field_validator, model_validator, ValidationInfo
 
+from api.schemas import AuthUser
+
+
 class RefundRequest(BaseModel):
     user_id: str = Field(..., min_length=1)
     order_id: str = Field(..., min_length=1)
@@ -199,9 +202,42 @@ class Layer4Validator:
         "access_control": AccessControlRequest,
     }
 
-    def validate_action(self, action_type: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    LEGACY_ROLE_PERMISSIONS = {
+        "support_agent": {"chat:read", "refund:request"},
+        "finance_lead": {"chat:read", "refund:request", "refund:approve", "refund:approve_over_200"},
+        "security_admin": {"chat:read", "data_access:system_prompt", "data_access:credentials"},
+    }
+
+    def _effective_roles_and_permissions(self, payload: Dict[str, Any], user: Optional[AuthUser]):
+        if user is not None:
+            return {
+                role.lower() for role in user.roles
+            }, {
+                permission.lower() for permission in user.permissions
+            }
+
+        requested_role = str(payload.get("user_role", "")).strip()
+        roles = {requested_role.lower()} if requested_role else set()
+        permissions = set()
+
+        legacy_aliases = {
+            "supervisor": {"finance_lead", "support_agent"},
+            "admin": {"finance_lead", "support_agent"},
+        }
+
+        for role in set(roles):
+            permissions.update({p.lower() for p in self.LEGACY_ROLE_PERMISSIONS.get(role, set())})
+            for alias, mapped_roles in legacy_aliases.items():
+                if role == alias:
+                    for mapped_role in mapped_roles:
+                        roles.add(mapped_role)
+                        permissions.update({p.lower() for p in self.LEGACY_ROLE_PERMISSIONS.get(mapped_role, set())})
+
+        return roles, permissions
+
+    def validate_action(self, action_type: str, payload: Dict[str, Any], user: Optional[AuthUser] = None) -> Dict[str, Any]:
         """
-        Validates the proposed action against predefined policy schemas.
+        Validates the proposed action against predefined policy schemas and IAM roles.
         Returns:
             dict: { "layer": 4, "decision": "ALLOW" | "BLOCK", "reason": str | None }
         """
@@ -213,7 +249,34 @@ class Layer4Validator:
                 "reason": f"Unknown action type: '{action_type}'"
             }
 
+        payload = dict(payload or {})
+        user_roles, user_permissions = self._effective_roles_and_permissions(payload, user)
+
+        if user is not None:
+            payload.setdefault("user_role", next(iter(user.roles), "guest"))
+        elif not payload.get("user_role"):
+            payload["user_role"] = "guest"
+
         try:
+            if action_type.lower() == "refund":
+                if not user_roles:
+                    raise ValueError("Authentication required for refund action")
+                if "finance_lead" not in user_roles and "support_agent" not in user_roles:
+                    raise ValueError(f"Role '{payload.get('user_role')}' is not authorized to process refunds")
+                if "support_agent" in user_roles and "refund:approve_over_200" not in user_permissions:
+                    amount = float(payload.get("amount", 0.0))
+                    if amount > 200.0:
+                        raise ValueError("Support agents cannot approve refunds over $200.00")
+                if "supervisor" in user_roles or "admin" in user_roles:
+                    user_roles.add("finance_lead")
+                    user_permissions.update({"refund:approve_over_200", "refund:approve"})
+
+            if action_type.lower() == "data_access":
+                resource = str(payload.get("resource", "")).lower()
+                if resource in {"system_prompt", "credentials", "database_dump", "internal_keys", "shadow_file"}:
+                    if "security_admin" not in user_roles and "data_access:system_prompt" not in user_permissions:
+                        raise ValueError(f"Access to sensitive resource '{resource}' forbidden for role '{payload.get('user_role', 'guest')}'")
+
             validated = model_cls(**payload)
             return {
                 "layer": 4,

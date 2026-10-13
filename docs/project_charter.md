@@ -1,31 +1,25 @@
-# Project Charter: AI-Powered Threat Detection for Conversational Agents (AI Firewall)
+# Project Charter: AI Firewall cho AI Agent
 
-## 1. Executive Summary
-Conversational AI agents deployed in customer support, financial services, and internal operations are increasingly vulnerable to prompt injections, goal hijacking, jailbreaking, and unauthorized privilege escalation. Traditional static regex filters suffer from low recall (<40%), while querying large language models (LLMs) to inspect every incoming prompt introduces prohibitive latency (>500ms) and inference costs.
+## 1. Vấn đề
+AI agent trong chăm sóc khách hàng, tài chính và vận hành nội bộ bị đe dọa bởi prompt injection (trực tiếp và gián tiếp qua tài liệu/email/tool output), leo thang đặc quyền và lạm dụng tool. Model nền đã chặn jailbreak trong chat khá tốt, nhưng không kiểm soát được hành động của agent, không xử lý tốt nội dung không tin cậy, và yếu với tiếng Việt. Regex thuần có recall thấp (~37% trong baseline cũ), còn hỏi LLM cho mọi input thì chậm và tốn kém.
 
-This project delivers a high-throughput, multi-layered AI Firewall MVP combining regex prefiltering, semantic vector similarity, gradient-boosted feature classification (XGBoost), sequence classification (DistilBERT), and Pydantic policy guards.
+## 2. Mục tiêu và tiêu chí thành công
+Các ngưỡng dưới đây là **mục tiêu**, chưa phải kết quả.
+- Recall > 90% trên tập test tiếng Anh và > 85% trên tập test tiếng Việt, đo riêng từng ngôn ngữ.
+- False positive rate < 3% trên câu hỏi chăm sóc khách hàng thật (EN và VI).
+- p95 latency cho đường nhanh (L0-L2) < 50ms trên CPU.
+- 100% hành động vượt hạn mức hoặc sai quyền bị L4 chặn hoặc chuyển REVIEW.
+- Có trace giải thích được cho từng quyết định.
 
-## 2. Objectives & Success Criteria
-- **Latency Target**: P95 end-to-end inspection latency < 50ms (achieved P95 < 2ms for Layers 1 & 2).
-- **Recall Target**: Detect > 90% of malicious prompt injections (demonstrated > 98% recall with Layer 2 vs. 36.9% baseline).
-- **Zero Disruption for Benign Traffic**: Precision > 97% on genuine customer service prompts.
-- **Explainability**: Transparent 4-layer trace logged for SOC security analysts.
+## 3. Phạm vi
+- **Trong phạm vi**: L0 Normalize, L1 Signatures, L2 Classifier đa ngữ, L3 LLM judge, Spotlighting, L4 Action Firewall, L5 Output Guard, Session Risk, FastAPI, SOC console, đánh giá EN/VI.
+- **Ngoài phạm vi**: ảnh/âm thanh, hạ tầng huấn luyện phân tán, thay thế kiểm soát truy cập backend.
 
-## 3. Scope
-- **In-Scope**:
-  - Layer 1: Regex & Vector Prefilter (<10ms)
-  - Layer 2: XGBoost Feature Classifier (<30ms)
-  - Layer 3: DistilBERT Borderline Sequence Classifier (<100ms)
-  - Layer 4: Pydantic Policy Validator for business actions (<5ms)
-  - Orchestrator engine with dynamic escalation
-  - FastAPI inference and security incident dashboard routes
-  - Demo interface and real-time SOC incident console
-- **Out-of-Scope**:
-  - Continuous distributed model training clusters
-  - Voice/audio multimodal filtering
+## 4. Phương án AI (Build vs Buy)
+Hybrid: **buy** model nền mở (mDeBERTa/Prompt Guard 2, LLM judge), **build** phần fine-tune tiếng Việt, Action Firewall và anomaly detector. Rule làm baseline và hàng rào tất định. Chi tiết: `docs/engine_architecture_vi.md`.
 
-## 4. Key Milestones (Mapped to 4 Sprints)
-- **Sprint 1 (Tuần 2-3)**: Repo scaffolding, raw & synthetic datasets, ground truth taxonomy, regex baseline evaluation.
-- **Sprint 2 (Tuần 4-5)**: Layer 1 vector prefilter + Layer 2 XGBoost feature classifier (AUC > 0.75 target achieved).
-- **Sprint 3 (Tuần 6-7)**: Layer 3 DistilBERT + Layer 4 Pydantic policy validator + unified Orchestrator + FastAPI backend.
-- **Sprint 4 (Tuần 8-9)**: Next.js frontend demo, real-time incident monitor, demo scenarios, final AI System Card.
+## 5. Mốc thời gian (4 sprint)
+- **Sprint 1 (Tuần 2-3)**: Business Understanding, Charter, KPI tree, Risk Register v1.
+- **Sprint 2 (Tuần 4-5)**: Data Audit (sửa leakage), dữ liệu EN+VI, Data Dictionary, EDA, baseline, Metrics v1, Model Selection Matrix.
+- **Sprint 3 (Tuần 6-7)**: L0-L2 bản v2, L4 YAML/taint/REVIEW, evaluation EN/VI, deployment plan v1.
+- **Sprint 4 (Tuần 8-9)**: L3, L5, Session Risk, demo, AI System Card, final report, slides.

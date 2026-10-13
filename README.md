@@ -2,6 +2,8 @@
 
 A production-grade, multi-layer AI Security and LLM Safety system designed to detect and neutralize **prompt injection, jailbreak attempts, privilege escalation, and unsafe agent actions** across both **international benchmarks** and **Vietnamese conversational environments**.
 
+> **Status note:** the diagram and any metrics below describe the v1 pipeline. The target engine (v2: L0 Normalize, L1 Signatures, multilingual L2 classifier, LLM judge, Action Firewall, Output Guard, Session Risk) is defined in [docs/engine_architecture_vi.md](docs/engine_architecture_vi.md). L0 and the Layer 1 Vietnamese signatures are already implemented (`firewall/normalize.py`, `tests/test_layer1_vi_regression.py`). Treat accuracy figures in this README as unverified until re-measured on a leakage-free test set (see [docs/data_audit_report.md](docs/data_audit_report.md)).
+
 ---
 
 ## Architecture Overview

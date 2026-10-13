@@ -106,10 +106,7 @@ class Layer2Classifier:
             text,
             re.IGNORECASE,
         )))
-        is_mock = hasattr(self.model, "assert_called") or hasattr(self.model, "_mock_return_value")
-        if attack_cue_count == 0 and not is_mock and confidence >= self.allow_threshold:
-            confidence = min(confidence, self.allow_threshold - 0.01)
-        elif attack_cue_count == 0 and confidence >= self.block_threshold:
+        if attack_cue_count == 0 and confidence >= self.allow_threshold:
             confidence = min(confidence, self.allow_threshold - 0.01)
 
         if subtle_escalation:
@@ -130,6 +127,9 @@ class Layer2Classifier:
             "decision": decision,
             "confidence": round(confidence, 4),
             "reason": reason,
+            # No trained model: the score above is a keyword heuristic, so the
+            # orchestrator must not treat an ALLOW from this layer as final.
+            "degraded": self.model is None,
             "top_features": {
                 k: feats[k] for k in [
                     "override_word_count", "role_claim_count", "urgency_word_count",

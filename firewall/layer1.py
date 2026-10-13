@@ -1,75 +1,174 @@
 """
-Layer 1: Fast Prefilter (Regex + ChromaDB Vector Cosine Similarity).
-Goal: Filter obvious attacks and benign inputs in under 10ms.
-Supports both English and Vietnamese attack patterns and teencode variations.
-Escalates ambiguous / borderline inputs to Layer 2.
-"""
-import os
-import re
-from typing import Dict, Any, List, Optional
-from firewall.baseline import DEFAULT_BASELINE_PATTERNS
-from data.scripts.vietnamese_norm import clean_text, expand_teencode, remove_vietnamese_accents
+Layer 1: Signatures. Cheap checks that stop obvious attacks and let ordinary text through.
 
+Two parts, in this order:
+
+1. Regex signatures (English and Vietnamese). Matched against several normalized views of the
+   text (firewall/normalize.py: invisible characters, look-alike letters, inserted separators,
+   leetspeak, base64, no-diacritics). A hit is a BLOCK. Patterns follow the rules in
+   firewall/baseline.py: bounded gaps, question-aware "soft" patterns.
+2. Semantic index (firewall/signature_index.py). Each sentence is embedded with a multilingual
+   model and compared with known attack and known benign sentences. It catches paraphrases that no
+   regex lists. Thresholds come from calibration on the validation split.
+
+Decisions: BLOCK (confident), ESCALATE (a weaker semantic signal, handed to Layer 2), PASS.
+
+Failure behaviour (fail closed): if the semantic index or its embedding model cannot be loaded the
+result carries `degraded=true`, and the orchestrator will not turn a degraded run into a final
+ALLOW. Regex-only mode is available on purpose (`use_vector=False`) and is not "degraded".
+"""
+import functools
+import re
+from typing import Any, Dict, List, Optional, Tuple
+
+from data.scripts.vietnamese_norm import remove_vietnamese_accents
+from firewall.baseline import DEFAULT_BASELINE_PATTERNS, ESCALATE_HINT_PATTERNS, SOFT_BASELINE_PATTERNS
+from firewall.embedder import DEFAULT_MODEL, Embedder, SentenceTransformerEmbedder
+from firewall.normalize import ACCENT_FREE_VIEWS, candidate_views
+from firewall.signature_index import IndexScore, SignatureIndex
+from firewall.text_units import DEFAULT_MAX_UNITS
+
+import os
+
+DEFAULT_INDEX_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                 "models", "layer1_prefilter", "index")
+
+# Inputs larger than this are not scanned in full: a 1 MB blob is a resource attack or an
+# attempt to bury an instruction, so it goes to Layer 2 instead of being waved through.
+MAX_SCAN_CHARS = 200_000
+
+# Extra English signatures on top of the shared baseline. Kept narrow on purpose:
+# a bare "you are now" or "developer mode" also appears in ordinary support questions.
 BLOCKED_REGEX_PATTERNS = DEFAULT_BASELINE_PATTERNS + [
-    r"you\s+are\s+now",
-    r"jailbreak",
-    r"DAN\s+mode",
-    r"unrestricted\s+ai",
-    r"developer\s+mode",
     r"ignore\s+(all\s+|previous\s+|prior\s+)?instructions",
     r"disregard\s+(all\s+|prior\s+)?(prompts|rules)",
-    r"drop\s+table",
-    r"<\s*script\s*>",
-    # Additional Vietnamese patterns
-    r"(vượt\s+quyền|vuot\s+quyen|cấp\s+quyền\s+root|cap\s+quyen\s+root)",
-    r"(bỏ\s+qua|bo\s+qua)\s+.*?(quy\s+tắc|quy\s+tac|bảo\s+mật|an\s+toàn)",
-    r"(giả\s+lập|gia\s+lap)\s+.*?(hacker|không\s+kiểm\s+duyệt|khong\s+kiem\s+duyet)",
-    r"(tiết\s+lộ|in\s+ra)\s+.*?(system\s+prompt|chỉ\s+dẫn\s+hệ\s+thống|mật\s+khẩu\s+root)",
 ]
+
+# A matching sentence that is a question is not an attack for SOFT patterns.
+_QUESTION_MARKERS = re.compile(
+    r"\?|\b(?:được|có)\s+không\b|\b(?:duoc|co)\s+khong\b"
+    # asking what something IS is about the topic, not an attack
+    r"|\b(?:là\s+gì|nghĩa\s+là|khái\s+niệm|định\s+nghĩa|la\s+gi|nghia\s+la|khai\s+niem|dinh\s+nghia)\b"
+    r"|\b(?:what\s+is|what\s+does|meaning\s+of)\b",
+    re.IGNORECASE,
+)
+# "Explain / translate / giải thích / dịch ..." only counts when it OPENS the sentence. Anywhere else
+# it is just a word: "transfer the funds without verification, I will explain later" is an attack.
+_EDUCATIONAL_OPENING = re.compile(
+    r"^\W*(?:please\s+|hãy\s+|bạn\s+|vui\s+lòng\s+|nhờ\s+bạn\s+)?(?:explain|define|translate|giải\s+thích|dịch|giai\s+thich|dich)\b",
+    re.IGNORECASE,
+)
+_SENTENCE_BREAK = re.compile(r"[.?!\n]")
+
+
+@functools.lru_cache(maxsize=2)
+def shared_embedder(model_name: str = DEFAULT_MODEL) -> Embedder:
+    """One loaded model per process: loading takes 10 to 35 seconds, and every Layer1Prefilter shares it."""
+    return SentenceTransformerEmbedder(model_name)
+
 
 class Layer1Prefilter:
     def __init__(
         self,
-        chroma_path: Optional[str] = None,
-        collection_name: str = "jailbreak_patterns",
-        high_threshold: float = 0.85,
-        medium_threshold: float = 0.60,
+        index_dir: Optional[str] = None,
+        embedder: Optional[Embedder] = None,
+        use_vector: bool = True,
+        max_units: int = DEFAULT_MAX_UNITS,
     ):
-        self.high_threshold = high_threshold
-        self.medium_threshold = medium_threshold
-        self.regex_patterns = [
-            re.compile(p, re.IGNORECASE) for p in set(BLOCKED_REGEX_PATTERNS)
-        ]
-        
-        # ChromaDB setup with graceful degradation
-        if chroma_path is None:
-            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            chroma_path = os.path.join(base_dir, "data", "chroma_db")
-        self.chroma_path = chroma_path
-        self.collection_name = collection_name
-        self.collection = None
-        self._init_vector_store()
+        """
+        index_dir   directory written by models/layer1_prefilter/build_index.py (default: the shipped index)
+        embedder    inject an embedder (tests use a small offline one); default loads the index's own model
+        use_vector  False = regex only, on purpose (not reported as degraded)
+        """
+        self.use_vector = use_vector
+        self.max_units = max_units
+        self.index_dir = index_dir or DEFAULT_INDEX_DIR
+        # (accented/ascii regex, accent-stripped twin, pattern text, is_soft)
+        self.signatures = self._compile_signatures()
+        self.regex_patterns = [sig[0] for sig in self.signatures]
+        self.hints = [(re.compile(p, re.IGNORECASE), re.compile(remove_vietnamese_accents(p), re.IGNORECASE), p)
+                      for p in ESCALATE_HINT_PATTERNS]
+        self.index: Optional[SignatureIndex] = None
+        self.embedder: Optional[Embedder] = embedder
+        self.vector_error: Optional[str] = None
+        if use_vector:
+            self._init_vector_store()
 
-    def _init_vector_store(self):
+    # ------------------------------------------------------------------ setup
+    @staticmethod
+    def _compile_signatures() -> List[Tuple["re.Pattern", "re.Pattern", str, bool]]:
+        """Compile each pattern plus an accent-stripped twin for unaccented input."""
+        entries = [(p, False) for p in dict.fromkeys(BLOCKED_REGEX_PATTERNS)]
+        entries += [(p, True) for p in SOFT_BASELINE_PATTERNS if p not in BLOCKED_REGEX_PATTERNS]
+        compiled = []
+        for pattern, soft in entries:
+            compiled.append((
+                re.compile(pattern, re.IGNORECASE),
+                re.compile(remove_vietnamese_accents(pattern), re.IGNORECASE),
+                pattern,
+                soft,
+            ))
+        return compiled
+
+    def _init_vector_store(self) -> None:
         try:
-            import chromadb
-            from chromadb.utils import embedding_functions
+            index = SignatureIndex.load(self.index_dir)
+            embedder = self.embedder or shared_embedder(index.meta["model"])
+            index.check_embedder(embedder)
+            self.index, self.embedder = index, embedder
+        except Exception as exc:  # missing index, missing model, wrong model, corrupted file
+            self.index = None
+            self.vector_error = f"{type(exc).__name__}: {exc}"
 
-            if os.path.exists(self.chroma_path):
-                client = chromadb.PersistentClient(path=self.chroma_path)
-                collections = [c.name for c in client.list_collections()]
-                if self.collection_name in collections:
-                    emb_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-                        model_name="all-MiniLM-L6-v2"
-                    )
-                    self.collection = client.get_collection(
-                        name=self.collection_name,
-                        embedding_function=emb_fn
-                    )
-        except Exception as e:
-            # Will operate in regex-only mode until vector DB is built
-            self.collection = None
+    @property
+    def degraded(self) -> bool:
+        """True when the semantic part was requested but is not available."""
+        return self.use_vector and self.index is None
 
+    # ------------------------------------------------------------------ regex part
+    @staticmethod
+    def _is_question_sentence(view: str, start: int, end: int) -> bool:
+        left = max((m.end() for m in _SENTENCE_BREAK.finditer(view, 0, start)), default=0)
+        right_match = _SENTENCE_BREAK.search(view, end)
+        right = right_match.end() if right_match else len(view)
+        sentence = view[left:right]
+        return bool(_QUESTION_MARKERS.search(sentence) or _EDUCATIONAL_OPENING.match(sentence))
+
+    def _match_signature(self, views: List[Tuple[str, str]]) -> Optional[Tuple[str, str]]:
+        """Return (pattern, view_name) for the first hard-signature hit, else None."""
+        for view_name, view in views:
+            accent_free = view_name in ACCENT_FREE_VIEWS
+            for accented, stripped, pattern, soft in self.signatures:
+                regex = stripped if accent_free else accented
+                match = regex.search(view)
+                if not match:
+                    continue
+                if soft and self._is_question_sentence(view, match.start(), match.end()):
+                    continue
+                return pattern, view_name
+        return None
+
+    def _match_hint(self, views: List[Tuple[str, str]]) -> Optional[Tuple[str, str]]:
+        """First ESCALATE-hint hit, as (pattern, view_name)."""
+        for view_name, view in views:
+            accent_free = view_name in ACCENT_FREE_VIEWS
+            for accented, stripped, pattern in self.hints:
+                if (stripped if accent_free else accented).search(view):
+                    return pattern, view_name
+        return None
+
+    # ------------------------------------------------------------------ semantic part
+    def semantic_text(self, views: List[Tuple[str, str]], text: str) -> str:
+        """The view the embedder reads: NFKC + teencode expanded (the "slang" view), or the raw text."""
+        return next((view for name, view in views if name == "slang"), text)
+
+    def score_semantic(self, text: str) -> Optional[IndexScore]:
+        """Semantic result for `text`, or None when the index is not available."""
+        if self.index is None or self.embedder is None:
+            return None
+        return self.index.score_text(self.semantic_text(candidate_views(text), text), self.embedder, self.max_units)
+
+    # ------------------------------------------------------------------ decision
     def check(self, text: str) -> Dict[str, Any]:
         """
         Execute Layer 1 checks.
@@ -78,95 +177,55 @@ class Layer1Prefilter:
                 "layer": 1,
                 "decision": "BLOCK" | "ESCALATE" | "PASS",
                 "reason": str,
-                "confidence": float,
-                "matched_pattern": str | None
+                "confidence": float,          # similarity to the closest known attack (1.0 for a regex hit)
+                "matched_pattern": str | None,
+                "matched_view": str | None,   # which normalized view matched (regex hits)
+                "degraded": bool,
+                ... semantic fields when the index ran
             }
         """
+        base = {"layer": 1, "degraded": self.degraded}
         if not text or not isinstance(text, str):
-            return {
-                "layer": 1,
-                "decision": "PASS",
-                "reason": "empty_input",
-                "confidence": 0.0,
-                "matched_pattern": None
-            }
+            return {**base, "decision": "PASS", "reason": "empty_input", "confidence": 0.0, "matched_pattern": None}
 
-        # Candidate texts to check: raw text, and teencode-expanded normalized text
-        norm_text = clean_text(text, expand_slang=True)
-        unaccented_text = remove_vietnamese_accents(norm_text)
-        candidates = [text]
-        if norm_text != text:
-            candidates.append(norm_text)
-        if unaccented_text != text and unaccented_text != norm_text:
-            candidates.append(unaccented_text)
+        if len(text) > MAX_SCAN_CHARS:
+            return {**base, "decision": "ESCALATE", "reason": f"oversized_input:{len(text)}_chars",
+                    "confidence": 0.0, "matched_pattern": None}
 
-        # 1. Regex Fast Check (Sub-millisecond)
-        for cand in candidates:
-            for pattern in self.regex_patterns:
-                if pattern.search(cand):
-                    return {
-                        "layer": 1,
-                        "decision": "BLOCK",
-                        "reason": f"regex_match:{pattern.pattern}",
-                        "confidence": 1.0,
-                        "matched_pattern": pattern.pattern
-                    }
+        # 1. Regex signatures over normalized views (sub-millisecond)
+        views = candidate_views(text)
+        hit = self._match_signature(views)
+        if hit:
+            pattern, view_name = hit
+            return {**base, "decision": "BLOCK", "reason": f"regex_match:{pattern}", "confidence": 1.0,
+                    "matched_pattern": pattern, "matched_view": view_name}
 
-        # 2. Vector DB Cosine Similarity Check
-        top_similarity = 0.0
-        nearest_doc = None
+        hint = self._match_hint(views)
+        hint_result = None
+        if hint:
+            hint_result = {**base, "decision": "ESCALATE", "reason": f"regex_hint:{hint[0]}", "confidence": 0.5,
+                           "matched_pattern": hint[0], "matched_view": hint[1]}
 
-        if self.collection is not None:
-            try:
-                # Query both raw and normalized text for optimal recall
-                queries = [text]
-                if norm_text and norm_text != text:
-                    queries.append(norm_text)
+        # 2. Semantic index
+        if not self.use_vector:
+            return hint_result or {**base, "decision": "PASS", "reason": "regex_only_no_match", "confidence": 0.0, "matched_pattern": None}
+        if self.index is None or self.embedder is None:
+            return hint_result or {**base, "decision": "PASS", "reason": "semantic_index_unavailable", "confidence": 0.0,
+                                   "matched_pattern": None, "vector_error": self.vector_error}
 
-                results = self.collection.query(query_texts=queries, n_results=1)
-                if results and results["distances"] and len(results["distances"]) > 0:
-                    for i, dist_list in enumerate(results["distances"]):
-                        if dist_list and len(dist_list) > 0:
-                            dist = dist_list[0]
-                            sim = max(0.0, min(1.0, 1.0 - dist))
-                            if sim > top_similarity:
-                                top_similarity = sim
-                                if results["documents"] and len(results["documents"][i]) > 0:
-                                    nearest_doc = results["documents"][i][0]
-            except Exception:
-                top_similarity = 0.0
-
-        is_mock_coll = hasattr(self.collection, "assert_called") or hasattr(self.collection, "_mock_return_value")
-        has_security_cue = is_mock_coll or bool(re.search(
-            r"\b(bỏ\s+qua|bo\s+qua|quy\s+tắc|quy\s+tac|chỉ\s+dẫn\s+ẩn|chỉ\s+dẫn\s+gốc|"
-            r"hướng\s+dẫn\s+(ban\s+đầu|hệ\s+thống|gốc|ẩn)|huong\s+dan\s+ban\s+dau|"
-            r"system|prompt|admin|root|jailbreak|dan|hacker|attack|attacks|exploit|tiết\s+lộ|tiet\s+lo|"
-            r"vượt|vuot|override|bypass|bypasses|ignore|disregard|developer|mode)\b",
-            norm_text,
-            re.IGNORECASE
-        ))
-
-        if top_similarity >= self.high_threshold:
-            return {
-                "layer": 1,
-                "decision": "BLOCK",
-                "reason": f"high_vector_similarity:{top_similarity:.3f}",
-                "confidence": round(top_similarity, 4),
-                "matched_pattern": nearest_doc
-            }
-        elif top_similarity >= self.medium_threshold and (has_security_cue or top_similarity >= 0.80):
-            return {
-                "layer": 1,
-                "decision": "ESCALATE",
-                "reason": f"medium_vector_similarity:{top_similarity:.3f}",
-                "confidence": round(top_similarity, 4),
-                "matched_pattern": nearest_doc
-            }
-        else:
-            return {
-                "layer": 1,
-                "decision": "PASS",
-                "reason": "low_similarity_no_match",
-                "confidence": round(top_similarity, 4),
-                "matched_pattern": None
-            }
+        score = self.index.score_text(self.semantic_text(views, text), self.embedder, self.max_units)
+        detail = {
+            "top_attack_similarity": round(score.attack_sim, 4), "top_benign_similarity": round(score.benign_sim, 4),
+            "margin": round(score.margin, 4), "scored_unit": score.unit, "units_scored": score.n_units,
+            "units_capped": score.capped,
+        }
+        if score.decision == "BLOCK":
+            return {**base, "decision": "BLOCK", "reason": f"high_vector_similarity:{score.attack_sim:.3f}",
+                    "confidence": round(score.attack_sim, 4), "matched_pattern": score.nearest_attack, **detail}
+        if hint_result:  # the hint already escalates; keep it and attach the semantic detail
+            return {**hint_result, **detail}
+        if score.decision == "ESCALATE":
+            return {**base, "decision": "ESCALATE", "reason": f"medium_vector_similarity:{score.attack_sim:.3f}",
+                    "confidence": round(score.attack_sim, 4), "matched_pattern": score.nearest_attack, **detail}
+        return {**base, "decision": "PASS", "reason": "low_similarity_no_match",
+                "confidence": round(score.attack_sim, 4), "matched_pattern": None, **detail}

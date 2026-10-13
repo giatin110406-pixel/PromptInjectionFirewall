@@ -96,7 +96,15 @@ class Layer3Classifier:
             else:
                 malicious_prob = model_prob
         else:
-            malicious_prob = heuristic_prob
+            # Fail closed: without the trained model there is no valid score. Do not
+            # substitute the keyword heuristic; hand the decision to a human.
+            return {
+                "layer": 3,
+                "decision": "REVIEW",
+                "confidence": 0.0,
+                "reason": "layer3_model_unavailable",
+                "degraded": True,
+            }
 
         decision = "BLOCK" if malicious_prob >= self.threshold else "ALLOW"
         reason = f"layer3_deep_classifier_score:{malicious_prob:.3f}"

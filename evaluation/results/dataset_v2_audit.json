@@ -1,0 +1,419 @@
+{
+  "seed": 0,
+  "n_rows": 11960,
+  "rows_by_split": {
+    "train": 9708,
+    "validation": 1176,
+    "test": 1076
+  },
+  "label_by_split": {
+    "test": {
+      "0": 538,
+      "1": 538
+    },
+    "train": {
+      "0": 4854,
+      "1": 4854
+    },
+    "validation": {
+      "0": 588,
+      "1": 588
+    }
+  },
+  "rows_by_source": {
+    "doc_base": 9490,
+    "tmdeptrai": 1626,
+    "llm_gen_vi": 589,
+    "chat_bank": 255
+  },
+  "rows_by_lang": {
+    "en": 7108,
+    "mixed": 3304,
+    "vi": 1548
+  },
+  "dataset_sha256": "82cb33ad1d60007f3e97c725c25102a18aa746344695fb93a5aea5308b243642",
+  "balance": {
+    "dropped": 3132,
+    "residual_imbalance": {}
+  },
+  "label_by_split_and_lang": {
+    "test/en": {
+      "0": 307,
+      "1": 307
+    },
+    "test/mixed": {
+      "1": 173,
+      "0": 173
+    },
+    "test/vi": {
+      "0": 58,
+      "1": 58
+    },
+    "train/en": {
+      "0": 2885,
+      "1": 2885
+    },
+    "train/mixed": {
+      "1": 1326,
+      "0": 1326
+    },
+    "train/vi": {
+      "0": 643,
+      "1": 643
+    },
+    "validation/en": {
+      "0": 362,
+      "1": 362
+    },
+    "validation/mixed": {
+      "1": 153,
+      "0": 153
+    },
+    "validation/vi": {
+      "0": 73,
+      "1": 73
+    }
+  },
+  "validation_problems": [],
+  "regex_coverage_of_templates": {
+    "templates": 108,
+    "caught_by_regex": 10,
+    "share_needing_classifier": 0.907,
+    "by_split": {
+      "test": {
+        "templates": 14,
+        "caught_by_regex": 1
+      },
+      "validation": {
+        "templates": 14,
+        "caught_by_regex": 2
+      },
+      "train": {
+        "templates": 80,
+        "caught_by_regex": 7
+      }
+    }
+  },
+  "audit": {
+    "all": {
+      "name": "dataset_v2",
+      "n": 11960,
+      "label_counts": {
+        "0": 5980,
+        "1": 5980
+      },
+      "single_label": false,
+      "duplicate_texts_within": 2,
+      "length": {
+        "0": {
+          "mean": 1011.6,
+          "median": 874.0,
+          "p95": 2564.1
+        },
+        "1": {
+          "mean": 977.2,
+          "median": 862.0,
+          "p95": 2488.3
+        }
+      },
+      "length_auc": 0.5115045133723337,
+      "style_auc": 0.514315178241854,
+      "style_auc_noise_floor": 0.504777155736513,
+      "language": {
+        "detected": {
+          "en": 7419,
+          "mixed": 2497,
+          "vi": 2044
+        },
+        "foreign_rate": 0.003,
+        "foreign_rate_by_label": {
+          "0": 0.003,
+          "1": 0.004
+        }
+      },
+      "dataset_sha256": "82cb33ad1d60007f3e97c725c25102a18aa746344695fb93a5aea5308b243642",
+      "flags": [],
+      "leaky": false
+    },
+    "train": {
+      "name": "dataset_v2:train",
+      "n": 9708,
+      "label_counts": {
+        "0": 4854,
+        "1": 4854
+      },
+      "single_label": false,
+      "duplicate_texts_within": 1,
+      "length": {
+        "0": {
+          "mean": 1000.1,
+          "median": 867.0,
+          "p95": 2522.7
+        },
+        "1": {
+          "mean": 968.1,
+          "median": 855.0,
+          "p95": 2431.0
+        }
+      },
+      "length_auc": 0.5111090993389333,
+      "style_auc": 0.5145776237626116,
+      "style_auc_noise_floor": 0.5032024102558619,
+      "language": {
+        "detected": {
+          "en": 5998,
+          "mixed": 2038,
+          "vi": 1672
+        },
+        "foreign_rate": 0.004,
+        "foreign_rate_by_label": {
+          "0": 0.004,
+          "1": 0.004
+        }
+      },
+      "dataset_sha256": "229eb0cb55dfc0585aefd5815eb6254589b12c547a77abb93a8c1c466af46ac0",
+      "flags": [],
+      "leaky": false
+    },
+    "validation": {
+      "name": "dataset_v2:validation",
+      "n": 1176,
+      "label_counts": {
+        "0": 588,
+        "1": 588
+      },
+      "single_label": false,
+      "duplicate_texts_within": 0,
+      "length": {
+        "0": {
+          "mean": 1022.6,
+          "median": 867.0,
+          "p95": 2568.2
+        },
+        "1": {
+          "mean": 963.6,
+          "median": 855.5,
+          "p95": 2511.1
+        }
+      },
+      "length_auc": 0.5173972650284604,
+      "style_auc": 0.5094029108241936,
+      "style_auc_noise_floor": 0.5125451200888518,
+      "language": {
+        "detected": {
+          "en": 766,
+          "mixed": 209,
+          "vi": 201
+        },
+        "foreign_rate": 0.0,
+        "foreign_rate_by_label": {
+          "0": 0.0,
+          "1": 0.0
+        }
+      },
+      "dataset_sha256": "7dbd37d49ce00750407c12a1c1abca2d1901f8a2b3c1bf9dd2f38bceb021d39f",
+      "flags": [],
+      "leaky": false
+    },
+    "test": {
+      "name": "dataset_v2:test",
+      "n": 1076,
+      "label_counts": {
+        "0": 538,
+        "1": 538
+      },
+      "single_label": false,
+      "duplicate_texts_within": 0,
+      "length": {
+        "0": {
+          "mean": 1103.8,
+          "median": 949.5,
+          "p95": 2851.1
+        },
+        "1": {
+          "mean": 1074.3,
+          "median": 953.5,
+          "p95": 2797.3
+        }
+      },
+      "length_auc": 0.5067059603930294,
+      "style_auc": 0.5012299443070163,
+      "style_auc_noise_floor": 0.5169642486975029,
+      "language": {
+        "detected": {
+          "en": 655,
+          "mixed": 250,
+          "vi": 171
+        },
+        "foreign_rate": 0.0,
+        "foreign_rate_by_label": {
+          "0": 0.0,
+          "1": 0.0
+        }
+      },
+      "dataset_sha256": "f186f110a26b4388d9d14661a5676e7c243b66822f37088354b5475fd9d13cda",
+      "flags": [],
+      "leaky": false
+    },
+    "source:chat_bank": {
+      "name": "dataset_v2:chat_bank",
+      "n": 255,
+      "label_counts": {
+        "1": 174,
+        "0": 81
+      },
+      "single_label": false,
+      "duplicate_texts_within": 0,
+      "length": {
+        "0": {
+          "mean": 98.2,
+          "median": 90.0,
+          "p95": 165.0
+        },
+        "1": {
+          "mean": 97.2,
+          "median": 93.0,
+          "p95": 146.0
+        }
+      },
+      "length_auc": 0.5059599829714773,
+      "style_auc": 0.6480771959699163,
+      "style_auc_noise_floor": 0.5548744146445296,
+      "language": {
+        "detected": {
+          "vi": 130,
+          "en": 121,
+          "mixed": 4
+        },
+        "foreign_rate": 0.0,
+        "foreign_rate_by_label": {
+          "0": 0.0,
+          "1": 0.0
+        }
+      },
+      "dataset_sha256": "f7bc1f29ce2f2260932b093d2b568727b91a1abcfd18774481556e94f62450de",
+      "flags": [],
+      "leaky": false
+    },
+    "source:doc_base": {
+      "name": "dataset_v2:doc_base",
+      "n": 9490,
+      "label_counts": {
+        "0": 4896,
+        "1": 4594
+      },
+      "single_label": false,
+      "duplicate_texts_within": 2,
+      "length": {
+        "0": {
+          "mean": 1211.3,
+          "median": 999.0,
+          "p95": 2751.2
+        },
+        "1": {
+          "mean": 1237.0,
+          "median": 1034.0,
+          "p95": 2697.4
+        }
+      },
+      "length_auc": 0.5188936185234506,
+      "style_auc": 0.5043905395927055,
+      "style_auc_noise_floor": 0.5045962506864594,
+      "language": {
+        "detected": {
+          "en": 6579,
+          "mixed": 2431,
+          "vi": 480
+        },
+        "foreign_rate": 0.004,
+        "foreign_rate_by_label": {
+          "0": 0.004,
+          "1": 0.005
+        }
+      },
+      "dataset_sha256": "00a8a5b27bb32690109458fbebc6e9d1f6dfaa69ce8611387919f573ba152ca3",
+      "flags": [],
+      "leaky": false
+    },
+    "source:llm_gen_vi": {
+      "name": "dataset_v2:llm_gen_vi",
+      "n": 589,
+      "label_counts": {
+        "0": 298,
+        "1": 291
+      },
+      "single_label": false,
+      "duplicate_texts_within": 0,
+      "length": {
+        "0": {
+          "mean": 85.7,
+          "median": 84.0,
+          "p95": 112.1
+        },
+        "1": {
+          "mean": 88.7,
+          "median": 90.0,
+          "p95": 112.0
+        }
+      },
+      "length_auc": 0.5826356696418276,
+      "style_auc": 0.6540741253257686,
+      "style_auc_noise_floor": 0.5248691159851472,
+      "language": {
+        "detected": {
+          "vi": 530,
+          "en": 59
+        },
+        "foreign_rate": 0.0,
+        "foreign_rate_by_label": {
+          "0": 0.0,
+          "1": 0.0
+        }
+      },
+      "dataset_sha256": "bc86dc1c55d3ecc5f0bb65aad6c29360127d3e372868147b32e6fac92ca469b7",
+      "flags": [],
+      "leaky": false
+    },
+    "source:tmdeptrai": {
+      "name": "dataset_v2:tmdeptrai",
+      "n": 1626,
+      "label_counts": {
+        "1": 921,
+        "0": 705
+      },
+      "single_label": false,
+      "duplicate_texts_within": 0,
+      "length": {
+        "0": {
+          "mean": 121.5,
+          "median": 125.0,
+          "p95": 227.8
+        },
+        "1": {
+          "mean": 128.6,
+          "median": 125.0,
+          "p95": 220.0
+        }
+      },
+      "length_auc": 0.531135598832598,
+      "style_auc": 0.624121175718653,
+      "style_auc_noise_floor": 0.5237384588136547,
+      "language": {
+        "detected": {
+          "vi": 904,
+          "en": 660,
+          "mixed": 62
+        },
+        "foreign_rate": 0.0,
+        "foreign_rate_by_label": {
+          "0": 0.0,
+          "1": 0.0
+        }
+      },
+      "dataset_sha256": "e5f0c4b12c1c8f53b4e4cfb3af86f282437742c7a98015ec6c55dc131cca24c2",
+      "flags": [],
+      "leaky": false
+    }
+  },
+  "leaky_parts": []
+}

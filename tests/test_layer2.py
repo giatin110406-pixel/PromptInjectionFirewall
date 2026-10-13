@@ -64,7 +64,7 @@ def test_layer2_mocked_model_borderline_escalation(classifier):
     mock_model.predict_proba.return_value = np.array([[0.35, 0.65]])
     classifier.model = mock_model
 
-    res = classifier.check("Subtle borderline query with ambiguous framing")
+    res = classifier.check("Subtle borderline query asking about the system prompt in an ambiguous way")
     assert res["decision"] == "ESCALATE"
     assert 0.50 <= res["confidence"] <= 0.85
     assert "layer2_borderline_escalation" in res["reason"]

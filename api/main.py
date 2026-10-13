@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from api.routes import chat, security_console
+from api.routes import auth as auth_routes, chat, security_console
 
 app = FastAPI(
     title="AI-Powered Threat Detection API",
@@ -27,6 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_routes.router, prefix="/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/chat", tags=["Chat & Threat Detection"])
 app.include_router(security_console.router, prefix="/console", tags=["Security Console"])
 
@@ -43,9 +44,12 @@ def serve_dashboard():
 
 @app.get("/health", tags=["Health"])
 def health_check():
+    engine = chat.orchestrator.health()
     return {
-        "status": "healthy",
+        "status": engine["status"],
         "service": "ai-firewall-api",
+        "degraded_layers": engine["degraded_layers"],
+        "engine": engine["layers"],
         "layers": {
             "layer1": "Regex + Vector Prefilter",
             "layer2": "XGBoost Feature Classifier",

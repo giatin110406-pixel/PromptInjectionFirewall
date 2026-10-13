@@ -286,6 +286,11 @@ def load_dangvansam_dataset(local_path: Optional[str] = None) -> pd.DataFrame:
             seed_df = _load_jsonl(VIETNAMESE_SEED_FILE, source="vietnamese_seed_curated")
             print(f"[SUCCESS] Loaded {len(seed_df)} curated Vietnamese samples from {VIETNAMESE_SEED_FILE}")
             return seed_df
+        print(
+            f"[WARN] No Vietnamese data loaded from the dangvansam slot: {DANGVANSAM_DATASET_ID} is "
+            f"not accessible and {VIETNAMESE_SEED_FILE} does not exist. The processed dataset will "
+            "contain only the sources that did load; check the per-language counts printed at the end."
+        )
         return pd.DataFrame()
 
 

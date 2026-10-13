@@ -1,24 +1,38 @@
-# AI Project Canvas: AI-Powered Threat Detection for Conversational Agents
+# AI Project Canvas: AI Firewall cho AI Agent (v2)
+
+Chi tiết kiến trúc: xem `docs/engine_architecture_vi.md` (nguồn sự thật duy nhất).
 
 ## 1. Value Proposition
-Protects conversational AI applications against prompt injection, jailbreaking, and privilege escalation with sub-50ms latency, reducing corporate risk of unauthorized data leaks and business policy circumvention.
+Runtime security cho AI agent: phát hiện prompt injection (kể cả indirect injection trong tài liệu RAG, email, tool output) và kiểm soát hành động của agent theo quyền và chính sách, hỗ trợ tiếng Anh và tiếng Việt.
 
-## 2. Data Strategy
-- **Raw Sources**: Public datasets (Deepset prompt injections, Kaggle adversarial benchmarks).
-- **Synthetic Augmentation**: Parameterized adversarial templates covering persona claiming, urgency overrides, SQL/payload embeddings, and Vietnamese/English e-commerce customer intents.
-- **Ground Truth**: 738 curated, deduplicated samples mapped to 4 taxonomy classes (`SAFE`, `INJECTION_PROMPT`, `INJECTION_PAYLOAD`, `PRIVILEGE_ESCALATION`).
+## 2. Người dùng và bài toán
+- Đội phát triển/vận hành chatbot và agent có quyền dùng tool (hoàn tiền, truy cập dữ liệu).
+- Pain point: model nền chặn jailbreak khá tốt nhưng không kiểm soát được hành động của agent và nội dung không tin cậy.
 
-## 3. Modeling & AI Architecture
-- **Layer 1 (Prefilter)**: Regex keywords + Cosine similarity over known jailbreak embeddings (all-MiniLM-L6-v2 via ChromaDB).
-- **Layer 2 (XGBoost)**: 25 engineered syntactic, structural, and semantic features (ROC-AUC: 0.9998, Accuracy: 98.65%).
-- **Layer 3 (DistilBERT)**: Deep semantic sequence classification for ambiguous/borderline cases (confidence 0.50-0.85).
-- **Layer 4 (Policy Validator)**: Pydantic v2 schemas validating outbound business actions (refund amount caps, role permissions).
+## 3. Data Strategy
+- **Nguồn**: BIPIA (indirect injection), tập prompt injection công khai, dữ liệu tiếng Việt do nhóm dịch/sinh/tự viết.
+- **Ground truth**: nhãn nhị phân (benign/malicious) kèm `attack_type`. Mẫu an toàn và độc hại phải **cùng nguồn và cùng pipeline sinh** để tránh leakage nguồn.
+- **Tập test tiếng Việt**: 300-500 mẫu, người kiểm tra 100%, không dùng để train.
+- Trạng thái dữ liệu: xem `docs/data_audit_report.md`.
 
-## 4. Evaluation & Metrics
-- **Baseline (Regex)**: Recall 36.93%, Precision 100%, F1 53.94%.
-- **Layer 1 + 2 Combined**: Recall 99.09%, Precision 99.09%, F1 99.09% (+62.16% recall improvement over baseline).
-- **Latency**: P95 < 2ms for Layer 1, P95 < 2ms for Layer 2, P95 < 0.02ms for Orchestrator routing.
+## 4. Kiến trúc AI (tóm tắt)
+| Layer | AI |
+|---|---|
+| L0 Normalize | 0% |
+| L1 Signatures (regex EN/VI + embedding đa ngữ) | ~40% |
+| L2 Classifier đa ngữ (mDeBERTa fine-tune) | 100% |
+| L3 LLM judge (ca lưng chừng) | 100% (prompt, không train) |
+| Spotlighting | 0% |
+| L4 Action Firewall (policy + anomaly detector) | ~35% |
+| L5 Output Guard (canary, PII) | ~25% |
+| Session Risk | 100% |
 
-## 5. Deployment & Integration
-- **Runtime**: FastAPI REST API + WebSocket/Polling for real-time SOC incident updates.
-- **Client**: Next.js demo UI (split screen: User Chat Demo on left, SOC Incident Console on right).
+Rule làm baseline và hàng rào tất định. AI làm phần phát hiện ngữ nghĩa mà rule không bắt được.
+
+## 5. Baseline và đánh giá
+- **Baseline**: regex-only. Số liệu cũ (Recall 36.93%, Precision 100%, F1 53.94% trên 738 mẫu) nằm ở `evaluation/results/baseline_metrics.json`; tập 738 mẫu không còn trên đĩa nên cần chạy lại trên tập mới.
+- **So sánh**: XGBoost feature (bản cũ), Prompt Guard / Llama Guard (nguồn mở), L2 mDeBERTa đã fine-tune.
+- **Metric**: precision, recall, F1, FPR, p95 latency, tách riêng EN / VI / trộn lẫn. Chưa có số đo hợp lệ cho v2.
+
+## 6. Triển khai
+FastAPI + Next.js demo (chat bên trái, SOC console bên phải). Mục tiêu: đóng gói thành proxy đặt trước API LLM.

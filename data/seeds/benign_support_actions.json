@@ -1,0 +1,96 @@
+{
+  "version": "1",
+  "provenance": "Written by Claude Code on 2026-10-13. Ordinary customer requests that ask for a sensitive ACTION (refund, password reset, OTP, access, transfer, data deletion) in a legitimate way. They sit in the Layer 1 index as benign anchors so that a plain 'refund my order' is not mistaken for an attack that merely mentions the same action. Not independently reviewed by a human. Do not copy sentences from here into the test sets.",
+  "groups": {
+    "refund": {
+      "en": [
+        "I would like a refund for the blender I received yesterday because the lid is cracked.",
+        "Could you process a full refund for order 4417, the item never arrived?",
+        "Please send the money back to my original payment method for the cancelled booking.",
+        "How long will it take for the refund to appear on my statement?",
+        "I returned the shoes last week, can you confirm that my refund has been issued?",
+        "Refund my subscription for this month, I was charged after I cancelled."
+      ],
+      "vi": [
+        "Mình muốn được hoàn tiền cho chiếc máy xay nhận hôm qua vì nắp bị nứt.",
+        "Bạn xử lý giúp mình hoàn tiền toàn bộ đơn 4417 nhé, hàng không hề được giao.",
+        "Nhờ shop trả lại tiền vào thẻ ban đầu cho đơn đặt phòng mà mình đã hủy.",
+        "Tiền hoàn mất bao lâu thì hiện lên sao kê của mình vậy ạ?",
+        "Mình đã gửi trả đôi giày từ tuần trước, bạn xác nhận giúp tiền hoàn đã được xử lý chưa?",
+        "Hoàn lại tiền gói đăng ký tháng này giúp mình, mình bị trừ tiền sau khi đã hủy rồi."
+      ]
+    },
+    "account_and_password": {
+      "en": [
+        "I forgot my password and the reset email never arrives, what else can I try?",
+        "Please help me regain access to my account, I changed my phone number last month.",
+        "I did not receive the verification code by text, can you resend it?",
+        "How do I turn on two step verification for my account?",
+        "My account was locked after too many login attempts, how long until it unlocks?",
+        "Can I change the email address linked to my profile without losing my order history?"
+      ],
+      "vi": [
+        "Mình quên mật khẩu mà email đặt lại không gửi về, còn cách nào khác không?",
+        "Nhờ bạn giúp mình lấy lại tài khoản, tháng trước mình đã đổi số điện thoại.",
+        "Mình chưa nhận được mã xác thực qua tin nhắn, bạn gửi lại giúp mình được không?",
+        "Làm sao để bật xác thực hai lớp cho tài khoản của mình?",
+        "Tài khoản của mình bị khóa do nhập sai quá nhiều lần, bao lâu thì được mở lại?",
+        "Mình có thể đổi email gắn với hồ sơ mà vẫn giữ lịch sử đơn hàng không?"
+      ]
+    },
+    "orders_and_delivery": {
+      "en": [
+        "Please cancel order 9034, I placed it twice by mistake.",
+        "Can you change the delivery address on my order to my office before it ships?",
+        "I would like to exchange the jacket for a bigger size, what is the process?",
+        "Apply the discount code from my newsletter to my cart, it says it is invalid.",
+        "Send me the invoice for last month's purchase by email, please.",
+        "Can you upgrade my delivery to express and tell me the extra fee?"
+      ],
+      "vi": [
+        "Nhờ bạn hủy đơn 9034 giúp mình, mình lỡ đặt hai lần.",
+        "Bạn đổi địa chỉ giao đơn của mình sang văn phòng trước khi hàng được gửi đi nhé.",
+        "Mình muốn đổi áo khoác sang size lớn hơn, quy trình thế nào ạ?",
+        "Áp giúp mình mã giảm giá trong bản tin vào giỏ hàng, hệ thống báo mã không hợp lệ.",
+        "Gửi giúp mình hóa đơn của đơn hàng tháng trước qua email nhé.",
+        "Bạn nâng giúp mình lên giao hàng nhanh và cho mình biết phụ phí là bao nhiêu."
+      ]
+    },
+    "money_and_limits": {
+      "en": [
+        "I want to transfer 5 million to my sister's account, what is the daily limit?",
+        "Can I raise my card spending limit for a trip abroad next month?",
+        "How do I set up an automatic payment for my electricity bill?",
+        "Please explain why a transfer above a certain amount needs an extra confirmation.",
+        "I need to dispute a charge on my card that I do not recognise.",
+        "Can you tell me which documents the bank needs to approve my loan?"
+      ],
+      "vi": [
+        "Mình muốn chuyển 5 triệu cho em gái, hạn mức chuyển mỗi ngày là bao nhiêu ạ?",
+        "Mình có thể nâng hạn mức chi tiêu của thẻ cho chuyến đi nước ngoài tháng sau không?",
+        "Cài đặt thanh toán tự động tiền điện hằng tháng bằng cách nào vậy bạn?",
+        "Giải thích giúp mình vì sao chuyển khoản trên một mức nhất định lại cần xác nhận thêm.",
+        "Mình cần khiếu nại một khoản trừ tiền trên thẻ mà mình không nhận ra.",
+        "Bạn cho mình biết ngân hàng cần những giấy tờ nào để duyệt khoản vay của mình?"
+      ]
+    },
+    "permissions_and_data": {
+      "en": [
+        "As the team lead I need to add a new colleague to our shared workspace, how do I do that properly?",
+        "Please delete my account and personal data, I no longer use the service.",
+        "Can I download a copy of all the data you keep about me?",
+        "Who can see my uploaded documents, and how do I change the sharing settings?",
+        "I am the account owner, how do I transfer ownership to my business partner?",
+        "Which permissions does an editor have compared with an administrator?"
+      ],
+      "vi": [
+        "Là trưởng nhóm, mình cần thêm đồng nghiệp mới vào không gian làm việc chung, làm đúng quy trình thế nào?",
+        "Nhờ bạn xóa tài khoản và dữ liệu cá nhân của mình, mình không dùng dịch vụ nữa.",
+        "Mình có thể tải về bản sao toàn bộ dữ liệu mà bên bạn đang lưu về mình không?",
+        "Ai xem được tài liệu mình đã tải lên, và đổi cài đặt chia sẻ ở đâu vậy?",
+        "Mình là chủ tài khoản, chuyển quyền sở hữu cho đối tác kinh doanh bằng cách nào?",
+        "Quyền của người biên tập khác gì so với quản trị viên?"
+      ]
+    }
+  }
+}

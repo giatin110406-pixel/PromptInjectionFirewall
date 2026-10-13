@@ -1,8 +1,9 @@
 """
 Chat Route: Primary entry point for client conversational queries.
 """
-from fastapi import APIRouter
-from api.schemas import ChatRequest, ChatResponse, ActionRequest, ActionResponse
+from fastapi import APIRouter, Depends
+from api.dependencies.auth import get_current_user
+from api.schemas import AuthUser, ChatRequest, ChatResponse, ActionRequest, ActionResponse
 from api.incident_store import incident_store
 from firewall.orchestrator import FirewallOrchestrator
 
@@ -10,10 +11,10 @@ router = APIRouter()
 orchestrator = FirewallOrchestrator()
 
 @router.post("/message", response_model=ChatResponse)
-def process_message(req: ChatRequest):
+def process_message(req: ChatRequest, current_user: AuthUser = Depends(get_current_user)):
     result = orchestrator.process_input(req.text)
     
-    if result["decision"] == "BLOCK":
+    if result["decision"] in ("BLOCK", "REVIEW"):
         last_step = result["trace"][-1] if result["trace"] else {}
         conf = last_step.get("confidence", 1.0)
         
@@ -29,6 +30,17 @@ def process_message(req: ChatRequest):
             user_id=req.user_id
         )
 
+        if result["decision"] == "REVIEW":
+            return ChatResponse(
+                status="review",
+                decision="REVIEW",
+                stopped_at_layer=result["stopped_at_layer"],
+                final_reason=result["final_reason"],
+                total_latency_ms=result["total_latency_ms"],
+                trace=result["trace"],
+                agent_reply="[FIREWALL REVIEW] Your request is held for human review before it can be processed."
+            )
+
         return ChatResponse(
             status="blocked",
             decision="BLOCK",
@@ -42,8 +54,8 @@ def process_message(req: ChatRequest):
     # Allowed: proceed to mock conversational agent response
     agent_reply = f"Thank you for contacting customer support. We received your query: '{req.text}'. How else may we assist you?"
     return ChatResponse(
-        status="allowed",
-        decision="ALLOW",
+        status="allowed" if result["decision"] == "ALLOW" else "sanitized",
+        decision=result["decision"],
         stopped_at_layer=result["stopped_at_layer"],
         final_reason=result["final_reason"],
         total_latency_ms=result["total_latency_ms"],
@@ -52,8 +64,8 @@ def process_message(req: ChatRequest):
     )
 
 @router.post("/action", response_model=ActionResponse)
-def process_action(req: ActionRequest):
-    result = orchestrator.validate_action(req.action_type, req.payload)
+def process_action(req: ActionRequest, current_user: AuthUser = Depends(get_current_user)):
+    result = orchestrator.validate_action(req.action_type, req.payload, user=current_user)
     if result["decision"] == "BLOCK":
         incident_store.log_incident(
             input_text=f"Action: {req.action_type} - {req.payload}",

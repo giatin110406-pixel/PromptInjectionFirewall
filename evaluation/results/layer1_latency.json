@@ -1,0 +1,31 @@
+{
+  "model_and_index_load_seconds": 15.5,
+  "index_entries": 2746,
+  "regex_only_chat": {
+    "n": 298,
+    "mean": 0.61,
+    "p50": 0.51,
+    "p95": 1.46,
+    "p99": 2.05,
+    "max": 2.48,
+    "avg_chars": 106
+  },
+  "full_chat": {
+    "n": 298,
+    "mean": 30.0,
+    "p50": 30.53,
+    "p95": 50.37,
+    "p99": 59.8,
+    "max": 72.38,
+    "avg_chars": 106
+  },
+  "full_document": {
+    "n": 100,
+    "mean": 340.96,
+    "p50": 278.68,
+    "p95": 944.73,
+    "p99": 1819.27,
+    "max": 1819.27,
+    "avg_chars": 1376
+  }
+}
