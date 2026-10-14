@@ -15,7 +15,7 @@ Contract (firewall/types.py, firewall/orchestrator.py):
   - fail closed: no model, or a model that cannot run, returns REVIEW with degraded=true. There is no
     keyword fallback.
 
-Artifacts (git-ignored, ~1.1 GB): models/l2_multilingual/artifacts/{checkpoint/, temperature.json}.
+Artifacts (git-ignored, ~1.1 GB): models/l2_multilingual/artifacts/{checkpoint/, temperature.json} (trained on dataset v3, public data; the previous model trained on dataset v2 is kept in artifacts_v2_aigen).
 """
 import json
 import os

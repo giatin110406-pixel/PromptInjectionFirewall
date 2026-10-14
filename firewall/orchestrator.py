@@ -23,14 +23,16 @@ from firewall.spotlight import Chunk, ContextScanner
 from firewall.types import Decision, LayerResult, max_decision, parse_decision
 
 
-# A Layer 2 block below this score, with no agreement from Layer 1 and no judge, is held for review instead of blocked
-# (PrepareForBCTĐ2/04_layer2_classifier.md: of Layer 2's lone blocks scoring 0.67-0.98, 32% were safe texts; when Layer 1
-# agrees, 98.7% of blocks are right).
-DEFAULT_SOFT_BLOCK_BELOW = 0.98
+# A Layer 2 block below this score, with no agreement from Layer 1 and no judge, is held for review instead of blocked.
+# Values for the Layer 2 model trained on dataset v3 (threshold 0.9119), chosen with evaluation/calibrate_bands.py on the
+# validation split of v3 and the dev halves only (evaluation/results/band_calibration.json): among texts scoring 0.9119-0.992,
+# 16 of 97 were safe (16%); from 0.992 up, 13 of 1,409 (0.9%). The model trained on dataset v2 (threshold 0.6659) used 0.98.
+DEFAULT_SOFT_BLOCK_BELOW = 0.992
 
-# Layer 2 score edges handed to the judge (chosen on the validation and dev sets; see PrepareForBCTĐ2/10_layer3_judge.md)
+# Layer 2 score edges handed to the judge. Allow side [0.30, threshold): 26 attacks against 12 safe texts on the dev data;
+# below 0.30 the band holds more safe texts than attacks. Block side [threshold, 0.992): the unreliable blocks above.
 DEFAULT_ESCALATE_LOW = 0.30
-DEFAULT_ESCALATE_HIGH = 0.98
+DEFAULT_ESCALATE_HIGH = 0.992
 
 
 def normalize_skip(skip) -> set:

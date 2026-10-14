@@ -1,0 +1,114 @@
+{
+  "seed": 0,
+  "problems": [],
+  "balance": {
+    "dropped": 2378,
+    "residual_imbalance": {}
+  },
+  "holdout_rows": {
+    "tt": 396,
+    "dolly_instr": 1000,
+    "dolly_doc": 300,
+    "xquad_q": 128,
+    "xquad_doc": 27,
+    "injecagent_base": 391,
+    "injecagent_enhanced": 391
+  },
+  "rows_by_split_label": {
+    "train": {
+      "0": 10191,
+      "1": 10191
+    },
+    "validation": {
+      "0": 1407,
+      "1": 1407
+    },
+    "test": {
+      "0": 1368,
+      "1": 1368
+    }
+  },
+  "rows_by_source": {
+    "train": {
+      "dolly_chat": 5768,
+      "dolly_doc": 5709,
+      "bipia_doc": 2893,
+      "xquad_vi_chat": 2340,
+      "tensortrust_pure": 1500,
+      "xquad_vi_doc": 641,
+      "llm_gen_vi": 554,
+      "tmdeptrai": 535,
+      "hard_cases": 442
+    },
+    "validation": {
+      "dolly_doc": 780,
+      "dolly_chat": 684,
+      "xquad_vi_chat": 519,
+      "bipia_doc": 321,
+      "tensortrust_pure": 187,
+      "xquad_vi_doc": 121,
+      "tmdeptrai": 87,
+      "llm_gen_vi": 60,
+      "hard_cases": 55
+    },
+    "test": {
+      "dolly_chat": 803,
+      "dolly_doc": 742,
+      "bipia_doc": 403,
+      "xquad_vi_chat": 361,
+      "tensortrust_pure": 187,
+      "xquad_vi_doc": 97,
+      "tmdeptrai": 48,
+      "llm_gen_vi": 48,
+      "hard_cases": 47
+    }
+  },
+  "attack_origin_train": {
+    "public_attack": 7105,
+    "ai_vi_attack": 2321,
+    "llm_generated": 592,
+    "hard_case": 173
+  },
+  "attack_rows_by_type_train": {
+    "tensortrust": 6554,
+    "ai_vi": 2321,
+    "injecagent": 551,
+    "direct_injection": 225,
+    "prompt_leaking": 152,
+    "jailbreak_roleplay": 134,
+    "data_exfiltration": 68,
+    "privilege_escalation": 52,
+    "action_abuse": 39,
+    "indirect_injection": 36,
+    "obfuscation": 34,
+    "subtle_redirect": 25
+  },
+  "lang_by_split": {
+    "train": {
+      "en": 14184,
+      "vi": 3868,
+      "mixed": 2330
+    },
+    "validation": {
+      "en": 1798,
+      "vi": 688,
+      "mixed": 328
+    },
+    "test": {
+      "en": 1932,
+      "vi": 516,
+      "mixed": 288
+    }
+  },
+  "tt_pool": {
+    "train": 6343,
+    "validation": 370,
+    "test": 396
+  },
+  "injecagent_pool": {
+    "train": 31,
+    "validation": 9,
+    "test": 22
+  },
+  "dataset_sha256": "d5c0eab6f05e404aee6ee3a549056b858b0227d71ee24435c5cb302f820ad695"
+}

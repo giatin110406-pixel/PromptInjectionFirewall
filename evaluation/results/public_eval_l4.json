@@ -1,173 +1,143 @@
 {
   "settings": {
     "base": {
-      "mapped": 748,
+      "mapped": 238,
       "not_mapped": {
-        "dh": 306
+        "dh": 136
       },
-      "seconds": 95,
+      "seconds": 37,
       "scan_tainted": {
-        "n": 748,
-        "hits": 63,
-        "rate": 0.0842,
+        "n": 238,
+        "hits": 219,
+        "rate": 0.9202,
         "ci95": [
-          0.0664,
-          0.1063
+          0.8787,
+          0.9483
         ]
       },
       "action_stopped_end_to_end": {
-        "n": 748,
-        "hits": 114,
-        "rate": 0.1524,
+        "n": 238,
+        "hits": 219,
+        "rate": 0.9202,
         "ci95": [
-          0.1284,
-          0.1799
+          0.8787,
+          0.9483
         ]
       },
       "action_allowed_end_to_end": {
-        "n": 748,
-        "hits": 634,
-        "rate": 0.8476,
+        "n": 238,
+        "hits": 19,
+        "rate": 0.0798,
         "ci95": [
-          0.8201,
-          0.8716
+          0.0517,
+          0.1213
         ]
       },
       "control_allowed_without_scan": {
-        "n": 748,
-        "hits": 680,
-        "rate": 0.9091,
+        "n": 238,
+        "hits": 221,
+        "rate": 0.9286,
         "ci95": [
-          0.8863,
-          0.9277
+          0.8886,
+          0.9549
         ]
       },
       "control_review_without_scan": {
-        "n": 748,
-        "hits": 68,
-        "rate": 0.0909,
+        "n": 238,
+        "hits": 17,
+        "rate": 0.0714,
         "ci95": [
-          0.0723,
-          0.1137
+          0.0451,
+          0.1114
         ]
       },
       "by_action": {
         "access_control": {
-          "n": 68,
+          "n": 17,
           "scan_tainted": {
-            "n": 68,
+            "n": 17,
             "hits": 17,
-            "rate": 0.25,
+            "rate": 1.0,
             "ci95": [
-              0.1623,
-              0.3644
+              0.8157,
+              1.0
             ]
           },
           "stopped": {
-            "n": 68,
-            "hits": 68,
+            "n": 17,
+            "hits": 17,
             "rate": 1.0,
             "ci95": [
-              0.9465,
+              0.8157,
               1.0
             ]
           },
           "control_allowed": {
-            "n": 68,
+            "n": 17,
             "hits": 0,
             "rate": 0.0,
             "ci95": [
               0.0,
-              0.0535
-            ]
-          }
-        },
-        "account_recovery": {
-          "n": 34,
-          "scan_tainted": {
-            "n": 34,
-            "hits": 0,
-            "rate": 0.0,
-            "ci95": [
-              0.0,
-              0.1015
-            ]
-          },
-          "stopped": {
-            "n": 34,
-            "hits": 0,
-            "rate": 0.0,
-            "ci95": [
-              0.0,
-              0.1015
-            ]
-          },
-          "control_allowed": {
-            "n": 34,
-            "hits": 34,
-            "rate": 1.0,
-            "ci95": [
-              0.8985,
-              1.0
+              0.1843
             ]
           }
         },
         "data_access": {
-          "n": 544,
+          "n": 204,
           "scan_tainted": {
-            "n": 544,
-            "hits": 46,
-            "rate": 0.0846,
+            "n": 204,
+            "hits": 199,
+            "rate": 0.9755,
             "ci95": [
-              0.064,
-              0.111
+              0.9439,
+              0.9895
             ]
           },
           "stopped": {
-            "n": 544,
-            "hits": 46,
-            "rate": 0.0846,
+            "n": 204,
+            "hits": 199,
+            "rate": 0.9755,
             "ci95": [
-              0.064,
-              0.111
+              0.9439,
+              0.9895
             ]
           },
           "control_allowed": {
-            "n": 544,
-            "hits": 544,
+            "n": 204,
+            "hits": 204,
             "rate": 1.0,
             "ci95": [
-              0.993,
+              0.9815,
               1.0
             ]
           }
         },
         "transfer_money": {
-          "n": 102,
+          "n": 17,
           "scan_tainted": {
-            "n": 102,
-            "hits": 0,
-            "rate": 0.0,
+            "n": 17,
+            "hits": 3,
+            "rate": 0.1765,
             "ci95": [
-              0.0,
-              0.0363
+              0.0619,
+              0.4103
             ]
           },
           "stopped": {
-            "n": 102,
-            "hits": 0,
-            "rate": 0.0,
+            "n": 17,
+            "hits": 3,
+            "rate": 0.1765,
             "ci95": [
-              0.0,
-              0.0363
+              0.0619,
+              0.4103
             ]
           },
           "control_allowed": {
-            "n": 102,
-            "hits": 102,
+            "n": 17,
+            "hits": 17,
             "rate": 1.0,
             "ci95": [
-              0.9637,
+              0.8157,
               1.0
             ]
           }
@@ -175,173 +145,143 @@
       }
     },
     "enhanced": {
-      "mapped": 748,
+      "mapped": 238,
       "not_mapped": {
-        "dh": 306
+        "dh": 136
       },
-      "seconds": 68,
+      "seconds": 25,
       "scan_tainted": {
-        "n": 748,
-        "hits": 748,
+        "n": 238,
+        "hits": 238,
         "rate": 1.0,
         "ci95": [
-          0.9949,
+          0.9841,
           1.0
         ]
       },
       "action_stopped_end_to_end": {
-        "n": 748,
-        "hits": 748,
+        "n": 238,
+        "hits": 238,
         "rate": 1.0,
         "ci95": [
-          0.9949,
+          0.9841,
           1.0
         ]
       },
       "action_allowed_end_to_end": {
-        "n": 748,
+        "n": 238,
         "hits": 0,
         "rate": 0.0,
         "ci95": [
           0.0,
-          0.0051
+          0.0159
         ]
       },
       "control_allowed_without_scan": {
-        "n": 748,
-        "hits": 680,
-        "rate": 0.9091,
+        "n": 238,
+        "hits": 221,
+        "rate": 0.9286,
         "ci95": [
-          0.8863,
-          0.9277
+          0.8886,
+          0.9549
         ]
       },
       "control_review_without_scan": {
-        "n": 748,
-        "hits": 68,
-        "rate": 0.0909,
+        "n": 238,
+        "hits": 17,
+        "rate": 0.0714,
         "ci95": [
-          0.0723,
-          0.1137
+          0.0451,
+          0.1114
         ]
       },
       "by_action": {
         "access_control": {
-          "n": 68,
+          "n": 17,
           "scan_tainted": {
-            "n": 68,
-            "hits": 68,
+            "n": 17,
+            "hits": 17,
             "rate": 1.0,
             "ci95": [
-              0.9465,
+              0.8157,
               1.0
             ]
           },
           "stopped": {
-            "n": 68,
-            "hits": 68,
+            "n": 17,
+            "hits": 17,
             "rate": 1.0,
             "ci95": [
-              0.9465,
+              0.8157,
               1.0
             ]
           },
           "control_allowed": {
-            "n": 68,
+            "n": 17,
             "hits": 0,
             "rate": 0.0,
             "ci95": [
               0.0,
-              0.0535
-            ]
-          }
-        },
-        "account_recovery": {
-          "n": 34,
-          "scan_tainted": {
-            "n": 34,
-            "hits": 34,
-            "rate": 1.0,
-            "ci95": [
-              0.8985,
-              1.0
-            ]
-          },
-          "stopped": {
-            "n": 34,
-            "hits": 34,
-            "rate": 1.0,
-            "ci95": [
-              0.8985,
-              1.0
-            ]
-          },
-          "control_allowed": {
-            "n": 34,
-            "hits": 34,
-            "rate": 1.0,
-            "ci95": [
-              0.8985,
-              1.0
+              0.1843
             ]
           }
         },
         "data_access": {
-          "n": 544,
+          "n": 204,
           "scan_tainted": {
-            "n": 544,
-            "hits": 544,
+            "n": 204,
+            "hits": 204,
             "rate": 1.0,
             "ci95": [
-              0.993,
+              0.9815,
               1.0
             ]
           },
           "stopped": {
-            "n": 544,
-            "hits": 544,
+            "n": 204,
+            "hits": 204,
             "rate": 1.0,
             "ci95": [
-              0.993,
+              0.9815,
               1.0
             ]
           },
           "control_allowed": {
-            "n": 544,
-            "hits": 544,
+            "n": 204,
+            "hits": 204,
             "rate": 1.0,
             "ci95": [
-              0.993,
+              0.9815,
               1.0
             ]
           }
         },
         "transfer_money": {
-          "n": 102,
+          "n": 17,
           "scan_tainted": {
-            "n": 102,
-            "hits": 102,
+            "n": 17,
+            "hits": 17,
             "rate": 1.0,
             "ci95": [
-              0.9637,
+              0.8157,
               1.0
             ]
           },
           "stopped": {
-            "n": 102,
-            "hits": 102,
+            "n": 17,
+            "hits": 17,
             "rate": 1.0,
             "ci95": [
-              0.9637,
+              0.8157,
               1.0
             ]
           },
           "control_allowed": {
-            "n": 102,
-            "hits": 102,
+            "n": 17,
+            "hits": 17,
             "rate": 1.0,
             "ci95": [
-              0.9637,
+              0.8157,
               1.0
             ]
           }

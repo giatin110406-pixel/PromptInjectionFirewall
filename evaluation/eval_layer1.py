@@ -372,10 +372,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("command", choices=["calibrate", "report", "latency"])
     parser.add_argument("--index", default=DEFAULT_INDEX_DIR)
+    parser.add_argument("--data-dir", default=PROCESSED, help="folder holding dataset_v2_{validation,test}.csv (data/processed_public for dataset v3)")
     parser.add_argument("--escalate-budget", type=float, default=0.12)
     parser.add_argument("--sets", nargs="+", default=TEST_SETS)
     parser.add_argument("--out", default=os.path.join(RESULTS, "layer1_eval.json"))
     args = parser.parse_args()
+    globals()["PROCESSED"] = os.path.abspath(args.data_dir)   # read by _read_set
     {"calibrate": cmd_calibrate, "report": cmd_report, "latency": cmd_latency}[args.command](args)
 
 

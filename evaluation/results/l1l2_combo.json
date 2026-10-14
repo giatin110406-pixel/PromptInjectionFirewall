@@ -1,0 +1,631 @@
+{
+  "thresholds": {
+    "l2_old": 0.6659,
+    "l2_v3": 0.9119
+  },
+  "pairs": [
+    "l1_old+l2_old",
+    "l1_old+l2_v3",
+    "l1_v3+l2_v3"
+  ],
+  "sets": {
+    "deepset": {
+      "n": 662,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 182,
+            "rate": 0.692,
+            "ci95": [
+              0.6338,
+              0.7447
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 4,
+            "rate": 0.01,
+            "ci95": [
+              0.0039,
+              0.0255
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 211,
+            "rate": 0.8023,
+            "ci95": [
+              0.7499,
+              0.8459
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 11,
+            "rate": 0.0276,
+            "ci95": [
+              0.0155,
+              0.0487
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 209,
+            "rate": 0.7947,
+            "ci95": [
+              0.7418,
+              0.8391
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 11,
+            "rate": 0.0276,
+            "ci95": [
+              0.0155,
+              0.0487
+            ]
+          }
+        }
+      }
+    },
+    "grayswan_ipi": {
+      "n": 95,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 84,
+            "rate": 0.8842,
+            "ci95": [
+              0.8045,
+              0.9341
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 87,
+            "rate": 0.9158,
+            "ci95": [
+              0.8425,
+              0.9567
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 87,
+            "rate": 0.9158,
+            "ci95": [
+              0.8425,
+              0.9567
+            ]
+          }
+        }
+      }
+    },
+    "holdout_tensortrust": {
+      "n": 396,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 284,
+            "rate": 0.7172,
+            "ci95": [
+              0.6709,
+              0.7593
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 384,
+            "rate": 0.9697,
+            "ci95": [
+              0.9478,
+              0.9826
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 386,
+            "rate": 0.9747,
+            "ci95": [
+              0.9541,
+              0.9862
+            ]
+          }
+        }
+      }
+    },
+    "holdout_injecagent_base": {
+      "n": 391,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 89,
+            "rate": 0.238,
+            "ci95": [
+              0.1976,
+              0.2837
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 350,
+            "rate": 0.9358,
+            "ci95": [
+              0.9063,
+              0.9565
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 350,
+            "rate": 0.9358,
+            "ci95": [
+              0.9063,
+              0.9565
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        }
+      }
+    },
+    "holdout_injecagent_enhanced": {
+      "n": 391,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        }
+      }
+    },
+    "holdout_dolly_instr": {
+      "n": 1000,
+      "pairs": {
+        "l1_old+l2_old": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 43,
+            "rate": 0.043,
+            "ci95": [
+              0.0321,
+              0.0574
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 6,
+            "rate": 0.006,
+            "ci95": [
+              0.0028,
+              0.013
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 6,
+            "rate": 0.006,
+            "ci95": [
+              0.0028,
+              0.013
+            ]
+          }
+        }
+      }
+    },
+    "holdout_dolly_doc": {
+      "n": 300,
+      "pairs": {
+        "l1_old+l2_old": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 1,
+            "rate": 0.0033,
+            "ci95": [
+              0.0006,
+              0.0186
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 1,
+            "rate": 0.0033,
+            "ci95": [
+              0.0006,
+              0.0186
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0126
+            ]
+          }
+        }
+      }
+    },
+    "holdout_xquad_q": {
+      "n": 128,
+      "pairs": {
+        "l1_old+l2_old": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 5,
+            "rate": 0.0391,
+            "ci95": [
+              0.0168,
+              0.0882
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 1,
+            "rate": 0.0078,
+            "ci95": [
+              0.0014,
+              0.0429
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 1,
+            "rate": 0.0078,
+            "ci95": [
+              0.0014,
+              0.0429
+            ]
+          }
+        }
+      }
+    },
+    "holdout_xquad_doc": {
+      "n": 27,
+      "pairs": {
+        "l1_old+l2_old": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        }
+      }
+    },
+    "test": {
+      "n": 1108,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 547,
+            "rate": 0.9874,
+            "ci95": [
+              0.9742,
+              0.9939
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 8,
+            "rate": 0.0144,
+            "ci95": [
+              0.0073,
+              0.0282
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 539,
+            "rate": 0.9729,
+            "ci95": [
+              0.9558,
+              0.9835
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 30,
+            "rate": 0.0542,
+            "ci95": [
+              0.0382,
+              0.0763
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 507,
+            "rate": 0.9152,
+            "ci95": [
+              0.889,
+              0.9356
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 36,
+            "rate": 0.065,
+            "ci95": [
+              0.0473,
+              0.0887
+            ]
+          }
+        }
+      }
+    },
+    "external_test": {
+      "n": 101,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 48,
+            "rate": 1.0,
+            "ci95": [
+              0.9259,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 4,
+            "rate": 0.0755,
+            "ci95": [
+              0.0297,
+              0.1786
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 48,
+            "rate": 1.0,
+            "ci95": [
+              0.9259,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 3,
+            "rate": 0.0566,
+            "ci95": [
+              0.0194,
+              0.1537
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 48,
+            "rate": 1.0,
+            "ci95": [
+              0.9259,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 2,
+            "rate": 0.0377,
+            "ci95": [
+              0.0104,
+              0.1275
+            ]
+          }
+        }
+      }
+    },
+    "vi_test": {
+      "n": 161,
+      "pairs": {
+        "l1_old+l2_old": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 78,
+            "rate": 0.9286,
+            "ci95": [
+              0.8528,
+              0.9669
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 6,
+            "rate": 0.0779,
+            "ci95": [
+              0.0362,
+              0.1598
+            ]
+          }
+        },
+        "l1_old+l2_v3": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 68,
+            "rate": 0.8095,
+            "ci95": [
+              0.7128,
+              0.8792
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 2,
+            "rate": 0.026,
+            "ci95": [
+              0.0072,
+              0.0898
+            ]
+          }
+        },
+        "l1_v3+l2_v3": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 61,
+            "rate": 0.7262,
+            "ci95": [
+              0.6225,
+              0.8101
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 2,
+            "rate": 0.026,
+            "ci95": [
+              0.0072,
+              0.0898
+            ]
+          }
+        }
+      }
+    }
+  }
+}

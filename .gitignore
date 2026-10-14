@@ -101,3 +101,16 @@ evaluation/results/public_eval_rows/
 evaluation/results/public_l3/*
 !evaluation/results/public_l3/l3_public_eval.json
 evaluation/results/public_*_run.log
+l2_colab_bundle*.zip
+
+# Dataset v3 (third-party text, some without a licence), the old L2 model kept for comparison, a rejected L1 index experiment
+data/processed_public/
+models/l2_multilingual/artifacts_v2_aigen/
+models/layer1_prefilter/index_v3/
+# per-row results and run logs of the evaluation scripts (numbers are kept in the *.json summaries)
+evaluation/results/*_rows/
+evaluation/results/v2_model/public_eval_rows/
+evaluation/results/v2_model/public_l3/*
+!evaluation/results/v2_model/public_l3/l3_public_eval.json
+evaluation/results/*_run.log
+evaluation/results/band_calibration_scores.csv

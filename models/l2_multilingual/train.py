@@ -57,6 +57,8 @@ def main() -> None:
     parser.add_argument("--safe-ratio", type=float, default=1.0, help="safe windows kept per attack window in TRAIN")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--limit", type=int, default=0, help="debug: use only N documents per split")
+    parser.add_argument("--freeze-embeddings", action="store_true",
+                        help="keep the word-embedding matrix fixed (69% of mDeBERTa's weights): fits a 6 GB GPU")
     args = parser.parse_args()
 
     import torch
@@ -89,7 +91,10 @@ def main() -> None:
                          padding=True, return_tensors="pt")
 
     model = AutoModelForSequenceClassification.from_pretrained(args.model, num_labels=2).float().to(device)  # fp32 master weights; autocast does the fp16
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
+    if args.freeze_embeddings:
+        for parameter in model.deberta.embeddings.word_embeddings.parameters():
+            parameter.requires_grad = False
+    optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr, weight_decay=0.01)
     train = splits["train"]
     steps = max(1, (len(train) + args.batch_size - 1) // args.batch_size) * args.epochs
     scheduler = get_linear_schedule_with_warmup(optimizer, int(0.06 * steps), steps)

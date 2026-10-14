@@ -1,7 +1,8 @@
 """
 InjecAgent against the context path and Layer 4 (step 4 of docs/public_data_implementation_plan.md).
 
-    python evaluation/eval_public_l4.py
+    python evaluation/eval_public_l4.py              # only the cases whose attacker instruction the Layer 2 never saw
+    python evaluation/eval_public_l4.py --all-cases  # all 1,054 cases per setting (right for a model not trained on InjecAgent)
 
 InjecAgent cases: an attacker instruction hidden in a tool response ("review_content") makes an agent call an
 attacker tool. Each case here goes end to end through the firewall:
@@ -65,10 +66,17 @@ def rate(hits, n):
     return {"n": n, "hits": hits, "rate": round(hits / n, 4) if n else None, "ci95": wilson(hits, n)}
 
 
-def main() -> None:
+def main(heldout_only: bool = True) -> None:
     from firewall.orchestrator import FirewallOrchestrator
 
     cases = [json.loads(line) for line in open(CASES, encoding="utf-8")]
+    if heldout_only:
+        # The Layer 2 of the engine is trained on dataset v3, which holds 31 of the 62 attacker instructions (the train group):
+        # only the cases of the 22 test-group instructions are unseen (data/scripts/build_dataset_v3.py injecagent_pool).
+        from data.scripts.build_dataset_v3 import injecagent_pool
+        test_group = {item["text"] for item in injecagent_pool(0) if item["split"] == "test"}
+        cases = [c for c in cases if c["attacker_instruction"].strip() in test_group]
+        print(f"[INFO] held-out instructions only: {len(cases)} cases", flush=True)
     engine = FirewallOrchestrator()
     engine.process_context([{"id": "w", "text": "warm up", "source": "tool"}], session_id="warm", use_judge=False)
     report = {"settings": {}, "tool_to_action": TOOL_TO_ACTION}
@@ -109,4 +117,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(heldout_only="--all-cases" not in sys.argv)

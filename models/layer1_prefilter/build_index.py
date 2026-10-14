@@ -23,7 +23,7 @@ import subprocess
 import sys
 from collections import Counter
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
@@ -41,6 +41,8 @@ PATTERNS = os.path.join(BASE_DIR, "models", "layer1_prefilter", "jailbreak_patte
 DEFAULT_OUT = os.path.join(BASE_DIR, "models", "layer1_prefilter", "index")
 SUPPORT_ACTIONS = os.path.join(BASE_DIR, "data", "seeds", "benign_support_actions.json")
 MAX_ENTRY_CHARS = 300
+# Sources whose "clean" rows are whole documents (not chat messages): v2 has doc_base, v3 has one per base corpus.
+DOC_SOURCES = {"doc_base", "dolly_doc", "bipia_doc", "xquad_vi_doc"}
 
 
 def _short(text: Any) -> str:
@@ -48,7 +50,8 @@ def _short(text: Any) -> str:
     return text if 4 <= len(text) <= MAX_ENTRY_CHARS else ""
 
 
-def collect_entries(train: pd.DataFrame, patterns: List[str], doc_sentences: int = 600, seed: int = 0) -> List[Dict[str, Any]]:
+def collect_entries(train: pd.DataFrame, patterns: List[str], doc_sentences: int = 600, seed: int = 0,
+                    support_actions: Optional[str] = SUPPORT_ACTIONS) -> List[Dict[str, Any]]:
     if "split" in train.columns and set(train["split"].unique()) - {"train"}:
         raise ValueError("the index must be built from the train split only (found other splits)")
     found: Dict[tuple, str] = {}
@@ -69,7 +72,7 @@ def collect_entries(train: pd.DataFrame, patterns: List[str], doc_sentences: int
         add(sentence, ATTACK, "attack:inserted")
 
     safes = train[train["label_binary"] == 0]
-    short = safes[(safes["variant"].isin(["clean", "raw"]) | safes["variant"].str.startswith("hard_")) & (safes["source"] != "doc_base")]
+    short = safes[(safes["variant"].isin(["clean", "raw"]) | safes["variant"].str.startswith("hard_")) & ~safes["source"].isin(DOC_SOURCES)]
     for row in short.itertuples():
         add(row.text, BENIGN, f"benign:{row.source}")
     # The harmless notes inserted into benign_insert rows come from ONE bank shared by every split
@@ -77,15 +80,15 @@ def collect_entries(train: pd.DataFrame, patterns: List[str], doc_sentences: int
     # index and in validation/test, so those texts would match themselves at similarity 1.0 and the
     # false positive rate would look better than it is. They are deliberately left out.
 
-    if os.path.exists(SUPPORT_ACTIONS):
-        with open(SUPPORT_ACTIONS, "r", encoding="utf-8") as handle:
+    if support_actions and os.path.exists(support_actions):
+        with open(support_actions, "r", encoding="utf-8") as handle:
             for group in json.load(handle)["groups"].values():
                 for sentences in group.values():
                     for sentence in sentences:
                         add(sentence, BENIGN, "benign:support_actions")
 
     rng = random.Random(seed)
-    docs = safes[(safes["variant"] == "clean") & (safes["source"] == "doc_base")]["text"].tolist()
+    docs = safes[(safes["variant"] == "clean") & safes["source"].isin(DOC_SOURCES)]["text"].tolist()
     rng.shuffle(docs)
     sentences: List[str] = []
     for doc in docs:
@@ -109,11 +112,12 @@ def collect_entries(train: pd.DataFrame, patterns: List[str], doc_sentences: int
 
 
 def build(embedder: Embedder, out_dir: str = DEFAULT_OUT, train_csv: str = TRAIN_CSV,
-          patterns_json: str = PATTERNS, doc_sentences: int = 600, seed: int = 0) -> SignatureIndex:
+          patterns_json: str = PATTERNS, doc_sentences: int = 600, seed: int = 0,
+          support_actions: Optional[str] = SUPPORT_ACTIONS) -> SignatureIndex:
     train = pd.read_csv(train_csv)
     with open(patterns_json, "r", encoding="utf-8") as handle:
         patterns = json.load(handle)
-    entries = collect_entries(train, patterns, doc_sentences, seed)
+    entries = collect_entries(train, patterns, doc_sentences, seed, support_actions)
     try:
         commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=BASE_DIR, capture_output=True, text=True, timeout=10).stdout.strip()
     except Exception:
@@ -121,6 +125,7 @@ def build(embedder: Embedder, out_dir: str = DEFAULT_OUT, train_csv: str = TRAIN
     index = SignatureIndex.build(entries, embedder, {
         "built_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "git_commit": commit or None,
         "train_csv": os.path.relpath(train_csv, BASE_DIR), "seed": seed, "doc_sentences": doc_sentences,
+        "support_actions": os.path.relpath(support_actions, BASE_DIR) if support_actions else None,
         "sources": dict(Counter(e["source"] for e in entries)),
     })
     index.save(out_dir)
@@ -135,9 +140,12 @@ def main() -> None:
     parser.add_argument("--patterns", default=PATTERNS)
     parser.add_argument("--doc-sentences", type=int, default=600)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--support-actions", default=SUPPORT_ACTIONS,
+                        help="Claude-written benign support requests (data/seeds/benign_support_actions.json); 'none' leaves them out")
     args = parser.parse_args()
+    support = None if str(args.support_actions).lower() == "none" else args.support_actions
 
-    index = build(SentenceTransformerEmbedder(args.model), args.out, args.train, args.patterns, args.doc_sentences, args.seed)
+    index = build(SentenceTransformerEmbedder(args.model), args.out, args.train, args.patterns, args.doc_sentences, args.seed, support)
     print(f"[INFO] {index.meta['n_entries']} entries ({index.meta['n_attack']} attack, {index.meta['n_benign']} benign), "
           f"model {index.meta['model']}, dim {index.meta['dim']} -> {args.out}")
     for source, count in sorted(index.meta["sources"].items()):

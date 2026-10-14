@@ -34,9 +34,12 @@ from eval_layer1 import wilson  # noqa: E402
 DATA = os.path.join(BASE_DIR, "data", "eval", "public")
 ROWS = os.path.join(BASE_DIR, "evaluation", "results", "public_eval_rows")
 SUMMARY = os.path.join(BASE_DIR, "evaluation", "results", "public_eval.json")
-DOC_SETS = {"injecagent_resp_base", "injecagent_resp_enhanced", "grayswan_ipi", "dolly_doc", "xquad_vi_doc"}
-ORDER = ["deepset", "tensortrust_hijack", "tensortrust_extract", "multijail_vi", "multijail_en", "injecagent_resp_base",
-         "injecagent_resp_enhanced", "grayswan_ipi", "dolly_instr", "xquad_vi_q", "injecagent_user", "dolly_doc", "xquad_vi_doc"]
+DOC_SETS = {"injecagent_resp_base", "injecagent_resp_enhanced", "grayswan_ipi", "dolly_doc", "xquad_vi_doc",
+            "holdout_injecagent_base", "holdout_injecagent_enhanced", "holdout_dolly_doc", "holdout_xquad_doc"}
+# Sets measured by default. The engine now uses a Layer 2 trained on dataset v3, which contains Tensor Trust, InjecAgent, Dolly and
+# XQuAD-vi, so only their held-out parts (holdout_*) are clean; the full sets are kept for the old model (results/v2_model/).
+ORDER = ["deepset", "grayswan_ipi", "multijail_vi", "multijail_en", "holdout_tensortrust", "holdout_injecagent_base",
+         "holdout_injecagent_enhanced", "holdout_dolly_instr", "holdout_dolly_doc", "holdout_xquad_q", "holdout_xquad_doc"]
 
 
 def git_commit() -> str:

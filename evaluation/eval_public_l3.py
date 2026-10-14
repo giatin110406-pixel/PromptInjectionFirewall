@@ -31,8 +31,9 @@ OUT = os.path.join(ROOT, "evaluation", "results", "public_l3")
 MANUAL = os.path.join(OUT, "manual")
 RECORDS = os.path.join(OUT, "records.jsonl")
 LOW, HIGH = 0.30, 0.98
-SETS = ["deepset", "tensortrust_hijack", "tensortrust_extract", "multijail_vi", "multijail_en", "injecagent_resp_base",
-        "injecagent_resp_enhanced", "grayswan_ipi", "dolly_instr", "xquad_vi_q", "injecagent_user", "dolly_doc", "xquad_vi_doc"]
+SETS = ["deepset", "grayswan_ipi", "multijail_vi", "multijail_en", "holdout_tensortrust", "holdout_injecagent_base",
+        "holdout_injecagent_enhanced", "holdout_dolly_instr", "holdout_dolly_doc", "holdout_xquad_q", "holdout_xquad_doc"]
+# (the engine's Layer 2 is trained on dataset v3, so only the clean sets above are used; see evaluation/eval_public.py)
 
 
 def make_judge():
