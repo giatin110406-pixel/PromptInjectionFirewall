@@ -1,0 +1,366 @@
+{
+  "settings": {
+    "base": {
+      "mapped": 748,
+      "not_mapped": {
+        "dh": 306
+      },
+      "seconds": 95,
+      "scan_tainted": {
+        "n": 748,
+        "hits": 63,
+        "rate": 0.0842,
+        "ci95": [
+          0.0664,
+          0.1063
+        ]
+      },
+      "action_stopped_end_to_end": {
+        "n": 748,
+        "hits": 114,
+        "rate": 0.1524,
+        "ci95": [
+          0.1284,
+          0.1799
+        ]
+      },
+      "action_allowed_end_to_end": {
+        "n": 748,
+        "hits": 634,
+        "rate": 0.8476,
+        "ci95": [
+          0.8201,
+          0.8716
+        ]
+      },
+      "control_allowed_without_scan": {
+        "n": 748,
+        "hits": 680,
+        "rate": 0.9091,
+        "ci95": [
+          0.8863,
+          0.9277
+        ]
+      },
+      "control_review_without_scan": {
+        "n": 748,
+        "hits": 68,
+        "rate": 0.0909,
+        "ci95": [
+          0.0723,
+          0.1137
+        ]
+      },
+      "by_action": {
+        "access_control": {
+          "n": 68,
+          "scan_tainted": {
+            "n": 68,
+            "hits": 17,
+            "rate": 0.25,
+            "ci95": [
+              0.1623,
+              0.3644
+            ]
+          },
+          "stopped": {
+            "n": 68,
+            "hits": 68,
+            "rate": 1.0,
+            "ci95": [
+              0.9465,
+              1.0
+            ]
+          },
+          "control_allowed": {
+            "n": 68,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0535
+            ]
+          }
+        },
+        "account_recovery": {
+          "n": 34,
+          "scan_tainted": {
+            "n": 34,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1015
+            ]
+          },
+          "stopped": {
+            "n": 34,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1015
+            ]
+          },
+          "control_allowed": {
+            "n": 34,
+            "hits": 34,
+            "rate": 1.0,
+            "ci95": [
+              0.8985,
+              1.0
+            ]
+          }
+        },
+        "data_access": {
+          "n": 544,
+          "scan_tainted": {
+            "n": 544,
+            "hits": 46,
+            "rate": 0.0846,
+            "ci95": [
+              0.064,
+              0.111
+            ]
+          },
+          "stopped": {
+            "n": 544,
+            "hits": 46,
+            "rate": 0.0846,
+            "ci95": [
+              0.064,
+              0.111
+            ]
+          },
+          "control_allowed": {
+            "n": 544,
+            "hits": 544,
+            "rate": 1.0,
+            "ci95": [
+              0.993,
+              1.0
+            ]
+          }
+        },
+        "transfer_money": {
+          "n": 102,
+          "scan_tainted": {
+            "n": 102,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0363
+            ]
+          },
+          "stopped": {
+            "n": 102,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0363
+            ]
+          },
+          "control_allowed": {
+            "n": 102,
+            "hits": 102,
+            "rate": 1.0,
+            "ci95": [
+              0.9637,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "enhanced": {
+      "mapped": 748,
+      "not_mapped": {
+        "dh": 306
+      },
+      "seconds": 68,
+      "scan_tainted": {
+        "n": 748,
+        "hits": 748,
+        "rate": 1.0,
+        "ci95": [
+          0.9949,
+          1.0
+        ]
+      },
+      "action_stopped_end_to_end": {
+        "n": 748,
+        "hits": 748,
+        "rate": 1.0,
+        "ci95": [
+          0.9949,
+          1.0
+        ]
+      },
+      "action_allowed_end_to_end": {
+        "n": 748,
+        "hits": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0051
+        ]
+      },
+      "control_allowed_without_scan": {
+        "n": 748,
+        "hits": 680,
+        "rate": 0.9091,
+        "ci95": [
+          0.8863,
+          0.9277
+        ]
+      },
+      "control_review_without_scan": {
+        "n": 748,
+        "hits": 68,
+        "rate": 0.0909,
+        "ci95": [
+          0.0723,
+          0.1137
+        ]
+      },
+      "by_action": {
+        "access_control": {
+          "n": 68,
+          "scan_tainted": {
+            "n": 68,
+            "hits": 68,
+            "rate": 1.0,
+            "ci95": [
+              0.9465,
+              1.0
+            ]
+          },
+          "stopped": {
+            "n": 68,
+            "hits": 68,
+            "rate": 1.0,
+            "ci95": [
+              0.9465,
+              1.0
+            ]
+          },
+          "control_allowed": {
+            "n": 68,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0535
+            ]
+          }
+        },
+        "account_recovery": {
+          "n": 34,
+          "scan_tainted": {
+            "n": 34,
+            "hits": 34,
+            "rate": 1.0,
+            "ci95": [
+              0.8985,
+              1.0
+            ]
+          },
+          "stopped": {
+            "n": 34,
+            "hits": 34,
+            "rate": 1.0,
+            "ci95": [
+              0.8985,
+              1.0
+            ]
+          },
+          "control_allowed": {
+            "n": 34,
+            "hits": 34,
+            "rate": 1.0,
+            "ci95": [
+              0.8985,
+              1.0
+            ]
+          }
+        },
+        "data_access": {
+          "n": 544,
+          "scan_tainted": {
+            "n": 544,
+            "hits": 544,
+            "rate": 1.0,
+            "ci95": [
+              0.993,
+              1.0
+            ]
+          },
+          "stopped": {
+            "n": 544,
+            "hits": 544,
+            "rate": 1.0,
+            "ci95": [
+              0.993,
+              1.0
+            ]
+          },
+          "control_allowed": {
+            "n": 544,
+            "hits": 544,
+            "rate": 1.0,
+            "ci95": [
+              0.993,
+              1.0
+            ]
+          }
+        },
+        "transfer_money": {
+          "n": 102,
+          "scan_tainted": {
+            "n": 102,
+            "hits": 102,
+            "rate": 1.0,
+            "ci95": [
+              0.9637,
+              1.0
+            ]
+          },
+          "stopped": {
+            "n": 102,
+            "hits": 102,
+            "rate": 1.0,
+            "ci95": [
+              0.9637,
+              1.0
+            ]
+          },
+          "control_allowed": {
+            "n": 102,
+            "hits": 102,
+            "rate": 1.0,
+            "ci95": [
+              0.9637,
+              1.0
+            ]
+          }
+        }
+      }
+    }
+  },
+  "tool_to_action": {
+    "BankManagerTransferFunds": "transfer_money",
+    "BankManagerPayBill": "transfer_money",
+    "BinanceDeposit": "transfer_money",
+    "BinanceWithdraw": "transfer_money",
+    "BinancePlaceOrder": "transfer_money",
+    "VenmoWithdrawMoney": "transfer_money",
+    "NortonIdentitySafeDisableTwoFactorAuthentication": "account_recovery",
+    "NortonIdentitySafeSharePassword": "account_recovery",
+    "AugustSmartLockGrantGuestAccess": "access_control",
+    "CiscoUmbrellaCreatePolicy": "access_control",
+    "CiscoUmbrellaUpdatePolicy": "access_control",
+    "EvernoteManagerManageNoteSharingLevel": "access_control"
+  }
+}
