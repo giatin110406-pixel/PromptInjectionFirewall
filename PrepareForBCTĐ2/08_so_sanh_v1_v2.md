@@ -1,6 +1,6 @@
 # So sánh engine v1 (cũ) và v2 (mới)
 
-Mã và tài liệu của v1 được giữ nguyên tại `legacy_v1/` (bản chụp commit `65e2a02`, xem `legacy_v1/README.md`).
+Mã và tài liệu của v1 được giữ nguyên tại `archive/legacy_v1/` (bản chụp commit `65e2a02`, xem `archive/legacy_v1/README.md`).
 
 | | v1 | v2 |
 |---|---|---|
@@ -17,7 +17,7 @@ Mã và tài liệu của v1 được giữ nguyên tại `legacy_v1/` (bản ch
 | Tiếng Việt | gần như không | 1.838 dòng, tập đo riêng 300 + 200 dòng |
 
 ## Số đo (cùng điều kiện)
-Các số đo cũ của v1 **không dùng để so sánh công bằng** (xem `legacy_v1/README.md`): trong lần đo của v1, 738 mẫu đều dừng ở L1 và L2 xử lý 0 mẫu, nên mức cải thiện F1 +0,025 chỉ là của regex; checkpoint L3 không nạp được; dữ liệu train L3 lẫn nguồn.
+Các số đo cũ của v1 **không dùng để so sánh công bằng** (xem `archive/legacy_v1/README.md`): trong lần đo của v1, 738 mẫu đều dừng ở L1 và L2 xử lý 0 mẫu, nên mức cải thiện F1 +0,025 chỉ là của regex; checkpoint L3 không nạp được; dữ liệu train L3 lẫn nguồn.
 
 Muốn có bảng so sánh có số thật cần chạy v1 và v2 trên **cùng các tập chưa thấy** (test, `vi_test_v1`, external), gọi thẳng L2 và L3 cũ để chúng xử lý mẫu. **Script này chưa viết**; bảng sẽ bổ sung ở đây khi có.
 

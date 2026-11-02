@@ -1,6 +1,6 @@
 # Kế hoạch triển khai dữ liệu công khai
 
-Ngày lập: 14/10/2026. Danh sách dataset và lý do chọn nằm ở mục 2.5.7 của `BaoCao_Firewall_Layer0_5.docx`. File này mô tả cách đưa các tập đó vào dự án.
+Ngày lập: 14/10/2026. Danh sách dataset và lý do chọn nằm ở mục 2.5.7 của `archive/reports_old/BaoCao_Firewall_Layer0_5.docx`. File này mô tả cách đưa các tập đó vào dự án.
 
 ## Mục tiêu
 
@@ -17,7 +17,7 @@ Hướng đề xuất (chưa chốt) là **chỉ đo**: L2 giữ nguyên, dữ l
 | 2. Chuyển định dạng | Xong | `data/scripts/prepare_public_eval.py` → `data/eval/public/*.csv` (13 file). Tensor Trust chỉ còn 910 mẫu sau khi bỏ trùng (kế hoạch ước 2.000 đến 3.000, vì benchmark có nhiều bản trùng) |
 | 3. Rò rỉ và trùng | Xong | Chỉ 1 dòng trùng với dữ liệu dự án (multijail_en). Báo cáo: `evaluation/results/public_prepare.json`, `public_leakage_report.json` |
 | 4. Đo | Xong | `evaluation/eval_public.py` (L1, L2, pipeline, tài liệu), `eval_public_l3.py` (judge, Haiku thay thế), `eval_public_l4.py` (InjecAgent). Không chỉnh ngưỡng |
-| 5. Báo cáo | Xong | `BaoCao_Firewall_Layer0_5_v2.docx` |
+| 5. Báo cáo | Xong | `archive/reports_old/BaoCao_Firewall_Layer0_5_v2.docx` |
 | 6. Huấn luyện lại L2 | Không làm | Kế hoạch chỉ làm nếu kết quả đo cho thấy cần; xem phần "Kết quả và khuyến nghị" bên dưới. Quyết định thuộc về nhóm |
 
 Thay đổi so với kế hoạch: thêm Dolly-15k (câu lệnh và đoạn văn bình thường, tiếng Anh) và XQuAD tiếng Việt (câu hỏi và đoạn văn) làm nguồn mẫu bình thường do người viết để đo chặn nhầm, vì plan gốc thiếu phía "bình thường". Phần "mẫu tiếng Việt nhóm tự viết" chưa làm được: cần thành viên nhóm (file mẫu: `data/eval/vi_human_v1_template.csv`).

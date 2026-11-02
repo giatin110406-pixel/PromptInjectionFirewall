@@ -1,6 +1,6 @@
 # AI Firewall v2: cách engine hoạt động
 
-Tài liệu này giải thích engine làm gì với từng request và **chặn những tình huống nào**. Quyết định kiến trúc và trạng thái triển khai nằm ở [engine_architecture_vi.md](engine_architecture_vi.md). Kế hoạch làm nằm ở [../ai_firewall_agent_roadmap.md](../ai_firewall_agent_roadmap.md).
+Tài liệu này giải thích engine làm gì với từng request và **chặn những tình huống nào**. Quyết định kiến trúc và trạng thái triển khai nằm ở [engine_architecture_vi.md](engine_architecture_vi.md). Kế hoạch làm nằm ở [../archive/notes_old/ai_firewall_agent_roadmap.md](../archive/notes_old/ai_firewall_agent_roadmap.md) (bản cũ, đã thay bằng [implementation_plan_v4_vi.md](implementation_plan_v4_vi.md)).
 
 **Quy ước trạng thái** (dùng xuyên suốt tài liệu):
 - ✅ **Có**: đã chạy được trong code hiện tại và có test.

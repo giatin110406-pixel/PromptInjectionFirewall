@@ -1,5 +1,7 @@
 # Đối chiếu `BaoCao_Firewall_Layer0_5.docx` với dự án
 
+(File báo cáo này nay ở `archive/reports_old/`; báo cáo hiện hành là `BaoCao_Firewall_Engine_v3.docx`.)
+
 Ngày đối chiếu: 14/10/2026. Cách làm: đọc toàn bộ file Word, rồi **đếm lại từng con số về dữ liệu trực tiếp từ file trong dự án** (không dựa vào tài liệu khác) bằng `data/verify_doc_claims.py` và `data/verify_doc_claims2.py`; các tuyên bố về mã được kiểm bằng cách chạy hoặc đọc mã. File Word **chưa bị sửa**; danh sách sửa nằm ở đây.
 
 ## Kết luận

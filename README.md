@@ -193,6 +193,7 @@ pytest -v
 
 ```text
 .
+├── archive/                        # Old versions in one place: legacy_v1, old reports, old model zips (see archive/README.md)
 ├── api/
 │   ├── main.py                     # FastAPI application endpoints
 │   ├── routes/                     # Chat & Action validation routes

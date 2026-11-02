@@ -60,7 +60,7 @@ Chứng minh phần AI (L2 và tổ hợp) có giá trị hơn cách đơn giả
 | B0. Bộ phân loại "ngu" | Mô hình chỉ nhìn độ dài và văn phong (hồi quy logistic trên đặc trưng hình thức, huấn luyện trên train v3) | "Mốc sàn" và công cụ dò leakage: nếu đạt điểm cao trên một tập thì tập đó bị rò rỉ. Mong đợi gần 0,5 AUC trên tập sạch |
 | B1. Regex-only | 63 mẫu viết tay song ngữ trong `firewall/baseline.py` (baseline cũ của dự án: recall 36,93%, precision 100%, F1 53,94% trên 738 mẫu, nay không còn tập đó) | Baseline chính, đúng như `AI Canvas` và Project Charter đã nêu |
 | B2. Model L2 cũ (dataset v2) | Model huấn luyện trên dữ liệu AI sinh | "Phiên bản trước" để cho thấy dữ liệu mới giúp gì |
-| (B3. Mô hình v1 XGBoost) | Engine cũ trong `legacy_v1/` | Chỉ thêm nếu còn `model.pkl` và chạy được (nhiều khả năng không, vì file bị `.gitignore`) |
+| (B3. Mô hình v1 XGBoost) | Engine cũ trong `archive/legacy_v1/` | Chỉ thêm nếu còn `model.pkl` và chạy được (nhiều khả năng không, vì file bị `.gitignore`) |
 
 Hệ thống đề xuất để so: L1 đầy đủ (regex + chỉ mục), L2 v3 một mình, tổ hợp L1 cũ + L2 v3 (cấu hình đang chạy).
 
