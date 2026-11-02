@@ -6,7 +6,8 @@ from pydantic import BaseModel, Field
 
 class DebugOptions(BaseModel):
     """Manual-testing switches. Both need a security_admin; skipping layers also needs FIREWALL_DEMO_MODE=1."""
-    skip_layers: List[str] = Field(default_factory=list, description="L1, L2, L3, clean, L4_hard, L4_taint, L4_policy, L5")
+    skip_layers: List[str] = Field(default_factory=list,
+                                   description="L1, L2, L3, clean, L4_hard, L4_taint (taint and exposure), L4_policy, L5")
     use_judge: bool = Field(False, description="Let Layer 3 call the paid LLM judge for this request (default: no)")
 
 
@@ -61,6 +62,8 @@ class ContextResponse(BaseModel):
     decision: str = Field(..., description="ALLOW, SANITIZE or REVIEW (a context scan never blocks the user)")
     tainted: bool
     session_tainted: bool
+    session_exposed: bool = Field(False, description="The session has read untrusted content: sensitive actions need a confirmation")
+    session_level: str = Field("clean", description="clean, exposed or tainted")
     degraded: bool = False
     chunks: List[Dict[str, Any]]
     sanitized_context: str = Field("", description="Surviving text, delimited and datamarked, to place in the prompt")
@@ -92,8 +95,17 @@ class ActionResponse(BaseModel):
     latency_ms: float
     validated_data: Optional[Dict[str, Any]] = None
     tainted: bool = False
+    exposed: bool = False
+    session_level: str = Field("clean", description="clean, exposed or tainted")
+    provenance: List[Dict[str, Any]] = Field(default_factory=list,
+                                             description="Untrusted sources the session read before the action")
+    value_provenance: List[Dict[str, Any]] = Field(
+        default_factory=list,
+        description="Per destination value (account, order...): origin trusted (typed by the user or saved), "
+                    "untrusted (seen only in untrusted content, with where) or unknown")
     review_id: Optional[str] = Field(None, description="Set when the action waits for a human decision")
-    check: Optional[str] = Field(None, description="hard_rule, taint, policy, rate_limit or none")
+    review_by: Optional[str] = Field(None, description="Who confirms a REVIEW: user (the customer) or staff")
+    check: Optional[str] = Field(None, description="hard_rule, taint, exposure, policy, rate_limit or none")
 
 class ReviewDecisionRequest(BaseModel):
     approve: bool

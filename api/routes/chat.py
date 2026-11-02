@@ -29,6 +29,18 @@ def debug_options(user: AuthUser, skip_layers, use_judge):
     if skip_layers and not demo_mode():
         raise HTTPException(status_code=403, detail="Layer switches are off. Start the API with FIREWALL_DEMO_MODE=1")
     return list(skip_layers), bool(use_judge)
+
+
+def require_session(req) -> None:
+    """With FIREWALL_REQUIRE_SESSION=1, /context and /action must name their session. Without it, untrusted content
+    read under a default or missing session never reaches the action it provokes, and Layer 4 cannot ask for a
+    confirmation (fail open). Off by default so older clients keep working."""
+    if os.environ.get("FIREWALL_REQUIRE_SESSION", "") != "1":
+        return
+    if "session_id" not in req.model_fields_set or not req.session_id or req.session_id == "session_default":
+        raise HTTPException(status_code=422, detail="session_id is required (FIREWALL_REQUIRE_SESSION=1)")
+
+
 from firewall.judge import build_judge_from_env
 
 orchestrator = FirewallOrchestrator(layer3=build_judge_from_env())
@@ -36,8 +48,11 @@ orchestrator = FirewallOrchestrator(layer3=build_judge_from_env())
 @router.post("/message", response_model=ChatResponse)
 def process_message(req: ChatRequest, current_user: AuthUser = Depends(get_current_user)):
     skip, judge = debug_options(current_user, req.skip_layers, req.use_judge)
-    result = orchestrator.process_input(req.text, skip=skip, use_judge=judge)
-    
+    # Values the user types are remembered for their session (argument provenance, Layer 4). Only for a session the
+    # client named: the shared default session would let one user's account number clear another user's transfer.
+    named = "session_id" in req.model_fields_set and req.session_id and req.session_id != "session_default"
+    result = orchestrator.process_input(req.text, skip=skip, use_judge=judge, session_id=req.session_id if named else None)
+
     if result["decision"] in ("BLOCK", "REVIEW"):
         last_step = result["trace"][-1] if result["trace"] else {}
         conf = last_step.get("confidence", 1.0)
@@ -119,6 +134,7 @@ def check_output(req: OutputRequest, current_user: AuthUser = Depends(get_curren
 @router.post("/context", response_model=ContextResponse)
 def process_context(req: ContextRequest, current_user: AuthUser = Depends(get_current_user)):
     """Scan untrusted content (email, web, RAG, tool output) before it is given to the agent."""
+    require_session(req)
     skip, judge = debug_options(current_user, req.skip_layers, req.use_judge)
     result = orchestrator.process_context([c.model_dump() for c in req.chunks], session_id=req.session_id,
                                           skip=skip, use_judge=judge)
@@ -132,12 +148,14 @@ def process_context(req: ContextRequest, current_user: AuthUser = Depends(get_cu
                 session_id=req.session_id, user_id=req.user_id, decision="SANITIZE")
     return ContextResponse(
         decision=result["decision"], tainted=result["tainted"], session_tainted=result["session_tainted"],
+        session_exposed=result["session_exposed"], session_level=result["session_level"],
         degraded=result["degraded"], chunks=result["chunks"], sanitized_context=result["sanitized_context"],
         total_latency_ms=result["total_latency_ms"])
 
 
 @router.post("/action", response_model=ActionResponse)
 def process_action(req: ActionRequest, current_user: AuthUser = Depends(get_current_user)):
+    require_session(req)
     skip, _ = debug_options(current_user, req.skip_layers, False)
     result = orchestrator.validate_action(req.action_type, req.payload, user=current_user, session_id=req.session_id, skip=skip)
     if result["decision"] in ("BLOCK", "REVIEW"):
@@ -159,7 +177,12 @@ def process_action(req: ActionRequest, current_user: AuthUser = Depends(get_curr
         latency_ms=result["latency_ms"],
         validated_data=result.get("validated_data"),
         tainted=result.get("tainted", False),
+        exposed=result.get("exposed", False),
+        session_level=result.get("session_level", "clean"),
+        provenance=result.get("provenance", []),
+        value_provenance=result.get("value_provenance", []),
         review_id=result.get("review_id"),
+        review_by=result.get("review_by"),
         check=result.get("check"),
     )
 
@@ -167,16 +190,28 @@ def process_action(req: ActionRequest, current_user: AuthUser = Depends(get_curr
 REVIEWER_ROLES = {"supervisor", "finance_lead", "security_admin", "admin"}
 
 
+def _is_reviewer(user: AuthUser) -> bool:
+    return bool(REVIEWER_ROLES & {r.lower() for r in user.roles})
+
+
 @router.get("/review")
 def list_review(status: str = "pending", current_user: AuthUser = Depends(get_current_user)):
-    """Actions waiting for a human decision. `status` is pending, approved, rejected or all."""
-    return orchestrator.review_queue.list(None if status == "all" else status)
+    """Actions waiting for a human decision. `status` is pending, approved, rejected or all.
+    Reviewers see every item; anyone else sees only their own."""
+    items = orchestrator.review_queue.list(None if status == "all" else status)
+    if _is_reviewer(current_user):
+        return items
+    return [i for i in items if i.get("user_id") == current_user.user_id]
 
 
 @router.post("/review/{item_id}/decision")
 def decide_review(item_id: str, req: ReviewDecisionRequest, current_user: AuthUser = Depends(get_current_user)):
-    if not REVIEWER_ROLES & {r.lower() for r in current_user.roles}:
-        raise HTTPException(status_code=403, detail="Only supervisors, finance leads or security admins can decide")
+    """Reviewers decide any item. The customer may decide only their own items marked review_by "user"."""
+    if not _is_reviewer(current_user):
+        item = orchestrator.review_queue.get(item_id)
+        own = item is not None and item.get("review_by") == "user" and item.get("user_id") == current_user.user_id
+        if not own:
+            raise HTTPException(status_code=403, detail="Only supervisors, finance leads or security admins can decide")
     item = orchestrator.review_queue.decide(item_id, req.approve, reviewer=current_user.username, note=req.note)
     if item is None:
         raise HTTPException(status_code=404, detail="No pending review item with that id")

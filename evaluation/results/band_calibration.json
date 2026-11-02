@@ -1,8 +1,8 @@
 {
-  "model": "models\\l2_multilingual\\artifacts",
-  "threshold": 0.9119,
+  "model": "models\\l2_multilingual\\artifacts_v3b",
+  "threshold": 0.6473,
   "dev_rows": {
-    "validation": 2814,
+    "validation": 3138,
     "external_dev": 99,
     "vi_dev": 139
   },
@@ -10,69 +10,204 @@
     "max_safe_share_above_high": 0.011,
     "min_attack_to_safe_in_allow_band": 2.0
   },
-  "escalate_low": 0.3,
-  "escalate_high": 0.992,
-  "soft_block_below": 0.992,
+  "escalate_low": 0.45,
+  "escalate_high": 0.957,
+  "soft_block_below": 0.957,
   "dev_counts": {
-    "attacks": 1525,
-    "safe": 1527
+    "attacks": 1687,
+    "safe": 1689
   },
   "allow_band": {
-    "attacks_in_band": 26,
-    "safe_in_band": 12,
-    "attacks_missed_below_threshold": 48
+    "attacks_in_band": 3,
+    "safe_in_band": 1,
+    "attacks_missed_below_threshold": 49
   },
   "block_band": {
-    "attacks": 81,
-    "safe": 16,
-    "attacks_at_or_above_high": 1396,
-    "safe_at_or_above_high": 13
+    "attacks": 38,
+    "safe": 15,
+    "attacks_at_or_above_high": 1600,
+    "safe_at_or_above_high": 17
   },
   "safe_share_by_score": [
     {
-      "from": 0.912,
-      "flagged": 1506,
-      "safe_share": 0.0193
+      "from": 0.647,
+      "flagged": 1670,
+      "safe_share": 0.0192
     },
     {
-      "from": 0.922,
-      "flagged": 1503,
+      "from": 0.657,
+      "flagged": 1668,
       "safe_share": 0.0186
     },
     {
-      "from": 0.932,
-      "flagged": 1501,
+      "from": 0.667,
+      "flagged": 1668,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.677,
+      "flagged": 1667,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.687,
+      "flagged": 1667,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.697,
+      "flagged": 1667,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.707,
+      "flagged": 1666,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.717,
+      "flagged": 1666,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.727,
+      "flagged": 1666,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.737,
+      "flagged": 1663,
       "safe_share": 0.018
     },
     {
-      "from": 0.942,
-      "flagged": 1500,
+      "from": 0.747,
+      "flagged": 1663,
       "safe_share": 0.018
     },
     {
-      "from": 0.952,
-      "flagged": 1497,
-      "safe_share": 0.0174
+      "from": 0.757,
+      "flagged": 1662,
+      "safe_share": 0.0181
     },
     {
-      "from": 0.962,
-      "flagged": 1492,
-      "safe_share": 0.0168
+      "from": 0.767,
+      "flagged": 1661,
+      "safe_share": 0.0175
     },
     {
-      "from": 0.972,
-      "flagged": 1481,
-      "safe_share": 0.0155
+      "from": 0.777,
+      "flagged": 1661,
+      "safe_share": 0.0175
     },
     {
-      "from": 0.982,
+      "from": 0.787,
+      "flagged": 1661,
+      "safe_share": 0.0175
+    },
+    {
+      "from": 0.797,
+      "flagged": 1661,
+      "safe_share": 0.0175
+    },
+    {
+      "from": 0.807,
+      "flagged": 1661,
+      "safe_share": 0.0175
+    },
+    {
+      "from": 0.817,
+      "flagged": 1660,
+      "safe_share": 0.0169
+    },
+    {
+      "from": 0.827,
+      "flagged": 1660,
+      "safe_share": 0.0169
+    },
+    {
+      "from": 0.837,
+      "flagged": 1660,
+      "safe_share": 0.0169
+    },
+    {
+      "from": 0.847,
+      "flagged": 1660,
+      "safe_share": 0.0169
+    },
+    {
+      "from": 0.857,
+      "flagged": 1660,
+      "safe_share": 0.0169
+    },
+    {
+      "from": 0.867,
+      "flagged": 1656,
+      "safe_share": 0.0163
+    },
+    {
+      "from": 0.877,
+      "flagged": 1652,
+      "safe_share": 0.0157
+    },
+    {
+      "from": 0.887,
+      "flagged": 1652,
+      "safe_share": 0.0157
+    },
+    {
+      "from": 0.897,
+      "flagged": 1650,
+      "safe_share": 0.0158
+    },
+    {
+      "from": 0.907,
+      "flagged": 1647,
+      "safe_share": 0.0152
+    },
+    {
+      "from": 0.917,
+      "flagged": 1644,
+      "safe_share": 0.0146
+    },
+    {
+      "from": 0.927,
+      "flagged": 1642,
+      "safe_share": 0.0146
+    },
+    {
+      "from": 0.937,
+      "flagged": 1638,
+      "safe_share": 0.014
+    },
+    {
+      "from": 0.947,
+      "flagged": 1629,
+      "safe_share": 0.0123
+    },
+    {
+      "from": 0.957,
+      "flagged": 1617,
+      "safe_share": 0.0105
+    },
+    {
+      "from": 0.967,
+      "flagged": 1600,
+      "safe_share": 0.0094
+    },
+    {
+      "from": 0.977,
+      "flagged": 1553,
+      "safe_share": 0.0058
+    },
+    {
+      "from": 0.987,
       "flagged": 1470,
-      "safe_share": 0.0143
+      "safe_share": 0.0048
     },
     {
-      "from": 0.992,
-      "flagged": 1409,
-      "safe_share": 0.0092
+      "from": 0.997,
+      "flagged": 0,
+      "safe_share": 0.0
     }
   ]
 }

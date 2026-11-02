@@ -1,0 +1,91 @@
+{
+  "seed": 0,
+  "problems": [],
+  "balance": {
+    "dropped": 2660,
+    "residual_imbalance": {}
+  },
+  "banking_bases_added": {
+    "chat": 731,
+    "doc": 102
+  },
+  "rows_by_split_label": {
+    "train": {
+      "0": 11414,
+      "1": 11414
+    },
+    "validation": {
+      "0": 1569,
+      "1": 1569
+    },
+    "test": {
+      "0": 1508,
+      "1": 1508
+    }
+  },
+  "rows_by_source": {
+    "train": {
+      "dolly_chat": 5781,
+      "dolly_doc": 5724,
+      "bipia_doc": 2902,
+      "xquad_vi_chat": 2336,
+      "banking_chat": 2139,
+      "tensortrust_pure": 1500,
+      "xquad_vi_doc": 641,
+      "llm_gen_vi": 554,
+      "tmdeptrai": 535,
+      "hard_cases": 442,
+      "banking_doc": 274
+    },
+    "validation": {
+      "dolly_doc": 781,
+      "dolly_chat": 686,
+      "xquad_vi_chat": 520,
+      "bipia_doc": 322,
+      "banking_chat": 254,
+      "tensortrust_pure": 187,
+      "xquad_vi_doc": 121,
+      "tmdeptrai": 87,
+      "banking_doc": 65,
+      "llm_gen_vi": 60,
+      "hard_cases": 55
+    },
+    "test": {
+      "dolly_chat": 803,
+      "dolly_doc": 742,
+      "bipia_doc": 403,
+      "xquad_vi_chat": 359,
+      "banking_chat": 252,
+      "tensortrust_pure": 187,
+      "xquad_vi_doc": 95,
+      "tmdeptrai": 48,
+      "llm_gen_vi": 48,
+      "hard_cases": 47,
+      "banking_doc": 32
+    }
+  },
+  "attack_origin_train": {
+    "public_attack": 7459,
+    "ai_vi_attack": 3190,
+    "llm_generated": 592,
+    "hard_case": 173
+  },
+  "lang_by_split": {
+    "train": {
+      "en": 14686,
+      "vi": 5556,
+      "mixed": 2586
+    },
+    "validation": {
+      "en": 1866,
+      "vi": 904,
+      "mixed": 368
+    },
+    "test": {
+      "en": 1966,
+      "vi": 726,
+      "mixed": 324
+    }
+  },
+  "dataset_sha256": "a6968ddc27aaf1f991812a6f50f5440d0f0aa58b159e2211c12aa8acc72702f7"
+}

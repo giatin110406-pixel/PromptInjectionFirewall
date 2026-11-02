@@ -1,0 +1,91 @@
+{
+  "split": "dev",
+  "n_flows": 48,
+  "cleared_by_provenance": 18,
+  "budget": 0.02,
+  "floor": 0.3,
+  "chosen": 0.3,
+  "table": [
+    {
+      "risk_low": 0.05,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.1,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.15,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.2,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.25,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.3,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.35,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.4,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.45,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.5,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.55,
+      "added_questions": 0,
+      "added_friction": 0.0
+    },
+    {
+      "risk_low": 0.6,
+      "added_questions": 0,
+      "added_friction": 0.0
+    }
+  ],
+  "cleared_risks": [
+    0.0133,
+    0.0161,
+    0.0162,
+    0.0173,
+    0.0179,
+    0.0195,
+    0.0199,
+    0.024,
+    0.0242,
+    0.0243,
+    0.0244,
+    0.0246,
+    0.0247,
+    0.0247,
+    0.0282,
+    0.0284,
+    0.0294,
+    0.0309
+  ],
+  "note": "AI-generated flows: pipeline check, not a result on human-written data"
+}

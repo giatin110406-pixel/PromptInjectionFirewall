@@ -1,0 +1,120 @@
+{
+  "date": "2026-11-02",
+  "timezone": "Asia/Bangkok",
+  "author": "OpenAI Codex",
+  "entry_point": "docs/handoff_noi_dung_ket_qua_vi.md",
+  "status": {
+    "H1": "9/9 API checks in supplied report; integrated work-case openers preserved; no browser test",
+    "H2": "48 synthetic pilot rows; human-authored requirement NOT MET",
+    "H3": "96 synthetic pilot flows; team-authored requirement NOT MET",
+    "H4": "Implemented; 10 pytest tests passed",
+    "H5": "1360 synthetic rows, 680 balanced pairs; structural and overlap checks passed; no training performed",
+    "H6": "Implemented; 10 pytest tests passed; 32 scenarios x 200 = 6400 real-model candidate trials; rates audited from history; measured policy snapshot, not latest workspace policy"
+  },
+  "policy_snapshot": "evaluation/results/handoff/h6_policy_at_start.yaml",
+  "current_policy_matches_measured_run": false,
+  "policy_note": "No rollback performed. Workspace policy gained risk_low and data_access provenance_fields while the static-engine run was in flight. See adaptive.policy_changes_after_start and docs/handoff_h6_vi.md.",
+  "prerequisites": "Existing evaluation/eval_v4.py Runner, evaluation/model_variant.py, engine/model artifacts and base v4 report; these are part of the recipient project, not replaced by this archive.",
+  "files": {
+    "frontend/security-console/lib/demo_scenarios.json": {
+      "sha256": "259e43190f1a6e3ff1c391cf01378c2d89abb4210dc29e4171d4a764619215e9",
+      "bytes": 10599
+    },
+    "data/eval/v4/attack_scenarios_vi.jsonl": {
+      "sha256": "fd1a0c3edc47f0022be71f3d9fcd9f34c45e49a26566d3b3268f5671f0c92a3f",
+      "bytes": 33233
+    },
+    "data/eval/v4/friction_flows.jsonl": {
+      "sha256": "f62134fe70f3dcc548a81c47480e9189b47c35cc9a393790473cd4577988df1d",
+      "bytes": 68524
+    },
+    "evaluation/adaptive_transforms.py": {
+      "sha256": "747e7de19638cb4447a36f721e2457499ff82ce700692234eb202c879c70f9fb",
+      "bytes": 6114
+    },
+    "data/raw/handoff/tool_json.jsonl": {
+      "sha256": "3cf9dc4a2613abd9c7b0be21c0747095008b0be80baaa14c980fe1ce2bc421c4",
+      "bytes": 330100
+    },
+    "data/raw/handoff/vi_cskh.jsonl": {
+      "sha256": "78acf34e6eb6e1e51dc46cff657f66093d2f8000210a62b8200452e6032ebc19",
+      "bytes": 229570
+    },
+    "data/eval/v4/README.md": {
+      "sha256": "ffea4852ae16740ec8ae8705100804fed26c5d6db1b070f6a5a6edf1d5be4342",
+      "bytes": 2360
+    },
+    "data/raw/handoff/README.md": {
+      "sha256": "43d5ca55808c1aadb926ce9ca907533e938151020cecc9578364fd578bafcd70",
+      "bytes": 2333
+    },
+    "docs/handoff_noi_dung_ket_qua_vi.md": {
+      "sha256": "24c021ffb911b8a1be522b6667b91421ed5d2b0abdad15eba964895429fd30f2",
+      "bytes": 10407
+    },
+    "docs/handoff_h6_vi.md": {
+      "sha256": "720f363c5c20d1bd2b5cddbbef27c2e967a01c125ba96b835e41bf707565f777",
+      "bytes": 9650
+    },
+    "data/scripts/build_handoff_content.py": {
+      "sha256": "6ad85319bd555c75dad96ae68dd1fce31daa5ddc19a0427085a4ee83438f5e98",
+      "bytes": 51113
+    },
+    "evaluation/validate_handoff_content.py": {
+      "sha256": "e4d42a9861e5c0a6b0d13991f14d64959d4f320d6d301bf57d0a128aa5579892",
+      "bytes": 13374
+    },
+    "evaluation/check_handoff_demo.py": {
+      "sha256": "fbd4c495fc52afe9bab20c898a1ad047a38d0acec2486cbdcc2ee84712249939",
+      "bytes": 4488
+    },
+    "evaluation/eval_v4_adaptive.py": {
+      "sha256": "7b3727343fa49c8ef49143b1fee697b93fb5c143e1ce537ea82181a46e9fa2d4",
+      "bytes": 15233
+    },
+    "evaluation/validate_adaptive_results.py": {
+      "sha256": "a7facb7c512ae351d98adb860961caeb3c48f382920cdabece8eae27cf235ed2",
+      "bytes": 7096
+    },
+    "tests/test_adaptive_transforms.py": {
+      "sha256": "7e9189ac58093001315a756fcc49eaeea2217565f38c40cd4e79a5110e2044f0",
+      "bytes": 3145
+    },
+    "tests/test_eval_v4_adaptive.py": {
+      "sha256": "48db17abc7e6f0ee9a9609ec057b84b34a67301fdf059ac514c2835d7a5f4646",
+      "bytes": 4371
+    },
+    "requirements.txt": {
+      "sha256": "16d9674df1cb560d87cecf2209ead9e9af8e1250e0f9c0ba1bbad3ebc13e9209",
+      "bytes": 536
+    },
+    "evaluation/results/handoff/content_validation.json": {
+      "sha256": "3d3f473e95f983da3f1687a855291f99a82b4cb83b80b5e41ab57815a943cd05",
+      "bytes": 3064
+    },
+    "evaluation/results/handoff/demo_api_check.json": {
+      "sha256": "1470ae9fcff1cd17fbbc7b7b9b8f46637f91ff0c78f529633f9de9d929d23d37",
+      "bytes": 32855
+    },
+    "evaluation/results/handoff/h6_policy_at_start.yaml": {
+      "sha256": "dfcd208fdefc1050f6417266d36f167cf3e7e2032353d286d69c5754769babc4",
+      "bytes": 5793
+    },
+    "evaluation/results/handoff/h6_validation_v3b.json": {
+      "sha256": "ac04cbae78c10a0333521e85c4bc4a8d51617b103aaea5a569141cedcef363e9",
+      "bytes": 951
+    },
+    "evaluation/results/v4_eval_v3b.json": {
+      "sha256": "98d343224d5293c4251ebd15b92d07a7133740826c41e653d4f824289c983091",
+      "bytes": 147375
+    },
+    "evaluation/results/v4_adaptive_v3b.png": {
+      "sha256": "f6be3ea68dc15eaf6538336b0d3895e22bbdf4910df5fef9be97a67ebafd3a34",
+      "bytes": 67514
+    },
+    "evaluation/results/v4_adaptive_v3b_checkpoint.json": {
+      "sha256": "eeb4a5ee6dfab29e69989986072f1368b7aa08a16151ec1705d6970b566b18ba",
+      "bytes": 3551914
+    }
+  }
+}

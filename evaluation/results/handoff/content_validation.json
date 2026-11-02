@@ -1,0 +1,115 @@
+{
+  "structural_checks_passed": true,
+  "errors": [],
+  "human_authorship_requirements": {
+    "H2": "NOT MET: Codex synthetic pilot; requires independent human-authored replacement",
+    "H3": "NOT MET: Codex synthetic pilot; requires team-authored replacement"
+  },
+  "H1": {
+    "cases": 9,
+    "api_report": "evaluation/results/handoff/demo_api_check.json"
+  },
+  "H2": {
+    "rows": 48,
+    "explicit": {
+      "true": 32,
+      "false": 16
+    },
+    "channels": {
+      "email": 11,
+      "web": 8,
+      "document": 12,
+      "review": 5,
+      "tool_json": 12
+    },
+    "actions": {
+      "transfer_money": 12,
+      "refund": 9,
+      "data_access": 7,
+      "role_escalation": 4,
+      "voucher_apply": 5,
+      "password_reset": 5,
+      "account_recovery": 6
+    }
+  },
+  "H3": {
+    "rows": 96,
+    "splits": {
+      "dev": 48,
+      "test": 48
+    },
+    "languages": {
+      "vi": 48,
+      "en": 48
+    },
+    "destination_from": {
+      "user": 48,
+      "content": 32,
+      "saved": 16
+    },
+    "families": 24
+  },
+  "H4": {
+    "vi": 256,
+    "en": 256
+  },
+  "H5": {
+    "tool_json": {
+      "rows": 640,
+      "pairs": 320,
+      "labels": {
+        "1": 320,
+        "0": 320
+      },
+      "families": 16,
+      "min_pair_length_ratio": 0.92,
+      "max_pair_length_ratio": 1.044
+    },
+    "vi_cskh": {
+      "rows": 720,
+      "pairs": 360,
+      "labels": {
+        "1": 360,
+        "0": 360
+      },
+      "families": 36,
+      "min_pair_length_ratio": 0.851,
+      "max_pair_length_ratio": 1.052
+    }
+  },
+  "overlap": {
+    "protected_texts": 11921,
+    "exact_matches": [],
+    "copied_sentences": [],
+    "method": "casefold+whitespace exact/sentence match; char TF-IDF 3-5 grams, min_df=2, max_features=100000, threshold=0.7",
+    "highest_train_eval_similarity": 0.4058,
+    "high_similarity_candidates": [],
+    "limit": "Textual overlap only; does not prove semantic independence. Existing H1 legit cases excluded from new-text audit."
+  },
+  "files": {
+    "frontend/security-console/lib/demo_scenarios.json": {
+      "bytes": 10599,
+      "sha256": "259e43190f1a6e3ff1c391cf01378c2d89abb4210dc29e4171d4a764619215e9"
+    },
+    "data/eval/v4/attack_scenarios_vi.jsonl": {
+      "bytes": 33233,
+      "sha256": "fd1a0c3edc47f0022be71f3d9fcd9f34c45e49a26566d3b3268f5671f0c92a3f"
+    },
+    "data/eval/v4/friction_flows.jsonl": {
+      "bytes": 68524,
+      "sha256": "f62134fe70f3dcc548a81c47480e9189b47c35cc9a393790473cd4577988df1d"
+    },
+    "evaluation/adaptive_transforms.py": {
+      "bytes": 6114,
+      "sha256": "747e7de19638cb4447a36f721e2457499ff82ce700692234eb202c879c70f9fb"
+    },
+    "data/raw/handoff/tool_json.jsonl": {
+      "bytes": 330100,
+      "sha256": "3cf9dc4a2613abd9c7b0be21c0747095008b0be80baaa14c980fe1ce2bc421c4"
+    },
+    "data/raw/handoff/vi_cskh.jsonl": {
+      "bytes": 229570,
+      "sha256": "78acf34e6eb6e1e51dc46cff657f66093d2f8000210a62b8200452e6032ebc19"
+    }
+  }
+}

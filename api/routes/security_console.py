@@ -30,6 +30,8 @@ def get_stats(current_user: AuthUser = Depends(get_current_user)) -> Dict[str, A
     engine = chat_routes.orchestrator
     stats["pending_reviews"] = len(engine.review_queue.list("pending"))
     stats["tainted_sessions"] = len(engine.taint.tainted_sessions())
+    stats["exposed_sessions"] = len(engine.taint.exposed_sessions())
+    stats["exposure_mode"] = engine.actions.exposure_mode
     stats["feedback"] = feedback_store.counts()
     return stats
 
@@ -59,15 +61,19 @@ def list_feedback(limit: int = Query(50, ge=1, le=500), kind: str = None,
 
 
 @router.get("/sessions")
-def get_tainted_sessions(current_user: AuthUser = Depends(get_current_user)) -> List[Dict[str, Any]]:
-    """Sessions currently marked TAINT (untrusted content carried an instruction), with the events that tainted them."""
+def get_tainted_sessions(include_exposed: bool = False,
+                         current_user: AuthUser = Depends(get_current_user)) -> List[Dict[str, Any]]:
+    """Sessions currently marked TAINT (untrusted content carried an instruction), with the events that tainted them.
+    `include_exposed=true` also lists the sessions that only read untrusted content (`level` tells them apart)."""
     if "security_admin" not in current_user.roles:
         from fastapi import HTTPException, status
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
     from api.routes import chat as chat_routes
 
     engine = chat_routes.orchestrator
-    return [dict(engine.taint.info(sid), session_id=sid) for sid in engine.taint.tainted_sessions()]
+    ids = engine.taint.exposed_sessions() if include_exposed else engine.taint.tainted_sessions()
+    return [dict(engine.taint.info(sid), session_id=sid, values=engine.values.summary(sid),
+                 session_risk=engine.turn_risk.info(sid)) for sid in ids]
 
 
 @router.get("/health")

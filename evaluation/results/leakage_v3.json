@@ -1,0 +1,354 @@
+{
+  "dataset": "data/processed_public (dataset v3)",
+  "rows": {
+    "train": 20382,
+    "validation": 2814,
+    "test": 2736
+  },
+  "near_threshold": 0.8,
+  "flag_threshold": 0.8,
+  "length_style_auc": {
+    "all": {
+      "length_auc": 0.5221,
+      "style_auc": 0.6335,
+      "noise_floor": 0.5032
+    },
+    "split:train": {
+      "length_auc": 0.5284,
+      "style_auc": 0.6478,
+      "noise_floor": 0.5105
+    },
+    "split:validation": {
+      "length_auc": 0.5012,
+      "style_auc": 0.5801,
+      "noise_floor": 0.5028
+    },
+    "split:test": {
+      "length_auc": 0.504,
+      "style_auc": 0.5711,
+      "noise_floor": 0.5177
+    },
+    "source:bipia_doc": {
+      "length_auc": 0.5643,
+      "style_auc": 0.6005,
+      "noise_floor": 0.514,
+      "n": 3617
+    },
+    "source:dolly_chat": {
+      "length_auc": 0.6595,
+      "style_auc": 0.7353,
+      "noise_floor": 0.5082,
+      "n": 7255
+    },
+    "source:dolly_doc": {
+      "length_auc": 0.5665,
+      "style_auc": 0.6556,
+      "noise_floor": 0.505,
+      "n": 7231
+    },
+    "source:hard_cases": {
+      "length_auc": 0.5627,
+      "style_auc": 0.7352,
+      "noise_floor": 0.5274,
+      "n": 544
+    },
+    "source:llm_gen_vi": {
+      "length_auc": 0.6489,
+      "style_auc": 0.6908,
+      "noise_floor": 0.5288,
+      "n": 662
+    },
+    "source:tensortrust_pure": {
+      "note": "một nhãn duy nhất, không đo được",
+      "n": 1874
+    },
+    "source:tmdeptrai": {
+      "length_auc": 0.6081,
+      "style_auc": 0.6514,
+      "noise_floor": 0.5253,
+      "n": 670
+    },
+    "source:xquad_vi_chat": {
+      "length_auc": 0.7132,
+      "style_auc": 0.7814,
+      "noise_floor": 0.5068,
+      "n": 3220
+    },
+    "source:xquad_vi_doc": {
+      "length_auc": 0.5426,
+      "style_auc": 0.5653,
+      "noise_floor": 0.5156,
+      "n": 859
+    },
+    "lang:en": {
+      "length_auc": 0.5136,
+      "style_auc": 0.7045,
+      "noise_floor": 0.5047
+    },
+    "lang:mixed": {
+      "length_auc": 0.5003,
+      "style_auc": 0.5409,
+      "noise_floor": 0.513
+    },
+    "lang:vi": {
+      "length_auc": 0.6448,
+      "style_auc": 0.6889,
+      "noise_floor": 0.5034
+    }
+  },
+  "length_chars": {
+    "train": {
+      "0": {
+        "mean": 773.1,
+        "median": 601.0
+      },
+      "1": {
+        "mean": 823.1,
+        "median": 605.0
+      }
+    },
+    "validation": {
+      "0": {
+        "mean": 653.3,
+        "median": 496.0
+      },
+      "1": {
+        "mean": 621.6,
+        "median": 241.0
+      }
+    },
+    "test": {
+      "0": {
+        "mean": 700.5,
+        "median": 591.5
+      },
+      "1": {
+        "mean": 663.7,
+        "median": 356.5
+      }
+    }
+  },
+  "label_by_split_lang": {
+    "test/en": {
+      "0": 966,
+      "1": 966
+    },
+    "test/mixed": {
+      "1": 144,
+      "0": 144
+    },
+    "test/vi": {
+      "0": 258,
+      "1": 258
+    },
+    "train/en": {
+      "0": 7092,
+      "1": 7092
+    },
+    "train/mixed": {
+      "1": 1165,
+      "0": 1165
+    },
+    "train/vi": {
+      "0": 1934,
+      "1": 1934
+    },
+    "validation/en": {
+      "0": 899,
+      "1": 899
+    },
+    "validation/mixed": {
+      "1": 164,
+      "0": 164
+    },
+    "validation/vi": {
+      "0": 344,
+      "1": 344
+    }
+  },
+  "exact_duplicate_texts_across_splits": {
+    "train vs validation": 0,
+    "train vs test": 1,
+    "validation vs test": 0
+  },
+  "ids_in_more_than_one_split": {
+    "orig_id": 0,
+    "template_id": 0
+  },
+  "near_duplicates_vs_train": {
+    "insert_attack:validation": {
+      "n": 411,
+      "near": 21,
+      "share": 0.0511
+    },
+    "insert_benign:validation": {
+      "n": 358,
+      "near": 2,
+      "share": 0.0056
+    },
+    "base_and_raw_texts:validation": {
+      "n": 1510,
+      "near": 71,
+      "share": 0.047
+    },
+    "insert_attack:test": {
+      "n": 447,
+      "near": 12,
+      "share": 0.0268
+    },
+    "insert_benign:test": {
+      "n": 377,
+      "near": 3,
+      "share": 0.008
+    },
+    "base_and_raw_texts:test": {
+      "n": 1506,
+      "near": 73,
+      "share": 0.0485
+    }
+  },
+  "eval_sets_vs_v3_train": {
+    "deepset": {
+      "rows": 662,
+      "near_duplicate_of_train": {
+        "n": 662,
+        "near": 2,
+        "share": 0.003
+      },
+      "exact_in_train_pool": 0
+    },
+    "grayswan_ipi": {
+      "rows": 95,
+      "near_duplicate_of_train": {
+        "n": 95,
+        "near": 0,
+        "share": 0.0
+      },
+      "exact_in_train_pool": 0
+    },
+    "multijail_vi": {
+      "rows": 313,
+      "near_duplicate_of_train": {
+        "n": 313,
+        "near": 0,
+        "share": 0.0
+      },
+      "exact_in_train_pool": 0
+    },
+    "multijail_en": {
+      "rows": 310,
+      "near_duplicate_of_train": {
+        "n": 310,
+        "near": 0,
+        "share": 0.0
+      },
+      "exact_in_train_pool": 0
+    },
+    "holdout_tensortrust": {
+      "rows": 396,
+      "near_duplicate_of_train": {
+        "n": 396,
+        "near": 7,
+        "share": 0.0177
+      },
+      "exact_in_train_pool": 0
+    },
+    "holdout_injecagent_base": {
+      "rows": 391,
+      "near_duplicate_of_train": {
+        "n": 391,
+        "near": 1,
+        "share": 0.0026
+      },
+      "exact_in_train_pool": 0
+    },
+    "holdout_dolly_instr": {
+      "rows": 1000,
+      "near_duplicate_of_train": {
+        "n": 1000,
+        "near": 11,
+        "share": 0.011
+      },
+      "exact_in_train_pool": 5
+    },
+    "holdout_dolly_doc": {
+      "rows": 300,
+      "near_duplicate_of_train": {
+        "n": 300,
+        "near": 30,
+        "share": 0.1
+      },
+      "exact_in_train_pool": 23
+    },
+    "holdout_xquad_q": {
+      "rows": 128,
+      "near_duplicate_of_train": {
+        "n": 128,
+        "near": 0,
+        "share": 0.0
+      },
+      "exact_in_train_pool": 0
+    },
+    "holdout_xquad_doc": {
+      "rows": 27,
+      "near_duplicate_of_train": {
+        "n": 27,
+        "near": 0,
+        "share": 0.0
+      },
+      "exact_in_train_pool": 0
+    }
+  },
+  "eval_sets_vs_other_eval_sets": {
+    "deepset": {
+      "n": 662,
+      "near": 0,
+      "share": 0.0
+    },
+    "grayswan_ipi": {
+      "n": 95,
+      "near": 0,
+      "share": 0.0
+    },
+    "multijail_vi": {
+      "n": 313,
+      "near": 0,
+      "share": 0.0
+    },
+    "multijail_en": {
+      "n": 310,
+      "near": 0,
+      "share": 0.0
+    },
+    "holdout_tensortrust": {
+      "n": 396,
+      "near": 0,
+      "share": 0.0
+    },
+    "holdout_injecagent_base": {
+      "n": 391,
+      "near": 0,
+      "share": 0.0
+    },
+    "holdout_dolly_instr": {
+      "n": 1000,
+      "near": 0,
+      "share": 0.0
+    },
+    "holdout_dolly_doc": {
+      "n": 300,
+      "near": 0,
+      "share": 0.0
+    },
+    "holdout_xquad_q": {
+      "n": 128,
+      "near": 0,
+      "share": 0.0
+    },
+    "holdout_xquad_doc": {
+      "n": 27,
+      "near": 0,
+      "share": 0.0
+    }
+  }
+}

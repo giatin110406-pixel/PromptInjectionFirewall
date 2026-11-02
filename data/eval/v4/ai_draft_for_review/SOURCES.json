@@ -1,0 +1,60 @@
+{
+  "research_date": "2026-11-02",
+  "usage": "Design and document-format references only. No public utterance, benchmark attack or complaint narrative was copied or translated into a dataset row.",
+  "row_provenance": "Every row remains AI-generated; source_refs identifies design references, not original public sample IDs.",
+  "sources": {
+    "banking77": {
+      "title": "PolyAI task-specific datasets / BANKING77",
+      "url": "https://github.com/PolyAI-LDN/task-specific-datasets",
+      "sample_inspected": "https://raw.githubusercontent.com/PolyAI-LDN/task-specific-datasets/master/banking_data/test.csv",
+      "license_observed": "Repository: CC BY 4.0",
+      "application": "Varied short, contextual banking requests; use of intent categories to avoid treating every banking message as a single transfer template. No utterances imported.",
+      "limitations": "Intent queries are not complete transaction workflows or bank policy. This source is not evidence that the new Vietnamese rows were written by humans."
+    },
+    "multiwoz": {
+      "title": "MultiWOZ",
+      "url": "https://github.com/budzianowski/multiwoz",
+      "license_url": "https://github.com/budzianowski/multiwoz/blob/master/LICENSE",
+      "license_observed": "Top-level repository license: MIT; check the selected data version before redistributing actual data",
+      "application": "Task context, follow-up corrections and varied numbers of user turns in a multi-domain setting; no dialogue copied or translated.",
+      "limitations": "The original corpus is described as human-human dialogue. These newly created rows are not original MultiWOZ data and cannot inherit a human-authored label."
+    },
+    "cfpb_complaints": {
+      "title": "CFPB Consumer Complaint Database",
+      "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
+      "license_observed": "Official site states published complaint data is freely available to use, analyze and build on",
+      "application": "Business distinctions among payment disputes, reimbursements and corrected charges; no narrative or personal data imported.",
+      "limitations": "CFPB warns that complaints are not a statistical sample of all consumer experiences; no representativeness claim is made here."
+    },
+    "injecagent": {
+      "title": "InjecAgent",
+      "url": "https://github.com/uiuc-kang-lab/InjecAgent",
+      "paper_url": "https://arxiv.org/abs/2403.02691",
+      "license_observed": "Repository: MIT",
+      "application": "Separate direct harm and data-stealing intentions; model an outbound target action, not only an objectionable instruction.",
+      "limitations": "Already used by the project's existing evaluation. No test case, target wording or source sample reused. Research reference only."
+    },
+    "agentdojo": {
+      "title": "AgentDojo",
+      "url": "https://github.com/ethz-spylab/agentdojo",
+      "paper_url": "https://arxiv.org/abs/2406.13352",
+      "license_observed": "Repository: MIT",
+      "application": "Workspace, email, collaboration and tool-result trust boundaries; benign outward communication paired with malicious egress intentions.",
+      "limitations": "No suite task or injection text copied. These are project-native synthetic scenarios, not AgentDojo benchmark results."
+    },
+    "stripe_invoices": {
+      "title": "Stripe: Integrate with the Invoicing API",
+      "url": "https://docs.stripe.com/invoicing/integration",
+      "license_observed": "Documentation consulted for workflow; no documentation text or code redistributed as dataset rows",
+      "application": "Realistic invoice states, line items, prior payments and approved partial adjustments; values converted into this project's USD/VND conventions.",
+      "limitations": "The project's action payload is not the Stripe API schema; do not assume Stripe's smallest-currency-unit convention applies to refund.amount here."
+    },
+    "drive_permissions": {
+      "title": "Google Drive API: Share files, folders, and drives",
+      "url": "https://developers.google.com/workspace/drive/api/guides/manage-sharing",
+      "license_observed": "Documentation consulted; examples not copied",
+      "application": "Named recipients, least requested access and separation of released files from private folders. The local permission values remain view/comment/edit.",
+      "limitations": "The local ShareFileRequest is an adapter schema, not a literal Drive permissions.create request."
+    }
+  }
+}

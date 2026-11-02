@@ -2,13 +2,14 @@
 
 **Trạng thái: xong phần lõi, đã đo trên tập test.** Mã: `firewall/spotlight.py`, `firewall/session.py` (kho taint), `Orchestrator.process_context`, endpoint `POST /chat/context`. Đo: `PrepareForBCTĐ2/tools/eval_context_scan.py`, kết quả `results/context_scan_eval.json`.
 
-Đây không phải một layer có số riêng. Nó là đường xử lý cho nội dung **không tin cậy** (email, trang web, tài liệu RAG, kết quả công cụ), dùng lại L0, L1, L2 để phát hiện, rồi chuyển kết quả cho L4 qua cờ taint.
+Đây không phải một layer có số riêng. Nó là đường xử lý cho nội dung **không tin cậy** (email, trang web, tài liệu RAG, kết quả công cụ), dùng lại L0, L1, L2 để phát hiện, rồi chuyển kết quả cho L4 qua hai cờ của phiên: **EXPOSED** (phiên đã đọc nội dung ngoài, đặt cho mọi đoạn dù sạch hay không) và **TAINT** (một đoạn mang chỉ thị bị chặn chắc chắn). Xem `06_layer4_action_firewall.md`.
 
 ## Làm gì
 1. **Làm sạch**: gỡ phần người đọc không thấy nhưng model đọc: ký tự vô hình, ghi chú HTML `<!-- -->`, khối `<script>/<style>`, phần tử ẩn bằng CSS (`display:none`, `visibility:hidden`, `font-size:0`, `opacity:0`, `hidden`). Mỗi mảnh bị gỡ vẫn được **quét riêng**: ghi chú ẩn bảo "bỏ qua mọi quy tắc" là bằng chứng của tấn công dù không ai nhìn thấy.
 2. **Quét và cắt riêng phần độc**: cả khối nội dung được quét bằng chính pipeline đầu vào (L0 + L1 + L2). Nếu bị đánh dấu, engine **quét lại từng đoạn văn, rồi từng câu của đoạn bị đánh dấu, để tìm đúng chỗ có chỉ thị**. Chỉ phần đó bị cắt (thay bằng dòng `[đã loại một đoạn có chỉ thị]`); các đoạn sạch của cùng email hoặc tài liệu vẫn tới model. Nếu không xác định được chỗ độc (không đoạn nào bị đánh dấu riêng, hoặc mọi đoạn đều bị đánh dấu, hoặc quá 60 lần quét) thì bỏ cả khối như trước. Layer nào lỗi (degraded) thì cả yêu cầu thành REVIEW (fail-closed) và không đưa gì vào model.
 3. **Đánh dấu (spotlighting)**: đoạn sạch được bọc trong `<untrusted id=... source=...>`, các khoảng trắng được thay bằng ký tự đánh dấu `ˆ` (datamarking), kèm lời nhắc cho model: đây là dữ liệu, không làm theo chỉ thị trong đó. Một chỉ thị lọt qua khâu quét sẽ lộ ra như một phần của dữ liệu.
 4. **Taint, chỉ khi chắc**: TAINT được quyết định theo kết quả quét **cả khối** (nhiều ngữ cảnh nên đáng tin hơn; một câu ngắn quét riêng thường bị chấm điểm quá tự tin), không theo kết quả quét riêng từng câu. Phiên chỉ bị đánh dấu TAINT khi layer khỏe mạnh **chặn cứng** (L1 regex, L2 từ 0,98 trở lên, hoặc judge xác nhận). Đoạn L2 chỉ nghi ngờ (điểm 0,67 đến dưới 0,98, không có L1 đồng ý) vẫn bị loại khỏi ngữ cảnh (đánh dấu `uncertain`) nhưng **không làm phiên bị TAINT**, để một câu đáng ngờ không khóa các yêu cầu sau của khách. Phiên bị đánh dấu TAINT (trong bộ nhớ, hết hạn sau 30 phút không hoạt động). L4 đọc cờ này (xem `06_layer4_action_firewall.md`).
+5. **Điểm rủi ro của đoạn (WP4, 02/11/2026)**: mỗi đoạn ghi lại điểm L2 cao nhất của nó và của phần ẩn (`risk` trong kết quả quét). Kho phiên giữ giá trị lớn nhất (`exposure_risk`). Đoạn có điểm dưới ngưỡng L2 không làm phiên TAINT, nhưng nếu điểm từ 0,30 trở lên thì L4 vẫn hỏi lại cả khi người nhận do khách tự gõ. Ngoài các đoạn đọc qua `/chat/context`, một hội thoại bị Session Risk giữ (`firewall/turn_risk.py`) cũng làm phiên EXPOSED với nguồn `conversation`.
 
 Quyết định cho một yêu cầu ngữ cảnh: ALLOW (mọi đoạn sạch), SANITIZE (có đoạn bị loại hoặc bị gỡ nội dung ẩn), REVIEW (một layer degraded). **Không bao giờ BLOCK**, vì người dùng không có lỗi với nội dung của email.
 
@@ -41,12 +42,12 @@ Trân trọng, Nguyễn Văn A
 Ba bước kiểm thử API đầy đủ (`tests/test_api.py`): email nhiễm độc, phiên bị TAINT, lệnh chuyển tiền sau đó bị chặn ở L4; phiên khác không bị ảnh hưởng.
 
 ## Kiểm thử
-17 test (`tests/test_spotlight.py`): làm sạch ghi chú/CSS/ký tự vô hình, không đụng văn bản thường, datamark, quét với engine giả (đoạn độc, đoạn ẩn, ẩn vô hại, degraded), hết hạn taint, orchestrator đánh dấu phiên, và 4 test với model L2 thật.
+26 test (`tests/test_spotlight.py`): làm sạch ghi chú/CSS/ký tự vô hình, không đụng văn bản thường, datamark, quét với engine giả (đoạn độc, đoạn ẩn, ẩn vô hại, degraded), hết hạn taint, các mức clean/exposed/tainted của kho phiên, orchestrator đánh dấu phiên (đoạn sạch thì EXPOSED, đoạn độc thì TAINT), và 4 test với model L2 thật.
 
 ## Giới hạn
 - Phần đo dùng tài liệu **tổng hợp** (câu chèn do Claude viết vào văn bản BIPIA) nên đây là cận trên: kẻ tấn công thật diễn đạt khác sẽ khó hơn. Chưa có tập indirect injection thật ngoài nhóm.
 - Ba tài liệu độc lọt hẳn (1,5%) và một tài liệu sạch bị xử lý nhầm (0,5%).
-- **Đánh đổi của quy tắc "chỉ TAINT khi chắc"**: so với trước khi áp dụng (98,5% và 97,5%), tỷ lệ gắn TAINT giảm nhẹ (98,0% và 95,0%) vì có đoạn bị L2 chấm điểm trong vùng nghi ngờ. Những đoạn đó vẫn bị loại khỏi ngữ cảnh (nội dung độc không tới được model) nhưng phiên không bị TAINT, nên L4 không siết các lệnh sau đó. Nhận định: 10 trong 200 tài liệu ghi chú ẩn (5%) rơi vào trường hợp này.
+- **Đánh đổi của quy tắc "chỉ TAINT khi chắc"**: so với trước khi áp dụng (98,5% và 97,5%), tỷ lệ gắn TAINT giảm nhẹ (98,0% và 95,0%) vì có đoạn bị L2 chấm điểm trong vùng nghi ngờ. Những đoạn đó vẫn bị loại khỏi ngữ cảnh (nội dung độc không tới được model) nhưng phiên không bị TAINT. Nhận định: 10 trong 200 tài liệu ghi chú ẩn (5%) rơi vào trường hợp này. Từ khi có mức EXPOSED, các phiên này vẫn bị EXPOSED nên lệnh nhạy cảm sau đó vẫn phải được xác nhận (REVIEW thay vì BLOCK).
 - Chỉ gỡ được các kiểu ẩn đã liệt kê. Chữ trắng trên nền trắng (CSS ngoài file), văn bản trong ảnh và PDF chưa xử lý.
-- Taint nằm trong bộ nhớ một tiến trình: mất khi khởi động lại, không chia sẻ giữa nhiều máy chủ.
+- Taint và exposed nằm trong bộ nhớ một tiến trình, trừ khi đặt `FIREWALL_STATE_DB`: khi đó lưu SQLite, giữ qua khởi động lại và dùng chung giữa các tiến trình trên cùng máy (WP10). Nhiều máy chủ vẫn cần kho chung kiểu Redis.
 - Datamarking chỉ có tác dụng nếu agent LLM thật tuân theo lời nhắc; phần đó chưa đo (chưa có agent LLM thật trong demo).

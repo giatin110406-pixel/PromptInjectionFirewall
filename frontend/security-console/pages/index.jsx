@@ -9,29 +9,10 @@ import ReviewQueue from '../components/ReviewQueue';
 import FeedbackList from '../components/FeedbackList';
 import AttackSimulator from '../components/AttackSimulator';
 import ManualTester from '../components/ManualTester';
-import { Card } from '../components/ui';
+import SessionList, { SessionSummary } from '../components/SessionList';
 import { api, AuthError, loadToken, saveToken } from '../lib/api';
-import { timeAgo, shortReason } from '../lib/layers';
 
 const EMPTY_STATS = { total_incidents: 0, avg_latency_ms: 0, by_layer: {}, by_decision: {}, pending_reviews: 0, tainted_sessions: 0 };
-
-function TaintedSessions({ sessions }) {
-  return (
-    <Card title="Phiên đang bị TAINT" tint="cyan">
-      {sessions.length === 0 && <div className="small">Không có phiên nào. Một phiên bị TAINT khi nó vừa đọc nội dung ngoài mang chỉ thị; lệnh nhạy cảm sau đó bị chặn hoặc cần duyệt.</div>}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {sessions.map((s) => (
-          <div className="step-result" key={s.session_id}>
-            <strong className="mono">{s.session_id}</strong>
-            {(s.events || []).slice(-2).map((e, i) => (
-              <div className="small" key={i} title={e.reason}>{e.source} · {shortReason(e.reason, 70)} · {timeAgo(new Date(e.at * 1000).toISOString())}</div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </Card>
-  );
-}
 
 export default function SecurityConsole() {
   const [token, setToken] = useState(null);
@@ -70,7 +51,7 @@ export default function SecurityConsole() {
         api('/console/incidents?limit=100'),
         api('/console/stats'),
         api('/console/health'),
-        api('/console/sessions'),
+        api('/console/sessions?include_exposed=true'),
         api('/chat/review?status=pending'),
         api('/chat/review?status=all'),
         api('/console/feedback?limit=30'),
@@ -139,7 +120,7 @@ export default function SecurityConsole() {
             <PipelineFlow activeLayer={selected ? selected.blocked_by_layer : null} counts={stats.by_layer || {}} health={health} />
             <div className="grid two">
               <IncidentLog incidents={incidents} selectedId={selected?.id} onSelect={choose} limit={6} title="Sự cố mới nhất" />
-              <TaintedSessions sessions={sessions} />
+              <SessionSummary sessions={sessions} />
             </div>
           </>
         )}
@@ -150,6 +131,8 @@ export default function SecurityConsole() {
             <FeedbackList items={feedback} />
           </>
         )}
+
+        {tab === 'sessions' && <SessionList sessions={sessions} />}
 
         {tab === 'review' && <ReviewQueue pending={pending} history={history} onChanged={refresh} />}
 

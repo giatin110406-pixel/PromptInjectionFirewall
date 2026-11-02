@@ -37,7 +37,11 @@ def main() -> None:
     parser.add_argument("--data-dir", default=os.path.join(BASE_DIR, "data", "processed_public"))
     parser.add_argument("--artifacts", default=os.path.join(BASE_DIR, "models", "l2_multilingual", "artifacts"))
     parser.add_argument("--use-cache", action="store_true", help="reuse the scores of the previous run (same model)")
+    parser.add_argument("--tag", default="", help="suffix for the output files, e.g. v3b -> band_calibration_v3b.json")
     args = parser.parse_args()
+    global OUT, CACHE
+    if args.tag:
+        OUT, CACHE = OUT.replace(".json", f"_{args.tag}.json"), CACHE.replace(".csv", f"_{args.tag}.csv")
     eval_layer1.PROCESSED = os.path.abspath(args.data_dir)
 
     from firewall.classifier import MultilingualClassifier

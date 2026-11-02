@@ -1,0 +1,137 @@
+{
+  "seed": 0,
+  "problems": [],
+  "base": "data/processed_public_v3b (unchanged)",
+  "h5_rows_in": 1360,
+  "h5_rows_added": 1360,
+  "h5_pairs_dropped_for_leakage": [],
+  "leakage_threshold": 0.8,
+  "h5_max_similarity_to_eval": 0.3523,
+  "h5_max_similarity_to_v3b": 0.3306,
+  "h5_families_by_split": {
+    "train": [
+      "cskh_account_03",
+      "cskh_account_11",
+      "cskh_account_19",
+      "cskh_refund_00",
+      "cskh_refund_08",
+      "cskh_refund_12",
+      "cskh_refund_16",
+      "cskh_refund_20",
+      "cskh_return_01",
+      "cskh_return_05",
+      "cskh_return_09",
+      "cskh_return_13",
+      "cskh_return_17",
+      "cskh_return_21",
+      "cskh_voucher_02",
+      "cskh_voucher_06",
+      "cskh_voucher_10",
+      "cskh_voucher_14",
+      "cskh_voucher_18",
+      "cskh_voucher_22",
+      "money_transfer_00",
+      "money_transfer_01",
+      "money_transfer_03",
+      "money_transfer_04",
+      "money_transfer_05",
+      "money_transfer_06",
+      "money_transfer_07",
+      "money_transfer_08",
+      "money_transfer_09",
+      "money_transfer_11",
+      "tool_calendar",
+      "tool_crm",
+      "tool_documents",
+      "tool_inventory",
+      "tool_invoice",
+      "tool_maps",
+      "tool_membership",
+      "tool_orders",
+      "tool_payments",
+      "tool_reviews",
+      "tool_search",
+      "tool_weather"
+    ],
+    "validation": [
+      "cskh_account_07",
+      "cskh_account_23",
+      "money_transfer_02",
+      "tool_hr",
+      "tool_support_chat"
+    ],
+    "test": [
+      "cskh_account_15",
+      "cskh_refund_04",
+      "money_transfer_10",
+      "tool_helpdesk",
+      "tool_shipping"
+    ]
+  },
+  "h5_rows_by_split_label": {
+    "train": {
+      "1": 540,
+      "0": 540
+    },
+    "validation": {
+      "1": 70,
+      "0": 70
+    },
+    "test": {
+      "1": 70,
+      "0": 70
+    }
+  },
+  "h5_rows_by_split_source": {
+    "train": {
+      "h5_tool": 480,
+      "h5_cskh": 400,
+      "h5_money": 200
+    },
+    "validation": {
+      "h5_tool": 80,
+      "h5_cskh": 40,
+      "h5_money": 20
+    },
+    "test": {
+      "h5_tool": 80,
+      "h5_cskh": 40,
+      "h5_money": 20
+    }
+  },
+  "rows_by_split_label": {
+    "train": {
+      "0": 11954,
+      "1": 11954
+    },
+    "validation": {
+      "0": 1639,
+      "1": 1639
+    },
+    "test": {
+      "0": 1578,
+      "1": 1578
+    }
+  },
+  "lang_by_split": {
+    "train": {
+      "en": 14766,
+      "vi": 6556,
+      "mixed": 2586
+    },
+    "validation": {
+      "en": 1866,
+      "vi": 1044,
+      "mixed": 368
+    },
+    "test": {
+      "en": 1986,
+      "vi": 846,
+      "mixed": 324
+    }
+  },
+  "data_authors": {
+    "h5": "OpenAI Codex (AI-generated synthetic data; not human-authored; no independent label review)"
+  },
+  "dataset_sha256": "888c9d8e2cc6fb2184c87b6a1490b9ec15fb1059fe5d765e6d75fbefe94e2ab1"
+}

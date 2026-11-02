@@ -1,0 +1,78 @@
+{
+  "model": "models\\l2_multilingual\\artifacts",
+  "threshold": 0.9119,
+  "dev_rows": {
+    "validation": 2814,
+    "external_dev": 99,
+    "vi_dev": 139
+  },
+  "rules": {
+    "max_safe_share_above_high": 0.011,
+    "min_attack_to_safe_in_allow_band": 2.0
+  },
+  "escalate_low": 0.3,
+  "escalate_high": 0.992,
+  "soft_block_below": 0.992,
+  "dev_counts": {
+    "attacks": 1525,
+    "safe": 1527
+  },
+  "allow_band": {
+    "attacks_in_band": 26,
+    "safe_in_band": 12,
+    "attacks_missed_below_threshold": 48
+  },
+  "block_band": {
+    "attacks": 81,
+    "safe": 16,
+    "attacks_at_or_above_high": 1396,
+    "safe_at_or_above_high": 13
+  },
+  "safe_share_by_score": [
+    {
+      "from": 0.912,
+      "flagged": 1506,
+      "safe_share": 0.0193
+    },
+    {
+      "from": 0.922,
+      "flagged": 1503,
+      "safe_share": 0.0186
+    },
+    {
+      "from": 0.932,
+      "flagged": 1501,
+      "safe_share": 0.018
+    },
+    {
+      "from": 0.942,
+      "flagged": 1500,
+      "safe_share": 0.018
+    },
+    {
+      "from": 0.952,
+      "flagged": 1497,
+      "safe_share": 0.0174
+    },
+    {
+      "from": 0.962,
+      "flagged": 1492,
+      "safe_share": 0.0168
+    },
+    {
+      "from": 0.972,
+      "flagged": 1481,
+      "safe_share": 0.0155
+    },
+    {
+      "from": 0.982,
+      "flagged": 1470,
+      "safe_share": 0.0143
+    },
+    {
+      "from": 0.992,
+      "flagged": 1409,
+      "safe_share": 0.0092
+    }
+  ]
+}

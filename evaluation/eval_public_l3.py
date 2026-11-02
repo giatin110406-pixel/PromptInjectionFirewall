@@ -36,11 +36,11 @@ SETS = ["deepset", "grayswan_ipi", "multijail_vi", "multijail_en", "holdout_tens
 # (the engine's Layer 2 is trained on dataset v3, so only the clean sets above are used; see evaluation/eval_public.py)
 
 
-def make_judge():
+def make_judge(manual_dir: str = MANUAL):
     from firewall.judge import Layer3Judge
     from firewall.llm_provider import ManualProvider
 
-    return Layer3Judge(ManualProvider(MANUAL), daily_calls=10 ** 6, deterministic_marker=True)
+    return Layer3Judge(ManualProvider(manual_dir), daily_calls=10 ** 6, deterministic_marker=True)
 
 
 def prepare() -> None:
@@ -81,8 +81,11 @@ def rate(hits, n):
     return {"n": n, "hits": hits, "rate": round(hits / n, 4) if n else None, "ci95": wilson(hits, n)}
 
 
-def score() -> None:
-    judge = make_judge()
+def score(manual_dir: str = MANUAL, out_name: str = "l3_public_eval.json",
+          judge_name: str = "Claude Haiku (not Gemini/DeepSeek)") -> dict:
+    """Replay the answers in `manual_dir` through the real judge code. The default is the stand-in judge;
+    evaluation/eval_local_judge.py passes the answers of a local model."""
+    judge = make_judge(manual_dir)
     rows, missing, verdicts = [], 0, []
     with open(RECORDS, "r", encoding="utf-8") as handle:
         records = [json.loads(line) for line in handle if line.strip()]
@@ -100,7 +103,7 @@ def score() -> None:
                              "window": (rec["window"] or "")[:160]})
         rows.append({**rec, "baseline": base, "final": final, "judged": judged})
     df = pd.DataFrame(rows)
-    report = {"answers_missing": missing, "stand_in_judge": "Claude Haiku (not Gemini/DeepSeek)", "bands": [LOW, HIGH], "per_set": {}}
+    report = {"answers_missing": missing, "stand_in_judge": judge_name, "bands": [LOW, HIGH], "per_set": {}}
     for name in SETS:
         d = df[df["set"] == name]
         a, s = d[d.label == 1], d[d.label == 0]
@@ -114,7 +117,8 @@ def score() -> None:
         report["per_set"][name] = entry
     v = pd.DataFrame(verdicts)
     if len(v):
-        v.to_csv(os.path.join(OUT, "l3_public_verdicts.csv"), index=False, encoding="utf-8")
+        v.to_csv(os.path.join(OUT, out_name.replace("l3_public_eval", "l3_public_verdicts").replace(".json", ".csv")),
+                 index=False, encoding="utf-8")
         report["verdicts_by_set"] = {name: {"items": int(len(g)), "attacks": int(g.label.sum()), "safe": int((g.label == 0).sum()),
                                             "said_attack_on_attacks": int(((g.verdict == "attack") & (g.label == 1)).sum()),
                                             "said_benign_on_attacks": int(((g.verdict == "benign") & (g.label == 1)).sum()),
@@ -131,12 +135,13 @@ def score() -> None:
                 "said_benign_on_attacks": int(((g.verdict == "benign") & (g.label == 1)).sum()),
                 "unsure": int((g.verdict == "unsure").sum())}
         report["benign_verdict_on_attacks_examples"] = v[(v.verdict == "benign") & (v.label == 1)][["set", "side", "score", "window"]].head(8).to_dict("records")
-    with open(os.path.join(OUT, "l3_public_eval.json"), "w", encoding="utf-8") as handle:
+    with open(os.path.join(OUT, out_name), "w", encoding="utf-8") as handle:
         json.dump(report, handle, indent=2, ensure_ascii=False)
     print("answers missing:", missing)
     for name, r in report["per_set"].items():
         print(name, r)
     print(json.dumps(report.get("judge_verdicts_by_side", {}), indent=1))
+    return report
 
 
 if __name__ == "__main__":

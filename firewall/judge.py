@@ -170,7 +170,7 @@ class Layer3Judge:
 
 def build_judge_from_env() -> Optional[Layer3Judge]:
     """
-    Layer 3 from the environment. FIREWALL_JUDGE_PROVIDER = gemini | ollama | anthropic | openai | none (default
+    Layer 3 from the environment. FIREWALL_JUDGE_PROVIDER = gemini | ollama | local | anthropic | openai | none (default
     none: no judge, Layer 2 decides alone). A provider that cannot start (missing key) disables the judge, with the
     reason kept in `build_judge_error`, instead of crashing the API.
     """

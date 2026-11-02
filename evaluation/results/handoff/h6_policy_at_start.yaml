@@ -1,0 +1,141 @@
+# Layer 4 action policy. Read by firewall/action_gate.py.
+#
+# The hard business rules (who may refund, OTP, no self-escalation, voucher caps...) live in firewall/layer4.py and
+# always win: an action they reject is BLOCKed. This file adds four checks on actions that passed them:
+#
+#   when_tainted   what to do when the session has seen untrusted content that carried an instruction
+#                  (an email, web page or document flagged by /chat/context): "block" or "review" or "allow"
+#   when_exposed   what to do when the session has read untrusted content at all, flagged or not
+#                  (only in exposure mode "provenance", see below): "block" or "review" or "allow"
+#   review_over    the action is legitimate but large: a human must confirm it (REVIEW)
+#   rate limit     too many sensitive actions in a short window go to REVIEW
+#
+# class: money | identity | privilege | data | communicate | write. All but write count as sensitive.
+# A sensitive action with no `when_exposed` gets "review"; any other action gets "allow".
+# review_over.field names a key of the action payload; the check applies when payload[field] >= value.
+# review_by: who confirms a REVIEW. "user" = the customer confirms their own action (a transfer from their account),
+#            "staff" = a supervisor in the review queue (privileges, other people's data). Default "staff".
+# provenance_fields: payload keys that name WHO or WHAT receives the action (the destination account, the order).
+#            In an exposed session, an action whose when_exposed is "review" is cleared without a question when every
+#            one of these values was typed by the user or is in their saved recipients (firewall/trusted_book.yaml).
+#            A value seen only in untrusted content, or seen nowhere (made up by the agent), keeps the REVIEW.
+#            Amounts are never used for this: small numbers occur everywhere by chance.
+# content_fields (class communicate only): payload keys holding what is sent out (subject, body...). They are scanned
+#            for secrets and personal data before the action runs (firewall/egress.py).
+
+version: 2
+
+# provenance  the session is EXPOSED as soon as it reads untrusted content, and `when_exposed` applies even when no
+#             layer flagged that content: the protection does not depend on detecting the attack.
+# detection   the v3 behaviour: only a flagged instruction (taint) changes what Layer 4 does. Kept to compare.
+exposure:
+  mode: provenance
+
+# Egress (actions of class communicate, firewall/egress.py). A destination on this list (a domain with its subdomains,
+# or an exact channel name) is trusted like a value the user typed. Outside it:
+#   - a secret or canary token in the content is a BLOCK in every session;
+#   - personal data in the content, in a session that read untrusted content, sent to a destination the user did not
+#     type or save, is a BLOCK (the data-stealing pattern of InjecAgent).
+# Demo values; a deployment lists the company's own domains and channels.
+egress:
+  allowlist:
+    - example-shop.vn
+    - bank-demo.vn
+    - "#support"
+    - "#it-helpdesk"
+
+rate_limit:
+  window_seconds: 60
+  max_sensitive_actions: 5
+
+actions:
+  refund:
+    class: money
+    review_over: {field: amount, value: 100}
+    when_tainted: review
+    when_exposed: review
+    review_by: staff
+    provenance_fields: [order_id]
+  transfer_money:
+    class: money
+    review_over: {field: amount, value: 10000000}
+    when_tainted: block
+    when_exposed: review
+    review_by: user
+    provenance_fields: [to_account]
+  transfer:
+    class: money
+    review_over: {field: amount, value: 10000000}
+    when_tainted: block
+    when_exposed: review
+    review_by: user
+    provenance_fields: [to_account]
+  account_recovery:
+    class: identity
+    when_tainted: block
+    when_exposed: review
+    review_by: user
+    provenance_fields: [target_account]
+  password_reset:
+    class: identity
+    when_tainted: block
+    when_exposed: review
+    review_by: user
+    provenance_fields: [target_account]
+  voucher_apply:
+    class: write
+    review_over: {field: discount_percent, value: 50}
+    when_tainted: review
+    when_exposed: review       # v4 eval: codes planted in content went through; a code the user typed still passes
+    provenance_fields: [voucher_code]
+  coupon_apply:
+    class: write
+    review_over: {field: discount_percent, value: 50}
+    when_tainted: review
+    when_exposed: review       # v4 eval: codes planted in content went through; a code the user typed still passes
+    provenance_fields: [voucher_code]
+  role_escalation:
+    class: privilege
+    always_review: true
+    when_tainted: block
+    when_exposed: review
+    review_by: staff
+  access_control:
+    class: privilege
+    always_review: true
+    when_tainted: block
+    when_exposed: review
+    review_by: staff
+  data_access:
+    class: data
+    when_tainted: block
+    when_exposed: review
+    review_by: staff
+  send_email:
+    class: communicate
+    when_tainted: block
+    when_exposed: review
+    review_by: user
+    provenance_fields: [to, cc]
+    content_fields: [subject, body, attachments]
+  http_request:
+    class: communicate
+    when_tainted: block
+    when_exposed: review
+    review_by: staff
+    provenance_fields: [url]
+    content_fields: [url, body]
+  post_message:
+    class: communicate
+    when_tainted: block
+    when_exposed: review
+    review_by: user
+    provenance_fields: [target]
+    content_fields: [text]
+  share_file:
+    class: communicate
+    when_tainted: block
+    when_exposed: review
+    review_by: user
+    provenance_fields: [share_with]
+    content_fields: [file_id]

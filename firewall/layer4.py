@@ -5,10 +5,14 @@ Uses Pydantic v2 to validate actions and prevent business logic bypasses
 excessive coupon/voucher discounts, and illegal privilege escalation).
 Independent of language (validates structured JSON schemas).
 """
-from typing import Dict, Any, Optional
+import re
+from typing import Dict, Any, List, Optional, Union
+from urllib.parse import urlparse
+
 from pydantic import BaseModel, Field, field_validator, model_validator, ValidationInfo
 
 from api.schemas import AuthUser
+from firewall.egress import private_host
 
 
 class RefundRequest(BaseModel):
@@ -186,6 +190,105 @@ class AccessControlRequest(BaseModel):
         return self
 
 
+# ---------------------------------------------------------------- egress (WP3): actions that send data out
+_EMAIL_ADDRESS = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+MAX_RECIPIENTS = 20
+
+
+def _as_list(value: Union[str, List[str], None]) -> List[str]:
+    if value is None:
+        return []
+    items = [value] if isinstance(value, str) else list(value)
+    return [str(v).strip() for v in items if str(v).strip()]
+
+
+def _web_url(url: str) -> str:
+    parsed = urlparse(url)
+    if parsed.scheme.lower() not in ("http", "https") or not parsed.hostname:
+        raise ValueError(f"Only http(s) URLs with a host may be called, not '{url[:60]}'")
+    if private_host(url):
+        raise ValueError(f"Calls to local or private network addresses are forbidden ('{parsed.hostname}')")
+    return url
+
+
+class SendEmailRequest(BaseModel):
+    user_id: str = Field(..., min_length=1)
+    to: List[str]
+    cc: List[str] = Field(default_factory=list)
+    subject: str = ""
+    body: str = ""
+    attachments: List[str] = Field(default_factory=list)
+    user_role: str = Field("user")
+
+    @field_validator("to", "cc", mode="before")
+    @classmethod
+    def listify(cls, v):
+        return _as_list(v)
+
+    @model_validator(mode="after")
+    def validate_recipients(self) -> "SendEmailRequest":
+        recipients = self.to + self.cc
+        if not self.to:
+            raise ValueError("An email needs at least one recipient")
+        if len(recipients) > MAX_RECIPIENTS:
+            raise ValueError(f"At most {MAX_RECIPIENTS} recipients per email (got {len(recipients)})")
+        bad = [r for r in recipients if not _EMAIL_ADDRESS.fullmatch(r)]
+        if bad:
+            raise ValueError(f"Not an email address: '{bad[0][:60]}'")
+        return self
+
+
+class HttpRequestRequest(BaseModel):
+    user_id: str = Field(..., min_length=1)
+    url: str = Field(..., min_length=8)
+    method: str = "GET"
+    body: str = ""
+    user_role: str = Field("user")
+
+    @model_validator(mode="after")
+    def validate_request(self) -> "HttpRequestRequest":
+        if self.method.upper() not in {"GET", "POST", "PUT", "PATCH", "DELETE"}:
+            raise ValueError(f"HTTP method '{self.method}' is not allowed")
+        _web_url(self.url)
+        return self
+
+
+class PostMessageRequest(BaseModel):
+    user_id: str = Field(..., min_length=1)
+    target: str = Field(..., min_length=2, description="a channel ('#support'), a user handle or a webhook URL")
+    text: str = Field(..., min_length=1)
+    user_role: str = Field("user")
+
+    @model_validator(mode="after")
+    def validate_target(self) -> "PostMessageRequest":
+        if "://" in self.target:
+            _web_url(self.target)
+        return self
+
+
+class ShareFileRequest(BaseModel):
+    user_id: str = Field(..., min_length=1)
+    file_id: str = Field(..., min_length=1)
+    share_with: List[str]
+    permission: str = "view"
+    user_role: str = Field("user")
+
+    @field_validator("share_with", mode="before")
+    @classmethod
+    def listify(cls, v):
+        return _as_list(v)
+
+    @model_validator(mode="after")
+    def validate_share(self) -> "ShareFileRequest":
+        if not self.share_with:
+            raise ValueError("Nobody to share the file with")
+        if self.permission.lower() not in {"view", "comment", "edit"}:
+            raise ValueError(f"Share permission '{self.permission}' is not allowed")
+        if any(s.lower() in {"anyone", "public", "*"} for s in self.share_with):
+            raise ValueError("Public links are not allowed: share with named people or domains")
+        return self
+
+
 def _clean_error(exc: Exception) -> str:
     """One readable sentence for a rejected action (pydantic's own text carries input dumps and a docs URL)."""
     errors = getattr(exc, "errors", None)
@@ -214,6 +317,10 @@ class Layer4Validator:
         "coupon_apply": VoucherApplyRequest,
         "role_escalation": AccessControlRequest,
         "access_control": AccessControlRequest,
+        "send_email": SendEmailRequest,
+        "http_request": HttpRequestRequest,
+        "post_message": PostMessageRequest,
+        "share_file": ShareFileRequest,
     }
 
     LEGACY_ROLE_PERMISSIONS = {

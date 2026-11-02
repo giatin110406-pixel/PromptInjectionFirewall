@@ -35,11 +35,13 @@ DATA = os.path.join(BASE_DIR, "data", "eval", "public")
 ROWS = os.path.join(BASE_DIR, "evaluation", "results", "public_eval_rows")
 SUMMARY = os.path.join(BASE_DIR, "evaluation", "results", "public_eval.json")
 DOC_SETS = {"injecagent_resp_base", "injecagent_resp_enhanced", "grayswan_ipi", "dolly_doc", "xquad_vi_doc",
-            "holdout_injecagent_base", "holdout_injecagent_enhanced", "holdout_dolly_doc", "holdout_xquad_doc"}
+            "holdout_injecagent_base", "holdout_injecagent_enhanced", "holdout_dolly_doc", "holdout_xquad_doc",
+            "msb_tool_desc", "msb_tool_resp"}
 # Sets measured by default. The engine now uses a Layer 2 trained on dataset v3, which contains Tensor Trust, InjecAgent, Dolly and
 # XQuAD-vi, so only their held-out parts (holdout_*) are clean; the full sets are kept for the old model (results/v2_model/).
 ORDER = ["deepset", "grayswan_ipi", "multijail_vi", "multijail_en", "holdout_tensortrust", "holdout_injecagent_base",
-         "holdout_injecagent_enhanced", "holdout_dolly_instr", "holdout_dolly_doc", "holdout_xquad_q", "holdout_xquad_doc"]
+         "holdout_injecagent_enhanced", "holdout_dolly_instr", "holdout_dolly_doc", "holdout_xquad_q", "holdout_xquad_doc",
+         "msb_tool_desc", "msb_tool_resp", "promptshield"]   # MSB and PromptShield: see data/scripts/prepare_new_public.py
 
 
 def git_commit() -> str:
@@ -104,9 +106,9 @@ def summarize(name: str, rows: pd.DataFrame) -> dict:
     entry["by_lang"] = {str(k): {"n": int(len(g)), "labels": {str(l): int(c) for l, c in g.label_binary.value_counts().items()},
                                  **{f"{lab}": metrics(g[g.label_binary == int(lab)]) for lab in g.label_binary.unique().astype(str)}}
                         for k, g in rows.groupby("lang")} if name == "deepset" else {}
-    if name.startswith(("tensortrust", "injecagent_resp")):
-        key = "attack_type"
-        atk = rows[rows.label_binary == 1]
+    if name.startswith(("tensortrust", "injecagent_resp", "msb_")):
+        key = "family" if name.startswith("msb_") else "attack_type"
+        atk = rows[rows.label_binary == 1].assign(family=rows.attack_type.str.split(":").str[0])
         entry["by_attack_type"] = {str(k): {"n": int(len(g)), "L1_or_L2": rate((g.l1_block == 1) | (g.l2_flag == 1)),
                                             "pipeline_block_or_review": rate(g.pipeline.isin(["BLOCK", "REVIEW"]))}
                                    for k, g in atk.groupby(key)}
@@ -118,18 +120,25 @@ def summarize(name: str, rows: pd.DataFrame) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--sets", help="comma-separated set names (default: all)")
+    parser.add_argument("--artifacts", help="another Layer 2 checkpoint (default: the engine's)")
+    parser.add_argument("--bands", help="band_calibration*.json for that checkpoint")
+    parser.add_argument("--tag", help="suffix: rows in public_eval_rows_<tag>/, summary in public_eval_<tag>.json")
     args = parser.parse_args()
+    global ROWS, SUMMARY
+    if args.tag:
+        ROWS, SUMMARY = f"{ROWS}_{args.tag}", SUMMARY.replace(".json", f"_{args.tag}.json")
     wanted = [s.strip() for s in args.sets.split(",")] if args.sets else [n for n in ORDER if os.path.exists(os.path.join(DATA, f"{n}.csv"))]
 
-    from firewall.orchestrator import FirewallOrchestrator
+    from model_variant import engine_for
 
-    engine = FirewallOrchestrator()
+    engine, _ = engine_for(args.artifacts, args.bands)
     health = engine.health()
     threshold = float(engine.layer2.threshold)
     print(f"[INFO] L2 threshold={threshold} device={getattr(engine.layer2, 'device', None)} degraded={health.get('degraded')}", flush=True)
     engine.process_input("warm up", use_judge=False)
 
-    summary = {"git_commit": git_commit(), "l2_threshold": threshold, "l2_temperature": engine.layer2.temperature,
+    summary = {"git_commit": git_commit(), "artifacts": args.artifacts or "default", "soft_block_below": engine.soft_block_below,
+               "l2_threshold": threshold, "l2_temperature": engine.layer2.temperature,
                "judge_used": False, "sets": {}}
     if os.path.exists(SUMMARY) and args.sets:
         previous = json.load(open(SUMMARY, encoding="utf-8"))

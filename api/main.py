@@ -50,6 +50,7 @@ def health_check():
         "service": "ai-firewall-api",
         "degraded_layers": engine["degraded_layers"],
         "engine": engine["layers"],
+        "session_state": engine.get("session_state"),
         "layers": {
             "layer1": "Regex + Vector Prefilter",
             "layer2": "Multilingual mDeBERTa Classifier",

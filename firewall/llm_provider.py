@@ -4,6 +4,8 @@ the Layer 3 judge (P5-T3).
 
 Providers (select with get_provider):
 - ollama      local model, no key.            env: OLLAMA_URL (default http://localhost:11434)
+- local       a Hugging Face chat model run in this process with transformers (no server, no key).
+              env: LOCAL_LLM_MODEL (default Qwen/Qwen2.5-1.5B-Instruct), LOCAL_LLM_DEVICE (default cuda if present)
 - anthropic   Anthropic Messages API.         env: ANTHROPIC_API_KEY, ANTHROPIC_MODEL
 - openai      any OpenAI-compatible endpoint. env: OPENAI_API_KEY, OPENAI_MODEL, OPENAI_BASE_URL
 - deepseek    DeepSeek (OpenAI-compatible).    env: DEEPSEEK_API_KEY, DEEPSEEK_MODEL (default deepseek-flash)
@@ -95,6 +97,47 @@ class OllamaProvider(LLMProvider):
             payload["system"] = system
         data = _post_json(f"{self.base_url}/api/generate", payload, {}, self.timeout, self.retries)
         return str(data.get("response", ""))
+
+
+class LocalHFProvider(LLMProvider):
+    """A small instruction model loaded with transformers, for a free judge without installing a server (WP8).
+    Loaded on the first call; greedy decoding when temperature is 0. fp16 on a GPU: a 1.5B model needs about 3.5 GB."""
+    name = "local"
+
+    def __init__(self, model: Optional[str] = None, device: Optional[str] = None):
+        self.model_name = model or os.environ.get("LOCAL_LLM_MODEL", "Qwen/Qwen2.5-1.5B-Instruct")
+        self.device = device or os.environ.get("LOCAL_LLM_DEVICE")
+        self._model = self._tokenizer = None
+        self._lock = threading.Lock()
+
+    def _load(self):
+        import torch
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+
+        device = self.device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        self._model = AutoModelForCausalLM.from_pretrained(
+            self.model_name, torch_dtype=torch.float16 if device == "cuda" else torch.float32).to(device).eval()
+        self.device = device
+
+    def complete(self, prompt, system=None, max_tokens=1024, temperature=0.7):
+        import torch
+
+        with self._lock:
+            if self._model is None:
+                try:
+                    self._load()
+                except Exception as exc:          # missing weights, no memory: a provider error, not a crash
+                    raise LLMError(f"local model {self.model_name} could not load: {exc}") from exc
+            messages = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": prompt}]
+            text = self._tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            inputs = self._tokenizer(text, return_tensors="pt").to(self.device)
+            sample = temperature > 0
+            with torch.no_grad():
+                out = self._model.generate(**inputs, max_new_tokens=max_tokens, do_sample=sample,
+                                           temperature=temperature if sample else None, top_p=None, top_k=None,
+                                           pad_token_id=self._tokenizer.eos_token_id)
+            return self._tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
 
 
 class AnthropicProvider(LLMProvider):
@@ -327,6 +370,8 @@ def get_provider(name: str, model: Optional[str] = None, manual_dir: Optional[st
     name = name.lower()
     if name == "ollama":
         provider: LLMProvider = OllamaProvider(model=model or "qwen2.5:7b")
+    elif name == "local":
+        provider = LocalHFProvider(model=model)
     elif name == "gemini":
         provider = GeminiProvider(model=model)
     elif name == "anthropic":
@@ -340,5 +385,5 @@ def get_provider(name: str, model: Optional[str] = None, manual_dir: Optional[st
             raise LLMError("manual provider needs --manual-dir")
         provider = ManualProvider(manual_dir)
     else:
-        raise LLMError(f"unknown provider '{name}' (ollama, gemini, anthropic, openai, deepseek, manual)")
+        raise LLMError(f"unknown provider '{name}' (ollama, local, gemini, anthropic, openai, deepseek, manual)")
     return BudgetedProvider(provider, max_calls) if max_calls else provider

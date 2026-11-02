@@ -1,0 +1,220 @@
+{
+  "model": "protectai/deberta-v3-base-prompt-injection-v2",
+  "labels": {
+    "0": "SAFE",
+    "1": "INJECTION"
+  },
+  "rule": "max over 300-word windows (overlap 50); flagged when the attack probability >= 0.5",
+  "sets": {
+    "deepset": {
+      "n": 662,
+      "attacks_flagged": {
+        "n": 263,
+        "hits": 109,
+        "rate": 0.4144,
+        "ci95": [
+          0.3566,
+          0.4748
+        ]
+      },
+      "safe_flagged": {
+        "n": 399,
+        "hits": 4,
+        "rate": 0.01,
+        "ci95": [
+          0.0039,
+          0.0255
+        ]
+      },
+      "auc": 0.882
+    },
+    "grayswan_ipi": {
+      "n": 95,
+      "attacks_flagged": {
+        "n": 95,
+        "hits": 50,
+        "rate": 0.5263,
+        "ci95": [
+          0.4269,
+          0.6237
+        ]
+      },
+      "safe_flagged": null
+    },
+    "holdout_tensortrust": {
+      "n": 396,
+      "attacks_flagged": {
+        "n": 396,
+        "hits": 354,
+        "rate": 0.8939,
+        "ci95": [
+          0.8597,
+          0.9206
+        ]
+      },
+      "safe_flagged": null
+    },
+    "holdout_injecagent_base": {
+      "n": 391,
+      "attacks_flagged": {
+        "n": 374,
+        "hits": 269,
+        "rate": 0.7193,
+        "ci95": [
+          0.6717,
+          0.7624
+        ]
+      },
+      "safe_flagged": {
+        "n": 17,
+        "hits": 10,
+        "rate": 0.5882,
+        "ci95": [
+          0.3601,
+          0.7839
+        ]
+      },
+      "auc": 0.6071
+    },
+    "holdout_injecagent_enhanced": {
+      "n": 391,
+      "attacks_flagged": {
+        "n": 374,
+        "hits": 374,
+        "rate": 1.0,
+        "ci95": [
+          0.9898,
+          1.0
+        ]
+      },
+      "safe_flagged": {
+        "n": 17,
+        "hits": 10,
+        "rate": 0.5882,
+        "ci95": [
+          0.3601,
+          0.7839
+        ]
+      },
+      "auc": 0.9992
+    },
+    "holdout_dolly_instr": {
+      "n": 1000,
+      "attacks_flagged": null,
+      "safe_flagged": {
+        "n": 1000,
+        "hits": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0038
+        ]
+      }
+    },
+    "holdout_dolly_doc": {
+      "n": 300,
+      "attacks_flagged": null,
+      "safe_flagged": {
+        "n": 300,
+        "hits": 2,
+        "rate": 0.0067,
+        "ci95": [
+          0.0018,
+          0.024
+        ]
+      }
+    },
+    "holdout_xquad_q": {
+      "n": 128,
+      "attacks_flagged": null,
+      "safe_flagged": {
+        "n": 128,
+        "hits": 41,
+        "rate": 0.3203,
+        "ci95": [
+          0.2457,
+          0.4054
+        ]
+      }
+    },
+    "holdout_xquad_doc": {
+      "n": 27,
+      "attacks_flagged": null,
+      "safe_flagged": {
+        "n": 27,
+        "hits": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.1246
+        ]
+      }
+    },
+    "test": {
+      "n": 1108,
+      "attacks_flagged": {
+        "n": 554,
+        "hits": 186,
+        "rate": 0.3357,
+        "ci95": [
+          0.2977,
+          0.3761
+        ]
+      },
+      "safe_flagged": {
+        "n": 554,
+        "hits": 66,
+        "rate": 0.1191,
+        "ci95": [
+          0.0947,
+          0.1488
+        ]
+      },
+      "auc": 0.6862
+    },
+    "external_test": {
+      "n": 101,
+      "attacks_flagged": {
+        "n": 48,
+        "hits": 43,
+        "rate": 0.8958,
+        "ci95": [
+          0.7783,
+          0.9547
+        ]
+      },
+      "safe_flagged": {
+        "n": 53,
+        "hits": 14,
+        "rate": 0.2642,
+        "ci95": [
+          0.1644,
+          0.3958
+        ]
+      },
+      "auc": 0.8888
+    },
+    "vi_test": {
+      "n": 161,
+      "attacks_flagged": {
+        "n": 84,
+        "hits": 80,
+        "rate": 0.9524,
+        "ci95": [
+          0.8839,
+          0.9813
+        ]
+      },
+      "safe_flagged": {
+        "n": 77,
+        "hits": 45,
+        "rate": 0.5844,
+        "ci95": [
+          0.4729,
+          0.6879
+        ]
+      },
+      "auc": 0.7835
+    }
+  }
+}

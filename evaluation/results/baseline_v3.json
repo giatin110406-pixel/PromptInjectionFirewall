@@ -1,0 +1,2276 @@
+{
+  "b0_threshold": 0.721,
+  "thresholds": {
+    "l2_v2": 0.6659,
+    "l2_v3": 0.9119
+  },
+  "v1_xgboost_usable": true,
+  "sets": {
+    "deepset": {
+      "n": 662,
+      "labels": {
+        "0": 399,
+        "1": 263
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 8,
+            "rate": 0.0304,
+            "ci95": [
+              0.0155,
+              0.0589
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 28,
+            "rate": 0.0702,
+            "ci95": [
+              0.049,
+              0.0996
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 20,
+            "rate": 0.076,
+            "ci95": [
+              0.0498,
+              0.1145
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0095
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 70,
+            "rate": 0.2662,
+            "ci95": [
+              0.2164,
+              0.3227
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0095
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 97,
+            "rate": 0.3688,
+            "ci95": [
+              0.3128,
+              0.4286
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 1,
+            "rate": 0.0025,
+            "ci95": [
+              0.0004,
+              0.0141
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 20,
+            "rate": 0.076,
+            "ci95": [
+              0.0498,
+              0.1145
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0095
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 42,
+            "rate": 0.1597,
+            "ci95": [
+              0.1204,
+              0.2088
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 1,
+            "rate": 0.0025,
+            "ci95": [
+              0.0004,
+              0.0141
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 181,
+            "rate": 0.6882,
+            "ci95": [
+              0.6299,
+              0.7411
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 3,
+            "rate": 0.0075,
+            "ci95": [
+              0.0026,
+              0.0219
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 209,
+            "rate": 0.7947,
+            "ci95": [
+              0.7418,
+              0.8391
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 11,
+            "rate": 0.0276,
+            "ci95": [
+              0.0155,
+              0.0487
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 211,
+            "rate": 0.8023,
+            "ci95": [
+              0.7499,
+              0.8459
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 11,
+            "rate": 0.0276,
+            "ci95": [
+              0.0155,
+              0.0487
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 263,
+            "hits": 109,
+            "rate": 0.4144,
+            "ci95": [
+              0.3566,
+              0.4748
+            ]
+          },
+          "safe_flagged": {
+            "n": 399,
+            "hits": 4,
+            "rate": 0.01,
+            "ci95": [
+              0.0039,
+              0.0255
+            ]
+          }
+        }
+      },
+      "auc": {
+        "B0_style_only": 0.5017,
+        "L2_trained_on_v2": 0.8968,
+        "L2_trained_on_v3": 0.9299,
+        "B4_protectai_deberta": 0.882
+      }
+    },
+    "grayswan_ipi": {
+      "n": 95,
+      "labels": {
+        "1": 95
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 18,
+            "rate": 0.1895,
+            "ci95": [
+              0.1233,
+              0.2797
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0389
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 76,
+            "rate": 0.8,
+            "ci95": [
+              0.7086,
+              0.8681
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 91,
+            "rate": 0.9579,
+            "ci95": [
+              0.8967,
+              0.9835
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0389
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 17,
+            "rate": 0.1789,
+            "ci95": [
+              0.1148,
+              0.268
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 84,
+            "rate": 0.8842,
+            "ci95": [
+              0.8045,
+              0.9341
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 87,
+            "rate": 0.9158,
+            "ci95": [
+              0.8425,
+              0.9567
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 87,
+            "rate": 0.9158,
+            "ci95": [
+              0.8425,
+              0.9567
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 95,
+            "hits": 50,
+            "rate": 0.5263,
+            "ci95": [
+              0.4269,
+              0.6237
+            ]
+          }
+        }
+      },
+      "auc": {}
+    },
+    "holdout_tensortrust": {
+      "n": 396,
+      "labels": {
+        "1": 396
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 84,
+            "rate": 0.2121,
+            "ci95": [
+              0.1747,
+              0.2551
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 20,
+            "rate": 0.0505,
+            "ci95": [
+              0.0329,
+              0.0767
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 84,
+            "rate": 0.2121,
+            "ci95": [
+              0.1747,
+              0.2551
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 118,
+            "rate": 0.298,
+            "ci95": [
+              0.255,
+              0.3448
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 20,
+            "rate": 0.0505,
+            "ci95": [
+              0.0329,
+              0.0767
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 78,
+            "rate": 0.197,
+            "ci95": [
+              0.1608,
+              0.239
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 279,
+            "rate": 0.7045,
+            "ci95": [
+              0.6578,
+              0.7473
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 383,
+            "rate": 0.9672,
+            "ci95": [
+              0.9446,
+              0.9807
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 384,
+            "rate": 0.9697,
+            "ci95": [
+              0.9478,
+              0.9826
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 396,
+            "hits": 354,
+            "rate": 0.8939,
+            "ci95": [
+              0.8597,
+              0.9206
+            ]
+          }
+        }
+      },
+      "auc": {}
+    },
+    "holdout_injecagent_base": {
+      "n": 391,
+      "labels": {
+        "1": 374,
+        "0": 17
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 356,
+            "rate": 0.9519,
+            "ci95": [
+              0.9252,
+              0.9693
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 17,
+            "rate": 1.0,
+            "ci95": [
+              0.8157,
+              1.0
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0102
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 79,
+            "rate": 0.2112,
+            "ci95": [
+              0.1729,
+              0.2554
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 1,
+            "rate": 0.0588,
+            "ci95": [
+              0.0105,
+              0.2698
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 104,
+            "rate": 0.2781,
+            "ci95": [
+              0.2351,
+              0.3256
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 2,
+            "rate": 0.1176,
+            "ci95": [
+              0.0329,
+              0.3434
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0102
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 1,
+            "rate": 0.0027,
+            "ci95": [
+              0.0005,
+              0.015
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 89,
+            "rate": 0.238,
+            "ci95": [
+              0.1976,
+              0.2837
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 350,
+            "rate": 0.9358,
+            "ci95": [
+              0.9063,
+              0.9565
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 350,
+            "rate": 0.9358,
+            "ci95": [
+              0.9063,
+              0.9565
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 269,
+            "rate": 0.7193,
+            "ci95": [
+              0.6717,
+              0.7624
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 10,
+            "rate": 0.5882,
+            "ci95": [
+              0.3601,
+              0.7839
+            ]
+          }
+        }
+      },
+      "auc": {
+        "B0_style_only": 0.0075,
+        "L2_trained_on_v2": 0.8138,
+        "L2_trained_on_v3": 0.9473,
+        "B4_protectai_deberta": 0.6071
+      }
+    },
+    "holdout_injecagent_enhanced": {
+      "n": 391,
+      "labels": {
+        "1": 374,
+        "0": 17
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 339,
+            "rate": 0.9064,
+            "ci95": [
+              0.8726,
+              0.9319
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 17,
+            "rate": 1.0,
+            "ci95": [
+              0.8157,
+              1.0
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 352,
+            "rate": 0.9412,
+            "ci95": [
+              0.9125,
+              0.9608
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 1,
+            "rate": 0.0588,
+            "ci95": [
+              0.0105,
+              0.2698
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 2,
+            "rate": 0.1176,
+            "ci95": [
+              0.0329,
+              0.3434
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1843
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 5,
+            "rate": 0.2941,
+            "ci95": [
+              0.1328,
+              0.5313
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 374,
+            "hits": 374,
+            "rate": 1.0,
+            "ci95": [
+              0.9898,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 17,
+            "hits": 10,
+            "rate": 0.5882,
+            "ci95": [
+              0.3601,
+              0.7839
+            ]
+          }
+        }
+      },
+      "auc": {
+        "B0_style_only": 0.0,
+        "L2_trained_on_v2": 1.0,
+        "L2_trained_on_v3": 1.0,
+        "B4_protectai_deberta": 0.9992
+      }
+    },
+    "holdout_dolly_instr": {
+      "n": 1000,
+      "labels": {
+        "0": 1000
+      },
+      "methods": {
+        "B0_style_only": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 1,
+            "rate": 0.001,
+            "ci95": [
+              0.0002,
+              0.0056
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0038
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 8,
+            "rate": 0.008,
+            "ci95": [
+              0.0041,
+              0.0157
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 28,
+            "rate": 0.028,
+            "ci95": [
+              0.0194,
+              0.0402
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0038
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 2,
+            "rate": 0.002,
+            "ci95": [
+              0.0005,
+              0.0073
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 42,
+            "rate": 0.042,
+            "ci95": [
+              0.0312,
+              0.0563
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 4,
+            "rate": 0.004,
+            "ci95": [
+              0.0016,
+              0.0102
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 6,
+            "rate": 0.006,
+            "ci95": [
+              0.0028,
+              0.013
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "safe_flagged": {
+            "n": 1000,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0038
+            ]
+          }
+        }
+      },
+      "auc": {}
+    },
+    "holdout_dolly_doc": {
+      "n": 300,
+      "labels": {
+        "0": 300
+      },
+      "methods": {
+        "B0_style_only": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0126
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0126
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 76,
+            "rate": 0.2533,
+            "ci95": [
+              0.2074,
+              0.3055
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 122,
+            "rate": 0.4067,
+            "ci95": [
+              0.3526,
+              0.4631
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0126
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 1,
+            "rate": 0.0033,
+            "ci95": [
+              0.0006,
+              0.0186
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0126
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0126
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 1,
+            "rate": 0.0033,
+            "ci95": [
+              0.0006,
+              0.0186
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "safe_flagged": {
+            "n": 300,
+            "hits": 2,
+            "rate": 0.0067,
+            "ci95": [
+              0.0018,
+              0.024
+            ]
+          }
+        }
+      },
+      "auc": {}
+    },
+    "holdout_xquad_q": {
+      "n": 128,
+      "labels": {
+        "0": 128
+      },
+      "methods": {
+        "B0_style_only": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0291
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0291
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0291
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0291
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0291
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 1,
+            "rate": 0.0078,
+            "ci95": [
+              0.0014,
+              0.0429
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 5,
+            "rate": 0.0391,
+            "ci95": [
+              0.0168,
+              0.0882
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0291
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 1,
+            "rate": 0.0078,
+            "ci95": [
+              0.0014,
+              0.0429
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "safe_flagged": {
+            "n": 128,
+            "hits": 41,
+            "rate": 0.3203,
+            "ci95": [
+              0.2457,
+              0.4054
+            ]
+          }
+        }
+      },
+      "auc": {}
+    },
+    "holdout_xquad_doc": {
+      "n": 27,
+      "labels": {
+        "0": 27
+      },
+      "methods": {
+        "B0_style_only": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 1,
+            "rate": 0.037,
+            "ci95": [
+              0.0066,
+              0.1828
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 1,
+            "rate": 0.037,
+            "ci95": [
+              0.0066,
+              0.1828
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "safe_flagged": {
+            "n": 27,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.1246
+            ]
+          }
+        }
+      },
+      "auc": {}
+    },
+    "test": {
+      "n": 1108,
+      "labels": {
+        "0": 554,
+        "1": 554
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 37,
+            "rate": 0.0668,
+            "ci95": [
+              0.0488,
+              0.0907
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 37,
+            "rate": 0.0668,
+            "ci95": [
+              0.0488,
+              0.0907
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 44,
+            "rate": 0.0794,
+            "ci95": [
+              0.0597,
+              0.1049
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0069
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 323,
+            "rate": 0.583,
+            "ci95": [
+              0.5415,
+              0.6234
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 171,
+            "rate": 0.3087,
+            "ci95": [
+              0.2716,
+              0.3483
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 394,
+            "rate": 0.7112,
+            "ci95": [
+              0.6721,
+              0.7474
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 218,
+            "rate": 0.3935,
+            "ci95": [
+              0.3537,
+              0.4348
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 87,
+            "rate": 0.157,
+            "ci95": [
+              0.1291,
+              0.1897
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 1,
+            "rate": 0.0018,
+            "ci95": [
+              0.0003,
+              0.0102
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 491,
+            "rate": 0.8863,
+            "ci95": [
+              0.8571,
+              0.9101
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 4,
+            "rate": 0.0072,
+            "ci95": [
+              0.0028,
+              0.0184
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 545,
+            "rate": 0.9838,
+            "ci95": [
+              0.9694,
+              0.9914
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 4,
+            "rate": 0.0072,
+            "ci95": [
+              0.0028,
+              0.0184
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 486,
+            "rate": 0.8773,
+            "ci95": [
+              0.8473,
+              0.902
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 27,
+            "rate": 0.0487,
+            "ci95": [
+              0.0337,
+              0.07
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 539,
+            "rate": 0.9729,
+            "ci95": [
+              0.9558,
+              0.9835
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 30,
+            "rate": 0.0542,
+            "ci95": [
+              0.0382,
+              0.0763
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 554,
+            "hits": 186,
+            "rate": 0.3357,
+            "ci95": [
+              0.2977,
+              0.3761
+            ]
+          },
+          "safe_flagged": {
+            "n": 554,
+            "hits": 66,
+            "rate": 0.1191,
+            "ci95": [
+              0.0947,
+              0.1488
+            ]
+          }
+        }
+      },
+      "auc": {
+        "B0_style_only": 0.5006,
+        "L2_trained_on_v2": 0.9993,
+        "L2_trained_on_v3": 0.9696,
+        "B4_protectai_deberta": 0.6862
+      }
+    },
+    "external_test": {
+      "n": 101,
+      "labels": {
+        "0": 53,
+        "1": 48
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 8,
+            "rate": 0.1667,
+            "ci95": [
+              0.087,
+              0.2958
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 1,
+            "rate": 0.0189,
+            "ci95": [
+              0.0033,
+              0.0994
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 8,
+            "rate": 0.1667,
+            "ci95": [
+              0.087,
+              0.2958
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0676
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 17,
+            "rate": 0.3542,
+            "ci95": [
+              0.2343,
+              0.4956
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0676
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 23,
+            "rate": 0.4792,
+            "ci95": [
+              0.3447,
+              0.6167
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 1,
+            "rate": 0.0189,
+            "ci95": [
+              0.0033,
+              0.0994
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 8,
+            "rate": 0.1667,
+            "ci95": [
+              0.087,
+              0.2958
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0676
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 33,
+            "rate": 0.6875,
+            "ci95": [
+              0.5467,
+              0.8005
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 3,
+            "rate": 0.0566,
+            "ci95": [
+              0.0194,
+              0.1537
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 48,
+            "rate": 1.0,
+            "ci95": [
+              0.9259,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 1,
+            "rate": 0.0189,
+            "ci95": [
+              0.0033,
+              0.0994
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 48,
+            "rate": 1.0,
+            "ci95": [
+              0.9259,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0676
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 48,
+            "rate": 1.0,
+            "ci95": [
+              0.9259,
+              1.0
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 3,
+            "rate": 0.0566,
+            "ci95": [
+              0.0194,
+              0.1537
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 48,
+            "hits": 43,
+            "rate": 0.8958,
+            "ci95": [
+              0.7783,
+              0.9547
+            ]
+          },
+          "safe_flagged": {
+            "n": 53,
+            "hits": 14,
+            "rate": 0.2642,
+            "ci95": [
+              0.1644,
+              0.3958
+            ]
+          }
+        }
+      },
+      "auc": {
+        "B0_style_only": 0.6034,
+        "L2_trained_on_v2": 1.0,
+        "L2_trained_on_v3": 1.0,
+        "B4_protectai_deberta": 0.8888
+      }
+    },
+    "vi_test": {
+      "n": 161,
+      "labels": {
+        "1": 84,
+        "0": 77
+      },
+      "methods": {
+        "B0_style_only": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0437
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0475
+            ]
+          }
+        },
+        "B1_regex_baseline": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 2,
+            "rate": 0.0238,
+            "ci95": [
+              0.0066,
+              0.0827
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0475
+            ]
+          }
+        },
+        "B2_v1_xgboost_block": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 19,
+            "rate": 0.2262,
+            "ci95": [
+              0.1499,
+              0.3265
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 2,
+            "rate": 0.026,
+            "ci95": [
+              0.0072,
+              0.0898
+            ]
+          }
+        },
+        "B2_v1_xgboost_block_or_escalate": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 25,
+            "rate": 0.2976,
+            "ci95": [
+              0.2104,
+              0.4025
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 5,
+            "rate": 0.0649,
+            "ci95": [
+              0.0281,
+              0.1432
+            ]
+          }
+        },
+        "L1_regex_only": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 5,
+            "rate": 0.0595,
+            "ci95": [
+              0.0257,
+              0.1319
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 0,
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0475
+            ]
+          }
+        },
+        "L1_full_old_index": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 38,
+            "rate": 0.4524,
+            "ci95": [
+              0.3504,
+              0.5586
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 1,
+            "rate": 0.013,
+            "ci95": [
+              0.0023,
+              0.07
+            ]
+          }
+        },
+        "L2_trained_on_v2": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 78,
+            "rate": 0.9286,
+            "ci95": [
+              0.8528,
+              0.9669
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 6,
+            "rate": 0.0779,
+            "ci95": [
+              0.0362,
+              0.1598
+            ]
+          }
+        },
+        "L2_trained_on_v3": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 60,
+            "rate": 0.7143,
+            "ci95": [
+              0.61,
+              0.7999
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 2,
+            "rate": 0.026,
+            "ci95": [
+              0.0072,
+              0.0898
+            ]
+          }
+        },
+        "L1_plus_L2_v3": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 68,
+            "rate": 0.8095,
+            "ci95": [
+              0.7128,
+              0.8792
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 2,
+            "rate": 0.026,
+            "ci95": [
+              0.0072,
+              0.0898
+            ]
+          }
+        },
+        "B4_protectai_deberta": {
+          "attacks_flagged": {
+            "n": 84,
+            "hits": 80,
+            "rate": 0.9524,
+            "ci95": [
+              0.8839,
+              0.9813
+            ]
+          },
+          "safe_flagged": {
+            "n": 77,
+            "hits": 45,
+            "rate": 0.5844,
+            "ci95": [
+              0.4729,
+              0.6879
+            ]
+          }
+        }
+      },
+      "auc": {
+        "B0_style_only": 0.616,
+        "L2_trained_on_v2": 0.9655,
+        "L2_trained_on_v3": 0.9477,
+        "B4_protectai_deberta": 0.7835
+      }
+    }
+  },
+  "b0_on_dataset_v3": {
+    "validation": {
+      "n": 2814,
+      "auc": 0.5764,
+      "attacks_flagged": {
+        "n": 1407,
+        "hits": 111,
+        "rate": 0.0789,
+        "ci95": [
+          0.0659,
+          0.0942
+        ]
+      },
+      "safe_flagged": {
+        "n": 1407,
+        "hits": 15,
+        "rate": 0.0107,
+        "ci95": [
+          0.0065,
+          0.0175
+        ]
+      }
+    },
+    "test": {
+      "n": 2736,
+      "auc": 0.5864,
+      "attacks_flagged": {
+        "n": 1368,
+        "hits": 107,
+        "rate": 0.0782,
+        "ci95": [
+          0.0651,
+          0.0937
+        ]
+      },
+      "safe_flagged": {
+        "n": 1368,
+        "hits": 19,
+        "rate": 0.0139,
+        "ci95": [
+          0.0089,
+          0.0216
+        ]
+      }
+    }
+  },
+  "market_guardrails": {
+    "model": "protectai/deberta-v3-base-prompt-injection-v2",
+    "rule": "max over 300-word windows (overlap 50); flagged when the attack probability >= 0.5",
+    "sets": {
+      "deepset": {
+        "n": 662,
+        "attacks_flagged": {
+          "n": 263,
+          "hits": 109,
+          "rate": 0.4144,
+          "ci95": [
+            0.3566,
+            0.4748
+          ]
+        },
+        "safe_flagged": {
+          "n": 399,
+          "hits": 4,
+          "rate": 0.01,
+          "ci95": [
+            0.0039,
+            0.0255
+          ]
+        },
+        "auc": 0.882
+      },
+      "grayswan_ipi": {
+        "n": 95,
+        "attacks_flagged": {
+          "n": 95,
+          "hits": 50,
+          "rate": 0.5263,
+          "ci95": [
+            0.4269,
+            0.6237
+          ]
+        },
+        "safe_flagged": null
+      },
+      "holdout_tensortrust": {
+        "n": 396,
+        "attacks_flagged": {
+          "n": 396,
+          "hits": 354,
+          "rate": 0.8939,
+          "ci95": [
+            0.8597,
+            0.9206
+          ]
+        },
+        "safe_flagged": null
+      },
+      "holdout_injecagent_base": {
+        "n": 391,
+        "attacks_flagged": {
+          "n": 374,
+          "hits": 269,
+          "rate": 0.7193,
+          "ci95": [
+            0.6717,
+            0.7624
+          ]
+        },
+        "safe_flagged": {
+          "n": 17,
+          "hits": 10,
+          "rate": 0.5882,
+          "ci95": [
+            0.3601,
+            0.7839
+          ]
+        },
+        "auc": 0.6071
+      },
+      "holdout_injecagent_enhanced": {
+        "n": 391,
+        "attacks_flagged": {
+          "n": 374,
+          "hits": 374,
+          "rate": 1.0,
+          "ci95": [
+            0.9898,
+            1.0
+          ]
+        },
+        "safe_flagged": {
+          "n": 17,
+          "hits": 10,
+          "rate": 0.5882,
+          "ci95": [
+            0.3601,
+            0.7839
+          ]
+        },
+        "auc": 0.9992
+      },
+      "holdout_dolly_instr": {
+        "n": 1000,
+        "attacks_flagged": null,
+        "safe_flagged": {
+          "n": 1000,
+          "hits": 0,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.0038
+          ]
+        }
+      },
+      "holdout_dolly_doc": {
+        "n": 300,
+        "attacks_flagged": null,
+        "safe_flagged": {
+          "n": 300,
+          "hits": 2,
+          "rate": 0.0067,
+          "ci95": [
+            0.0018,
+            0.024
+          ]
+        }
+      },
+      "holdout_xquad_q": {
+        "n": 128,
+        "attacks_flagged": null,
+        "safe_flagged": {
+          "n": 128,
+          "hits": 41,
+          "rate": 0.3203,
+          "ci95": [
+            0.2457,
+            0.4054
+          ]
+        }
+      },
+      "holdout_xquad_doc": {
+        "n": 27,
+        "attacks_flagged": null,
+        "safe_flagged": {
+          "n": 27,
+          "hits": 0,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.1246
+          ]
+        }
+      },
+      "test": {
+        "n": 1108,
+        "attacks_flagged": {
+          "n": 554,
+          "hits": 186,
+          "rate": 0.3357,
+          "ci95": [
+            0.2977,
+            0.3761
+          ]
+        },
+        "safe_flagged": {
+          "n": 554,
+          "hits": 66,
+          "rate": 0.1191,
+          "ci95": [
+            0.0947,
+            0.1488
+          ]
+        },
+        "auc": 0.6862
+      },
+      "external_test": {
+        "n": 101,
+        "attacks_flagged": {
+          "n": 48,
+          "hits": 43,
+          "rate": 0.8958,
+          "ci95": [
+            0.7783,
+            0.9547
+          ]
+        },
+        "safe_flagged": {
+          "n": 53,
+          "hits": 14,
+          "rate": 0.2642,
+          "ci95": [
+            0.1644,
+            0.3958
+          ]
+        },
+        "auc": 0.8888
+      },
+      "vi_test": {
+        "n": 161,
+        "attacks_flagged": {
+          "n": 84,
+          "hits": 80,
+          "rate": 0.9524,
+          "ci95": [
+            0.8839,
+            0.9813
+          ]
+        },
+        "safe_flagged": {
+          "n": 77,
+          "hits": 45,
+          "rate": 0.5844,
+          "ci95": [
+            0.4729,
+            0.6879
+          ]
+        },
+        "auc": 0.7835
+      }
+    }
+  }
+}

@@ -137,6 +137,61 @@ def test_clean_context_passes_and_comes_back_datamarked(client):
     assert "<untrusted id=\"kb1\"" in body["sanitized_context"]
 
 
+@_needs_l2
+def test_a_clean_document_still_sends_the_next_transfer_for_confirmation(client):
+    token = _token(client, "finance_lead", "finance_lead_123")
+    sid = "e2e-exposed"
+    ctx = _post(client, "/chat/context", token, {"session_id": sid, "chunks": [
+        {"id": "kb2", "source": "rag", "text": "Khách hàng được đổi sản phẩm trong vòng 7 ngày kể từ ngày nhận hàng."}]})
+    body = ctx.json()
+    assert body["session_tainted"] is False and body["session_exposed"] is True and body["session_level"] == "exposed"
+
+    out = _post(client, "/chat/action", token, {"action_type": "transfer_money", "payload": _TRANSFER, "session_id": sid}).json()
+    assert out["decision"] == "REVIEW" and out["check"] == "exposure" and out["review_by"] == "user"
+    assert out["exposed"] is True and out["provenance"] == [{"source": "rag", "chunk_id": "kb2"}]
+
+
+@_needs_l2
+def test_ordinary_transfer_requests_go_through(client):
+    # the v3 model held these (31/10/2026); dataset v3b added benign transactional requests (WP7)
+    token = _token(client)
+    for text in ("Mình muốn chuyển 1 triệu cho số tài khoản 999 888 nhé",
+                 "Chuyển khoản 2 triệu cho anh Nam số tài khoản 0123456789 Vietcombank",
+                 "Thanh toán hóa đơn tiền điện 1.250.000đ cho mã khách hàng PE0400012345"):
+        assert _post(client, "/chat/message", token, {"text": text}).json()["decision"] == "ALLOW", text
+
+
+@_needs_l2
+def test_an_account_the_customer_typed_clears_the_transfer_after_reading_a_document(client):
+    token = _token(client, "finance_lead", "finance_lead_123")
+    sid = "e2e-typed"
+    msg = _post(client, "/chat/message", token, {"session_id": sid,
+                                                 "text": "Cho mình hỏi phí chuyển 1 triệu sang tài khoản 999888 là bao nhiêu?"})
+    assert msg.json()["decision"] == "ALLOW"
+    _post(client, "/chat/context", token, {"session_id": sid, "chunks": [
+        {"id": "kb3", "source": "rag", "text": "Khách hàng được đổi sản phẩm trong vòng 7 ngày kể từ ngày nhận hàng."}]})
+    out = _post(client, "/chat/action", token, {"action_type": "transfer_money", "payload": _TRANSFER, "session_id": sid}).json()
+    assert out["decision"] == "ALLOW" and out["exposed"] is True
+    assert out["value_provenance"][0]["origin"] == "trusted"
+
+    # the same message without a named session is not remembered: the shared default session must not clear transfers
+    _post(client, "/chat/message", token, {"text": "Cho mình hỏi phí chuyển 1 triệu sang tài khoản 777666 là bao nhiêu?"})
+    from api.routes import chat as chat_routes
+    assert chat_routes.orchestrator.values.summary("session_default")["trusted"] == []
+
+
+def test_strict_mode_requires_a_session_for_context_and_actions(client, monkeypatch):
+    monkeypatch.setenv("FIREWALL_REQUIRE_SESSION", "1")
+    token = _token(client, "finance_lead", "finance_lead_123")
+    no_sid = _post(client, "/chat/action", token, {"action_type": "transfer_money", "payload": _TRANSFER})
+    assert no_sid.status_code == 422
+    default_sid = _post(client, "/chat/context", token, {"chunks": [{"id": "a", "text": "xin chào"}]})
+    assert default_sid.status_code == 422
+    with_sid = _post(client, "/chat/action", token, {"action_type": "transfer_money", "payload": _TRANSFER,
+                                                     "session_id": "strict-1"})
+    assert with_sid.status_code == 200 and with_sid.json()["decision"] == "ALLOW"
+
+
 def test_review_queue_is_reachable_and_only_reviewers_decide(client):
     finance = _token(client, "finance_lead", "finance_lead_123")
     big = {"user_id": "u1", "order_id": "o1", "amount": 150.0, "order_value": 500.0, "user_role": "finance_lead"}
@@ -152,6 +207,46 @@ def test_review_queue_is_reachable_and_only_reviewers_decide(client):
     assert denied.status_code == 403
     decided = _post(client, f"/chat/review/{review_id}/decision", finance, {"approve": True, "note": "ok"})
     assert decided.status_code == 200 and decided.json()["status"] == "approved"
+
+    customer = _token(client, "khach_hang", "khach_hang_123")
+    other_finance = _post(client, "/chat/action", finance, {"action_type": "refund", "payload": big, "session_id": "e2e-review-2"})
+    staff_item = other_finance.json()["review_id"]
+    assert _post(client, f"/chat/review/{staff_item}/decision", customer, {"approve": True}).status_code == 403
+    mine = client.get("/chat/review", headers={"Authorization": f"Bearer {customer}"}).json()
+    assert all(item["user_id"] == "demo_customer" for item in mine)
+
+
+def test_customer_confirms_own_transfer_held_after_reading_untrusted_content(client):
+    from api.routes import chat as chat_routes
+
+    sid = "e2e-customer-confirm"
+    chat_routes.orchestrator.taint.expose(sid, "email", "mail-1")
+    customer = _token(client, "khach_hang", "khach_hang_123")
+    payload = {"user_id": "demo_customer", "from_account": "111222", "to_account": "778899001122",
+               "bank_code": "VCB", "amount": 2_000_000, "otp_verified": True}
+    out = _post(client, "/chat/action", customer, {"action_type": "transfer_money", "payload": payload, "session_id": sid}).json()
+    assert out["decision"] == "REVIEW" and out["review_by"] == "user"
+    assert out["provenance"] == [{"source": "email", "chunk_id": "mail-1"}]
+
+    agent = _token(client)       # not the owner and not a reviewer
+    assert _post(client, f"/chat/review/{out['review_id']}/decision", agent, {"approve": True}).status_code == 403
+    mine = client.get("/chat/review", headers={"Authorization": f"Bearer {customer}"}).json()
+    assert [i["id"] for i in mine] == [out["review_id"]]
+    done = _post(client, f"/chat/review/{out['review_id']}/decision", customer, {"approve": False, "note": "không phải tôi"})
+    assert done.status_code == 200 and done.json()["status"] == "rejected" and done.json()["reviewer"] == "khach_hang"
+
+
+def test_saved_recipient_clears_the_exposure_question(client):
+    from api.routes import chat as chat_routes
+
+    sid = "e2e-customer-saved"
+    chat_routes.orchestrator.taint.expose(sid, "email", "mail-2")
+    customer = _token(client, "khach_hang", "khach_hang_123")
+    payload = {"user_id": "demo_customer", "from_account": "111222", "to_account": "0451000123456",
+               "bank_code": "VCB", "amount": 2_000_000, "otp_verified": True}
+    out = _post(client, "/chat/action", customer, {"action_type": "transfer_money", "payload": payload, "session_id": sid}).json()
+    assert out["decision"] == "ALLOW" and out["session_level"] == "exposed"
+    assert out["value_provenance"][0]["origin"] == "trusted"
 
 
 # ---------------- Layer 5: output guard through the API ----------------
@@ -192,7 +287,9 @@ def test_console_stats_sessions_and_health(client):
     admin = _token(client, "security_admin", "security_admin_123")
     headers = {"Authorization": f"Bearer {admin}"}
     stats = client.get("/console/stats", headers=headers).json()
-    assert {"by_layer", "by_decision", "pending_reviews", "tainted_sessions"} <= set(stats)
+    assert {"by_layer", "by_decision", "pending_reviews", "tainted_sessions", "exposed_sessions"} <= set(stats)
+    assert stats["exposure_mode"] in ("provenance", "detection")
+    assert isinstance(client.get("/console/sessions?include_exposed=true", headers=headers).json(), list)
     assert set(stats["by_layer"]) >= {"1", "2", "3", "4", "5"} or set(stats["by_layer"]) >= {1, 2, 3, 4, 5}
     assert isinstance(client.get("/console/sessions", headers=headers).json(), list)
     health = client.get("/console/health", headers=headers).json()

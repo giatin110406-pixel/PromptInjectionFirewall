@@ -78,6 +78,7 @@ models/layer3_distilbert/checkpoint/
 
 # Layer 2 training outputs (checkpoint is ~1 GB; share via Drive)
 models/l2_multilingual/artifacts/checkpoint/
+models/l2_multilingual/artifacts_*/checkpoint/
 l2_colab_bundle.zip
 data/processed_backup_tmp/
 
@@ -105,6 +106,9 @@ l2_colab_bundle*.zip
 
 # Dataset v3 (third-party text, some without a licence), the old L2 model kept for comparison, a rejected L1 index experiment
 data/processed_public/
+data/processed_public_v3*/
+# Word lock files
+~$*
 models/l2_multilingual/artifacts_v2_aigen/
 models/layer1_prefilter/index_v3/
 # per-row results and run logs of the evaluation scripts (numbers are kept in the *.json summaries)
@@ -114,3 +118,4 @@ evaluation/results/v2_model/public_l3/*
 !evaluation/results/v2_model/public_l3/l3_public_eval.json
 evaluation/results/*_run.log
 evaluation/results/band_calibration_scores.csv
+data/firewall_state.sqlite*

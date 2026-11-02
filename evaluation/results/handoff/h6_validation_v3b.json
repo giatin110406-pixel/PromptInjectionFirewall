@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "n": 32,
+  "executable": 28,
+  "total_queries": 6400,
+  "budgets": [
+    10,
+    50,
+    200
+  ],
+  "duplicate_queries": 0,
+  "all_milestones_recomputed_from_history": true,
+  "sources_match_provenance": true,
+  "policy_snapshot": "evaluation\\results\\handoff\\h6_policy_at_start.yaml",
+  "current_policy_matches_run": false,
+  "base_fields_unchanged": true,
+  "base_without_adaptive_sha256": "a817a31a038ce16b32a600ae945c85839ab2fee265d2de31236e6610bdab7acf",
+  "sensitive_subset": {
+    "n": 24,
+    "scope": "clean control ALLOW; policy class money, identity, privilege or data",
+    "asr_action_at": {
+      "detection": {
+        "10": 0.416667,
+        "50": 0.666667,
+        "200": 0.708333
+      },
+      "provenance": {
+        "10": 0.0,
+        "50": 0.0,
+        "200": 0.0
+      }
+    }
+  },
+  "image_sha256": "f6be3ea68dc15eaf6538336b0d3895e22bbdf4910df5fef9be97a67ebafd3a34"
+}

@@ -1,0 +1,22 @@
+# Saved recipients: values a user registered BEFORE the session (a bank's beneficiary list, known billers, the
+# company's own domains). Read by firewall/values.py. In a session that read untrusted content, an action whose
+# recipient is listed here is not held for confirmation (other checks, such as amount limits, still apply).
+#
+# users:     per user_id, the values that user saved (account numbers, emails, web hosts, IDs).
+# everyone:  values every user may send to without a question (e.g. the electricity company's billing account).
+#
+# Demo values only. A real deployment reads them from the bank or CRM, not from this file.
+
+version: 1
+
+users:
+  u1:
+    - "0451000123456"            # Vietcombank, saved as "Mẹ"
+    - "lan.nguyen@example.com"   # saved contact
+  demo_customer:
+    - "0451000123456"
+    - "19036868"                 # saved biller
+
+everyone:
+  - "9704180012345678"           # demo electricity billing account
+  - "example-shop.vn"            # the company's own web domain

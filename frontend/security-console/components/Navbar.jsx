@@ -3,6 +3,7 @@ import React from 'react';
 const TABS = [
   { id: 'overview', label: 'Tổng quan' },
   { id: 'incidents', label: 'Sự cố' },
+  { id: 'sessions', label: 'Phiên' },
   { id: 'review', label: 'Hàng chờ duyệt' },
   { id: 'try', label: 'Thử prompt' },
   { id: 'lab', label: 'Phòng thử tấn công' },
@@ -36,6 +37,7 @@ export default function Navbar({ tab, onTab, isOnline, health, pending, user, on
           <span className={`dot ${state === 'ok' ? '' : state}`} />
           {text}
         </span>
+        <a className="btn sm cyan" href="/demo" target="_blank" rel="noreferrer">Demo chatbot</a>
         <span className="small" style={{ fontWeight: 700 }}>{user}</span>
         <button className="btn sm red" onClick={onClear} title="Xóa nhật ký sự cố (cho lần demo mới)">Xóa nhật ký</button>
         <button className="btn sm white" onClick={onLogout}>Đăng xuất</button>

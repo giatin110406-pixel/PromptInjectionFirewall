@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from firewall.normalize import strip_invisible
+from firewall.turn_risk import layer2_score
 from firewall.types import Decision, max_decision, parse_decision
 
 DATAMARK = "ˆ"          # U+02C6, unlikely in ordinary text
@@ -186,10 +187,12 @@ class ContextScanner:
             content_worst, content_reason, content_layer = Decision.ALLOW, "", 0
             hidden_worst, hidden_reason, hidden_layer = Decision.ALLOW, "", 0
             chunk_degraded = False
+            risk = 0.0          # highest Layer 2 score of the chunk or its hidden parts (WP4: exposure_risk)
 
             def record(result):
-                nonlocal chunk_degraded
+                nonlocal chunk_degraded, risk
                 chunk_degraded = chunk_degraded or bool(result.get("degraded"))
+                risk = max(risk, layer2_score(result))
                 degraded.extend(int(x) for x in result.get("degraded_layers", []) or [])
 
             if cleaned.strip():
@@ -230,7 +233,7 @@ class ContextScanner:
             entry = {"id": chunk.id, "source": chunk.source, "decision": max(content_worst, hidden_worst).name,
                      "passed": not removed_whole, "partial": partial, "removed_segments": dropped,
                      "suspicious": sure, "uncertain": flagged and not sure and not chunk_degraded,
-                     "stopped_at_layer": layer, "reason": reason, "hidden_removed": hidden}
+                     "stopped_at_layer": layer, "reason": reason, "hidden_removed": hidden, "risk": round(risk, 4)}
             report.append(entry)
             if flagged or bool(hidden):
                 overall = max_decision(overall, Decision.SANITIZE)

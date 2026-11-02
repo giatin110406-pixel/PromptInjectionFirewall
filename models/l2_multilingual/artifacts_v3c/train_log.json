@@ -1,0 +1,86 @@
+{
+  "args": {
+    "model": "microsoft/mdeberta-v3-base",
+    "data_dir": "data/processed_public",
+    "out": "/content/drive/MyDrive/ai_firewall/l2_artifacts_v3c",
+    "epochs": 3,
+    "batch_size": 16,
+    "lr": 2e-05,
+    "max_tokens": 200,
+    "stride": 128,
+    "safe_ratio": 1.0,
+    "seed": 42,
+    "limit": 0,
+    "freeze_embeddings": false
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.1794,
+      "val_nll": 0.105,
+      "val": {
+        "n": 4957,
+        "positives": 1829,
+        "threshold": 0.5,
+        "precision": 0.9652,
+        "recall": 0.9705,
+        "f1": 0.9678,
+        "fpr": 0.0205,
+        "accuracy": 0.9762,
+        "auc": 0.9953,
+        "tp": 1775,
+        "fp": 64,
+        "fn": 54,
+        "tn": 3064
+      },
+      "minutes": 11.4
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.0323,
+      "val_nll": 0.0939,
+      "val": {
+        "n": 4957,
+        "positives": 1829,
+        "threshold": 0.5,
+        "precision": 0.9834,
+        "recall": 0.9738,
+        "f1": 0.9786,
+        "fpr": 0.0096,
+        "accuracy": 0.9843,
+        "auc": 0.9976,
+        "tp": 1781,
+        "fp": 30,
+        "fn": 48,
+        "tn": 3098
+      },
+      "minutes": 22.9
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.0111,
+      "val_nll": 0.107,
+      "val": {
+        "n": 4957,
+        "positives": 1829,
+        "threshold": 0.5,
+        "precision": 0.9846,
+        "recall": 0.9781,
+        "f1": 0.9813,
+        "fpr": 0.009,
+        "accuracy": 0.9863,
+        "auc": 0.9969,
+        "tp": 1789,
+        "fp": 28,
+        "fn": 40,
+        "tn": 3100
+      },
+      "minutes": 34.3
+    }
+  ],
+  "data_hash": {
+    "train": "8f64a8ff9b016cb4",
+    "validation": "58b2f3afa35038cb",
+    "test": "f37bc34f2bce084e"
+  }
+}

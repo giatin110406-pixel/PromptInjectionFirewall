@@ -20,19 +20,23 @@ from firewall.output_guard import OutputGuard
 from firewall.review_queue import ReviewQueue
 from firewall.session import TaintStore
 from firewall.spotlight import Chunk, ContextScanner
+from firewall.state_store import StateStore
+from firewall.turn_risk import TurnRisk, layer2_score
 from firewall.types import Decision, LayerResult, max_decision, parse_decision
+from firewall.values import ValueLedger
 
 
 # A Layer 2 block below this score, with no agreement from Layer 1 and no judge, is held for review instead of blocked.
-# Values for the Layer 2 model trained on dataset v3 (threshold 0.9119), chosen with evaluation/calibrate_bands.py on the
-# validation split of v3 and the dev halves only (evaluation/results/band_calibration.json): among texts scoring 0.9119-0.992,
-# 16 of 97 were safe (16%); from 0.992 up, 13 of 1,409 (0.9%). The model trained on dataset v2 (threshold 0.6659) used 0.98.
-DEFAULT_SOFT_BLOCK_BELOW = 0.992
+# Values for the Layer 2 model trained on dataset v3b (threshold 0.6473), chosen with evaluation/calibrate_bands.py on the
+# validation split of v3b and the dev halves only (evaluation/results/band_calibration.json): among texts scoring
+# 0.6473-0.957, 15 of 53 were safe (28%); from 0.957 up, 17 of 1,617 (1.1%). Earlier models: v3 (threshold 0.9119) used
+# 0.992 (band_calibration_v3.json), v2 (threshold 0.6659) used 0.98.
+DEFAULT_SOFT_BLOCK_BELOW = 0.957
 
-# Layer 2 score edges handed to the judge. Allow side [0.30, threshold): 26 attacks against 12 safe texts on the dev data;
-# below 0.30 the band holds more safe texts than attacks. Block side [threshold, 0.992): the unreliable blocks above.
-DEFAULT_ESCALATE_LOW = 0.30
-DEFAULT_ESCALATE_HIGH = 0.992
+# Layer 2 score edges handed to the judge. Allow side [0.45, threshold): 3 attacks against 1 safe text on the dev data;
+# below 0.45 the band holds more safe texts than attacks. Block side [threshold, 0.957): the unreliable blocks above.
+DEFAULT_ESCALATE_LOW = 0.45
+DEFAULT_ESCALATE_HIGH = 0.957
 
 
 def normalize_skip(skip) -> set:
@@ -72,12 +76,41 @@ class FirewallOrchestrator:
             if self.layer2.escalate_high is None:
                 self.layer2.escalate_high = DEFAULT_ESCALATE_HIGH
         self.layer4 = layer4 or Layer4Validator()
-        self.taint = TaintStore()
-        self.output_guard = OutputGuard()
+        # Session state is in memory unless FIREWALL_STATE_DB names a SQLite file (firewall/state_store.py).
+        self.state_store = StateStore.from_env()
+        self.taint = TaintStore(store=self.state_store)
+        self.values = ValueLedger(store=self.state_store)
+        self.output_guard = OutputGuard(store=self.state_store)
         self.review_queue = ReviewQueue()
-        self.actions = ActionGate(validator=self.layer4, taint=self.taint, queue=self.review_queue)
+        # Session risk across chat turns (firewall/turn_risk.py): the uncertain band is the allow side of the judge band.
+        self.turn_risk = TurnRisk(low=DEFAULT_ESCALATE_LOW, high=float(getattr(self.layer2, "threshold", None) or 0.65),
+                                  store=self.state_store)
+        self.actions = ActionGate(validator=self.layer4, taint=self.taint, queue=self.review_queue, values=self.values)
 
-    def process_input(self, text: str, source: str = "user", skip=(), use_judge: bool = True) -> Dict[str, Any]:
+    def process_input(self, text: str, source: str = "user", skip=(), use_judge: bool = True,
+                      session_id: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Check one text (see `_scan_input`). With a `session_id`, a user message that ends in ALLOW also records the
+        values it holds (account numbers, emails, IDs) as typed by the user: Layer 4 then lets an action addressed to
+        them through in a session that read untrusted content. A message held or blocked records nothing.
+        A user message in a session also adds its Layer 2 score to the session risk (firewall/turn_risk.py). When the
+        conversation as a whole looks like step-by-step pressure, the message is held (REVIEW) even if it passed on its
+        own, and the session becomes EXPOSED so the next sensitive action needs a confirmation.
+        """
+        result = self._scan_input(text, source=source, skip=skip, use_judge=use_judge)
+        if session_id and source == "user":
+            risk = self.turn_risk.record(session_id, layer2_score(result))
+            result["session_risk"] = risk
+            if risk["review"]:
+                self.taint.expose(session_id, "conversation", f"turn-{risk['turns']}", "REVIEW")
+                if result["decision"] == Decision.ALLOW.name:
+                    result["decision"] = Decision.REVIEW.name
+                    result["final_reason"] = f"session_risk:{risk['reason']}"
+            if result["decision"] == Decision.ALLOW.name:
+                self.values.add_trusted(session_id, text)
+        return result
+
+    def _scan_input(self, text: str, source: str = "user", skip=(), use_judge: bool = True) -> Dict[str, Any]:
         """
         Processes prompt text through the defense layers with dynamic escalation.
         Returns:
@@ -152,7 +185,9 @@ class FirewallOrchestrator:
         Scan untrusted content (RAG passages, emails, web pages, tool output) before it reaches the model.
         `chunks`: dicts with `id`, `text` and optionally `source`. Returns the decision, a verdict per chunk,
         and `sanitized_context`: the surviving text, delimited and datamarked (see firewall/spotlight.py).
-        A chunk that carried an instruction taints the session; Layer 4 reads that flag.
+        Every chunk EXPOSES the session, clean or not: the firewall cannot prove a chunk held no instruction, and the
+        caller may hand the raw text to the model anyway. A chunk that carried an instruction also TAINTS the session.
+        Layer 4 reads both flags.
         """
         parsed = [Chunk(id=str(c.get("id", i)), text=str(c.get("text", "")), source=str(c.get("source", "document")))
                   for i, c in enumerate(chunks)]
@@ -161,10 +196,16 @@ class FirewallOrchestrator:
         result = scanner.scan(parsed, clean="CLEAN" not in skip).to_dict()
         result["skipped"] = sorted(skip)
         if session_id:
+            for chunk in parsed:          # the raw text, removed parts included: an attacker's account sits there
+                self.values.add_untrusted(session_id, chunk.text, chunk.source, chunk.id)
             for entry in result["chunks"]:
                 if entry["suspicious"]:
                     self.taint.mark(session_id, entry["source"], entry["reason"], entry["id"])
+                else:
+                    self.taint.expose(session_id, entry["source"], entry["id"], entry["decision"], risk=entry.get("risk"))
         result["session_tainted"] = self.taint.is_tainted(session_id)
+        result["session_exposed"] = self.taint.is_exposed(session_id)
+        result["session_level"] = self.taint.level(session_id)
         return result
 
     def check_output(self, text: str, session_id: Optional[str] = None, allow_text: str = "",
@@ -214,6 +255,7 @@ class FirewallOrchestrator:
             "status": "degraded" if degraded else "healthy",
             "degraded_layers": degraded,
             "layers": layers,
+            "session_state": self.state_store.stats() if self.state_store is not None else {"path": None, "rows": {}},
         }
 
     def _layer3_health(self, configured: bool, model_ok: bool) -> Dict[str, Any]:

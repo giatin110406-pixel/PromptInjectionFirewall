@@ -25,6 +25,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from firewall.normalize import strip_invisible
+from firewall.state_store import StateStore
 
 CANARY_RE = re.compile(r"FWC-[0-9a-f]{16}")
 CANARY_TTL_SECONDS = 60 * 60
@@ -80,7 +81,7 @@ def _shingles(words: List[str], k: int) -> set:
 
 class OutputGuard:
     def __init__(self, allowed_domains: Iterable[str] = (), ttl_seconds: int = CANARY_TTL_SECONDS,
-                 echo_words: int = 8, echo_hits: int = 2, clock=time.time):
+                 echo_words: int = 8, echo_hits: int = 2, clock=time.time, store: Optional[StateStore] = None):
         self.allowed_domains = {d.lower().lstrip(".") for d in allowed_domains}
         self.ttl = ttl_seconds
         self.echo_words = echo_words
@@ -88,15 +89,25 @@ class OutputGuard:
         self._clock = clock
         self._canaries: Dict[str, Tuple[str, float]] = {}
         self._lock = threading.Lock()
+        self._store = store            # FIREWALL_STATE_DB: canaries survive a restart (firewall/state_store.py)
+
+    def _sync(self, session_id: str) -> None:
+        if self._store is not None and session_id:
+            row = self._store.get("canary", session_id)
+            if row:
+                self._canaries[session_id] = (row[0], row[1])
 
     # ------------------------------------------------------------- canary
     def canary_for(self, session_id: str) -> str:
         with self._lock:
             self._expire()
+            self._sync(session_id)
             token, _ = self._canaries.get(session_id, (None, 0.0))
             if token is None:
                 token = "FWC-" + secrets.token_hex(8)
             self._canaries[session_id] = (token, self._clock())
+            if self._store is not None:
+                self._store.put("canary", session_id, [token, self._clock()], self._clock())
             return token
 
     def system_prompt_with_canary(self, session_id: str, system_prompt: str) -> str:
@@ -109,6 +120,8 @@ class OutputGuard:
         cutoff = self._clock() - self.ttl
         for key in [k for k, (_, seen) in self._canaries.items() if seen < cutoff]:
             del self._canaries[key]
+        if self._store is not None:
+            self._store.delete_older("canary", cutoff)
 
     # ------------------------------------------------------------- check
     def check(self, text: str, session_id: Optional[str] = None, allow_text: str = "",
@@ -121,6 +134,7 @@ class OutputGuard:
         # 1. canary: the session's own token, and anything shaped like a canary
         with self._lock:
             self._expire()
+            self._sync(session_id or "")
             own = self._canaries.get(session_id or "", (None, 0.0))[0]
         for match in CANARY_RE.finditer(flat):
             findings.append({"type": "canary_leak", "severity": "BLOCK", "own_session": match.group(0) == own})

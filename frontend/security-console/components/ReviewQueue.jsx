@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, Json } from './ui';
 import { api } from '../lib/api';
 import { timeAgo } from '../lib/layers';
+import ProvenanceChain, { ReviewByBadge } from './ProvenanceChain';
 
 function PendingItem({ item, onDone }) {
   const [note, setNote] = useState('');
@@ -29,10 +30,16 @@ function PendingItem({ item, onDone }) {
       </div>
       <div>
         <span className="badge" style={{ background: 'var(--orange)' }}>REVIEW</span>{' '}
-        {item.tainted && <span className="badge" style={{ background: 'var(--red)' }}>PHIÊN BỊ TAINT</span>}
+        {item.tainted && <span className="badge" style={{ background: 'var(--red)' }}>PHIÊN BỊ TAINT</span>}{' '}
+        {!item.tainted && item.exposed && <span className="badge" style={{ background: 'var(--orange)' }}>ĐÃ ĐỌC NỘI DUNG NGOÀI</span>}{' '}
+        <ReviewByBadge by={item.review_by} />
       </div>
       <div className="small"><strong>Vì sao cần duyệt:</strong> <span className="mono">{item.reason}</span></div>
-      <Json value={item.payload} />
+      {item.exposed && <ProvenanceChain provenance={item.provenance} values={item.value_provenance} action={item.action_type} payload={item.payload} />}
+      {item.review_by === 'user' && (
+        <div className="small alert info">Lệnh này chờ <strong>chính khách hàng</strong> xác nhận trong khung chat. Nhân viên vẫn có thể quyết định thay nếu khách gọi tổng đài.</div>
+      )}
+      <details><summary className="small">Dữ liệu lệnh</summary><Json value={item.payload} /></details>
       <input placeholder="Ghi chú (tùy chọn)" value={note} onChange={(e) => setNote(e.target.value)} />
       {error && <div className="alert">{error}</div>}
       <div style={{ display: 'flex', gap: 10 }}>

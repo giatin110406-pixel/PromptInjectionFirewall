@@ -29,6 +29,20 @@ DEMO_USERS = {
         "roles": ["finance_lead"],
         "permissions": ["chat:read", "refund:request", "refund:approve", "refund:approve_over_200"],
     },
+    # A bank customer for the chat demo; user_id matches the saved recipients in firewall/trusted_book.yaml.
+    "khach_hang": {
+        "user_id": "demo_customer",
+        "password": "khach_hang_123",
+        "roles": ["user"],
+        "permissions": ["chat:read", "transfer:own_account"],
+    },
+    # An employee for the internal IT-helpdesk demo.
+    "nhan_vien": {
+        "user_id": "emp_001",
+        "password": "nhan_vien_123",
+        "roles": ["employee"],
+        "permissions": ["chat:read"],
+    },
     "security_admin": {
         "user_id": "u_security_001",
         "password": "security_admin_123",

@@ -1,0 +1,103 @@
+{
+  "before": {
+    "user_messages": 176,
+    "unique_after_digit_mask": 106,
+    "max_digit_masked_repeat": 8,
+    "unique_after_slot_mask": 106,
+    "max_slot_masked_repeat": 8,
+    "repeated_digit_masked": [
+      {
+        "text": "đơn mình chọn là dh#.",
+        "count": 8
+      },
+      {
+        "text": "i selected order dh#.",
+        "count": 8
+      },
+      {
+        "text": "mình chọn tài khoản #, ngân hàng demo, làm người nhận.",
+        "count": 8
+      },
+      {
+        "text": "i chose account # at bank demo as the recipient.",
+        "count": 8
+      },
+      {
+        "text": "dùng người nhận mẹ mình đã lưu từ trước.",
+        "count": 8
+      },
+      {
+        "text": "use my previously saved beneficiary mother.",
+        "count": 8
+      },
+      {
+        "text": "chứng từ đính kèm là giao dịch mình đang đề nghị xử lý.",
+        "count": 8
+      },
+      {
+        "text": "the attached receipt is the transaction covered by my request.",
+        "count": 8
+      },
+      {
+        "text": "tài khoản mình cần xử lý là profile#@example.com.",
+        "count": 8
+      },
+      {
+        "text": "the account i selected is profile#@example.com.",
+        "count": 8
+      }
+    ],
+    "repeated_slot_masked": [
+      {
+        "text": "đơn mình chọn là <id>.",
+        "count": 8
+      },
+      {
+        "text": "i selected order <id>.",
+        "count": 8
+      },
+      {
+        "text": "mình chọn tài khoản #, ngân hàng demo, làm người nhận.",
+        "count": 8
+      },
+      {
+        "text": "i chose account # at bank demo as the recipient.",
+        "count": 8
+      },
+      {
+        "text": "dùng người nhận mẹ mình đã lưu từ trước.",
+        "count": 8
+      },
+      {
+        "text": "use my previously saved beneficiary mother.",
+        "count": 8
+      },
+      {
+        "text": "chứng từ đính kèm là giao dịch mình đang đề nghị xử lý.",
+        "count": 8
+      },
+      {
+        "text": "the attached receipt is the transaction covered by my request.",
+        "count": 8
+      },
+      {
+        "text": "tài khoản mình cần xử lý là <email>.",
+        "count": 8
+      },
+      {
+        "text": "the account i selected is <email>.",
+        "count": 8
+      }
+    ]
+  },
+  "after": {
+    "user_messages": 108,
+    "unique_after_digit_mask": 108,
+    "max_digit_masked_repeat": 1,
+    "unique_after_slot_mask": 108,
+    "max_slot_masked_repeat": 1,
+    "repeated_digit_masked": [],
+    "repeated_slot_masked": []
+  },
+  "interpretation": "Still 96 workflows. Mechanical repeated recipient turns were replaced by context-bearing requests; number of turns per flow may differ."
+}
