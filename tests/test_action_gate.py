@@ -37,6 +37,32 @@ def test_small_refund_is_allowed(gate):
     assert out["decision"] == "ALLOW" and out["review_id"] is None and out["validated_data"]
 
 
+def test_concurrent_detection_call_cannot_weaken_default_mode(gate, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+    import threading
+
+    gate.taint.expose("overlap", "email", "mail", "ALLOW")
+    entered, release = threading.Event(), threading.Event()
+    validate = gate.validator.validate_action
+
+    def paused_validate(*args, **kwargs):
+        if threading.current_thread().name.startswith("detection"):
+            entered.set()
+            assert release.wait(5)
+        return validate(*args, **kwargs)
+
+    monkeypatch.setattr(gate.validator, "validate_action", paused_validate)
+    with ThreadPoolExecutor(max_workers=1, thread_name_prefix="detection") as pool:
+        other = pool.submit(gate.evaluate, "transfer_money", transfer(), session_id="overlap", exposure_mode="detection")
+        try:
+            assert entered.wait(5)
+            assert gate.exposure_mode == "provenance"
+            assert gate.evaluate("transfer_money", transfer(), session_id="overlap")["decision"] == "REVIEW"
+        finally:
+            release.set()
+        assert other.result()["decision"] == "ALLOW"
+
+
 def test_hard_rule_violation_is_blocked_and_not_reviewable(gate):
     out = gate.evaluate("refund", refund(900.0), session_id="s1")      # above 110% of the order value
     assert out["decision"] == "BLOCK" and out["check"] == "hard_rule"

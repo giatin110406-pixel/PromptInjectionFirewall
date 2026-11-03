@@ -29,9 +29,10 @@ from typing import Any, Dict, Optional
 
 from firewall.llm_provider import LLMError, LLMProvider, ManualPending
 
-PROMPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts", "judge_v1.md")
-PROMPT_VERSION = "judge_v1"
+PROMPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts", "judge_v2.md")
+PROMPT_VERSION = "judge_v2"
 MAX_TEXT_CHARS = 3000
+MAX_ADJUDICATION_CHARS = 20_000  # cover the complete API input/context, never approve a truncated prefix
 JUDGE_TIMEOUT_SECONDS = 8.0
 VERDICTS = {"attack", "benign", "unsure"}
 
@@ -73,7 +74,10 @@ def parse_verdict(raw: str) -> Dict[str, Any]:
     verdict = str(data.get("verdict", "")).strip().lower()
     if verdict not in VERDICTS:
         raise ValueError(f"unknown verdict {verdict!r}")
-    confidence = float(data.get("confidence", 0.0))
+    score = data.get("confidence", 0.0)
+    if isinstance(score, bool) or not isinstance(score, (int, float)):
+        raise ValueError("confidence must be a number")
+    confidence = float(score)
     if not 0.0 <= confidence <= 1.0:
         raise ValueError("confidence outside [0, 1]")
     return {"verdict": verdict, "confidence": confidence, "category": str(data.get("category", ""))[:60],
@@ -100,18 +104,18 @@ class Layer3Judge:
         self.calls = 0
 
     # ------------------------------------------------------------------
-    def build_prompt(self, text: str, source: str = "user") -> str:
+    def build_prompt(self, text: str, source: str = "user", max_text_chars: int = MAX_TEXT_CHARS) -> str:
         nonce = (hashlib.sha256(str(text).encode("utf-8")).hexdigest()[:12] if self.deterministic_marker
                  else secrets.token_hex(6)).upper()
         marker = "=====" + nonce + "====="
         return self._template.format(marker=marker, source=SOURCE_TEXT.get(source, SOURCE_TEXT["user"]),
-                                     text=str(text)[:MAX_TEXT_CHARS])
+                                     text=str(text)[:max_text_chars])
 
-    def judge(self, text: str, source: str = "user") -> Dict[str, Any]:
+    def judge(self, text: str, source: str = "user", max_text_chars: int = MAX_TEXT_CHARS) -> Dict[str, Any]:
         """Ask the provider. Returns {"ok": True, verdict, ...} or {"ok": False, "error": "..."}."""
         if self.provider is None:
             return {"ok": False, "error": "no_provider"}
-        key = hashlib.sha256(f"{source}\n{text}".encode("utf-8")).hexdigest()
+        key = hashlib.sha256(f"{source}\n{max_text_chars}\n{text}".encode("utf-8")).hexdigest()
         with self._lock:
             if key in self._cache:
                 self._cache.move_to_end(key)
@@ -120,7 +124,7 @@ class Layer3Judge:
             return {"ok": False, "error": "daily_budget_exhausted"}
         self.calls += 1
         try:
-            reply = self.provider.complete(self.build_prompt(text, source), max_tokens=self.max_tokens, temperature=0.0)
+            reply = self.provider.complete(self.build_prompt(text, source, max_text_chars), max_tokens=self.max_tokens, temperature=0.0)
             verdict = parse_verdict(reply)
         except ManualPending:
             return {"ok": False, "error": "manual_pending"}
@@ -136,26 +140,33 @@ class Layer3Judge:
         return dict(result, cached=False)
 
     # ------------------------------------------------------------------
-    def resolve(self, side: str, verdict: Dict[str, Any]) -> Dict[str, Any]:
+    def resolve(self, side: str, verdict: Dict[str, Any], adjudicate: bool = False) -> Dict[str, Any]:
         """Combine the judge's answer with the side Layer 2 was unsure on. Returns {decision, reason, degraded}."""
         if not verdict.get("ok"):
-            decision = "REVIEW" if side == "allow" else "BLOCK"
+            decision = "REVIEW" if adjudicate or side == "allow" else "BLOCK"
             return {"decision": decision, "degraded": True, "reason": f"layer3_unavailable:{verdict.get('error')}"}
         said, confident = verdict["verdict"], verdict["confidence"] >= self.min_confidence
         tag = f"layer3_{said}:{verdict['confidence']:.2f}"
         if said == "attack" and confident:
             return {"decision": "BLOCK", "degraded": False, "reason": tag}
         if said == "benign" and confident:
-            return {"decision": "ALLOW" if side == "allow" else self.downgrade_to, "degraded": False, "reason": tag}
-        return {"decision": "REVIEW" if side == "allow" else "BLOCK", "degraded": False, "reason": tag + ":not_confident"}
+            return {"decision": "ALLOW" if adjudicate or side == "allow" else self.downgrade_to, "degraded": False, "reason": tag}
+        return {"decision": "REVIEW" if adjudicate or side == "allow" else "BLOCK", "degraded": False, "reason": tag + ":not_confident"}
 
-    def check(self, text: str, side: str = "allow", source: str = "user", l2_score: Optional[float] = None) -> Dict[str, Any]:
+    def check(self, text: str, side: str = "allow", source: str = "user", l2_score: Optional[float] = None,
+              adjudicate: bool = False) -> Dict[str, Any]:
         started = time.perf_counter()
-        verdict = self.judge(text, source)
-        outcome = self.resolve(side, verdict)
+        if adjudicate and len(text) > MAX_ADJUDICATION_CHARS:
+            verdict = {"ok": False, "error": "adjudication_input_too_long"}
+        else:
+            verdict = self.judge(text, source, MAX_ADJUDICATION_CHARS if adjudicate else MAX_TEXT_CHARS)
+        outcome = self.resolve(side, verdict, adjudicate=adjudicate)
         details = {"side": side, "source": source, "prompt_version": PROMPT_VERSION, "l2_score": l2_score,
-                   "provider": getattr(self.provider, "name", None), "cached": verdict.get("cached", False)}
+                   "provider": getattr(self.provider, "name", None), "model": getattr(self.provider, "model", None),
+                   "cached": verdict.get("cached", False)}
         details.update({k: verdict[k] for k in ("verdict", "confidence", "category", "reason") if k in verdict})
+        if adjudicate:
+            details.update(adjudication=True, policy_version="auto_judge_v1", full_text_reviewed=bool(verdict.get("ok")))
         if not verdict.get("ok"):
             details["error"] = verdict.get("error")
         return {"layer": 3, "decision": outcome["decision"], "degraded": outcome["degraded"],
@@ -170,7 +181,7 @@ class Layer3Judge:
 
 def build_judge_from_env() -> Optional[Layer3Judge]:
     """
-    Layer 3 from the environment. FIREWALL_JUDGE_PROVIDER = gemini | ollama | local | anthropic | openai | none (default
+    Layer 3 from the environment. FIREWALL_JUDGE_PROVIDER = groq | gemini | ollama | local | anthropic | openai | none (default
     none: no judge, Layer 2 decides alone). A provider that cannot start (missing key) disables the judge, with the
     reason kept in `build_judge_error`, instead of crashing the API.
     """

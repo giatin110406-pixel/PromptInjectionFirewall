@@ -43,7 +43,8 @@ def require_session(req) -> None:
 
 from firewall.judge import build_judge_from_env
 
-orchestrator = FirewallOrchestrator(layer3=build_judge_from_env())
+orchestrator = FirewallOrchestrator(layer3=build_judge_from_env(),
+                                   auto_judge=os.environ.get("FIREWALL_AUTO_JUDGE", "") == "1")
 
 @router.post("/message", response_model=ChatResponse)
 def process_message(req: ChatRequest, current_user: AuthUser = Depends(get_current_user)):

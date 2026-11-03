@@ -2,6 +2,10 @@
 rem Starts the AI Firewall API (port 8000) and the Security Console (port 3001), then opens the console.
 rem Close the two black windows to stop everything.
 cd /d %~dp0
+rem The demo agent (/demo, Agent that mode) needs no key: scripted unless AGENT_PROVIDER is set (groq or gemini need their key in .env).
+if not defined AGENT_PROVIDER set AGENT_PROVIDER=scripted
+rem Lets the Firewall: TAT button of the demo send mode=off to /agent/chat (refused when this is not set).
+set AGENT_ALLOW_FIREWALL_OFF=1
 rem Session state (exposure/taint, values the user typed, canaries) in SQLite: survives an API restart mid-demo.
 set FIREWALL_STATE_DB=%~dp0data\firewall_state.sqlite
 start "AI Firewall API" cmd /k ".venv\Scripts\python.exe -m uvicorn api.main:app --port 8000"

@@ -97,6 +97,15 @@ class TurnRisk:
 def layer2_score(result: Dict[str, Any]) -> float:
     """The attack score of one process_input result: Layer 2's top window score; 1.0 when Layer 1 stopped the message
     first; 0.0 when no layer scored it (Layer 2 switched off)."""
+    if result.get("plain_read_request") or result.get("plain_greeting"):
+        return 0.0  # bounded user intent; the uncorrected model score remains visible in the trace
+    adjudication = result.get("judge_adjudication") or {}
+    if (result.get("decision") == "ALLOW" and not result.get("degraded")
+            and adjudication.get("source") == "user" and adjudication.get("verdict") == "benign"
+            and adjudication.get("full_text_reviewed")):
+        # A false-positive L2 score must not immediately re-block the same user
+        # through session risk. Existing history and taint are never cleared.
+        return max(0.0, min(1.0, 1.0 - float(adjudication["confidence"])))
     for step in result.get("trace", []):
         if step.get("layer") == 2 and step.get("decision") != "SKIPPED":
             details = step.get("details") if isinstance(step.get("details"), dict) else {}

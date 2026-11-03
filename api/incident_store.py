@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from typing import List, Dict, Any
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INCIDENTS_FILE = os.path.join(BASE_DIR, "data", "incidents.json")
+INCIDENTS_FILE = os.environ.get("FIREWALL_INCIDENTS_FILE") or os.path.join(BASE_DIR, "data", "incidents.json")
 
 class IncidentStore:
     def __init__(self):

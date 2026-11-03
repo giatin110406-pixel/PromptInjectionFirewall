@@ -48,6 +48,17 @@ Input ──► L0 ──► L1 ──► L2 ──(lưng chừng)──► L3 �
         exposed, nên lệnh nhạy cảm sau đó ở L4 phải được xác nhận
 ```
 
+### Tích hợp với một agent chạy được (`agent/`, 02/11/2026)
+
+```
+Khách ─► process_input ─► vòng lặp agent (LLM gọi tool) ─┬─ tool đọc ─► backend ─► process_context ─► (đã datamark) về LLM
+                                                         └─ tool hành động ─► validate_action ─► ALLOW: backend thực hiện
+                                                                                                REVIEW: chờ Agent.confirm
+                                                                                                BLOCK: báo LLM, không làm gì
+```
+
+Firewall được gọi trong cùng tiến trình qua ba hàm công khai của `FirewallOrchestrator`. Mọi thay đổi backend đi qua `Agent._execute`, có khóa theo phiên để tránh thực hiện trùng khi xác nhận đồng thời. LLM thay được bằng `AGENT_PROVIDER` (groq, gemini, local, scripted). Bản tiếp nối nhận chế độ L4 theo từng lời gọi, thêm ngữ pháp đóng sửa một nhóm câu đọc bị chặn nhầm trên kênh user; không đổi checkpoint hay ngưỡng L2. Header email chỉ được đưa qua tool có quét, không đặt vào system prompt. Chi tiết, giới hạn và số đo: `docs/agent_plan_vi.md` mục 9–10, `PrepareForBCTĐ2/15_ai_agent.md`.
+
 ## 5. Thay đổi so với bản cũ
 
 | Thành phần cũ | Xử lý | Lý do |

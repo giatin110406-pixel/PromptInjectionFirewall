@@ -9,6 +9,7 @@ Providers (select with get_provider):
 - anthropic   Anthropic Messages API.         env: ANTHROPIC_API_KEY, ANTHROPIC_MODEL
 - openai      any OpenAI-compatible endpoint. env: OPENAI_API_KEY, OPENAI_MODEL, OPENAI_BASE_URL
 - deepseek    DeepSeek (OpenAI-compatible).    env: DEEPSEEK_API_KEY, DEEPSEEK_MODEL (default deepseek-flash)
+- groq        dedicated judge credentials.    env: GROQ_JUDGE_API_KEY, GROQ_JUDGE_MODEL; never uses Agent keys.
 - manual      no API: prompts are written to a folder, a human pastes them into a chat UI
               and saves the replies; a second run reads them back.
 - fake        deterministic stub for tests.
@@ -28,6 +29,10 @@ import urllib.error
 import urllib.request
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, Optional
+from firewall.deadline import DeadlineExceeded, check_deadline, remaining_timeout
+
+
+DEFAULT_GROQ_AGENT_MODEL = "openai/gpt-oss-120b"
 
 
 class LLMError(RuntimeError):
@@ -65,13 +70,18 @@ def _post_json(url: str, payload: Dict[str, Any], headers: Dict[str, str], timeo
     request = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json", **headers})
     last: Optional[Exception] = None
     for attempt in range(retries + 1):
+        request_timeout = remaining_timeout(timeout)
         try:
-            with (opener or urllib.request.urlopen)(request, timeout=timeout) as response:
-                return json.loads(response.read().decode("utf-8"))
+            with (opener or urllib.request.urlopen)(request, timeout=request_timeout) as response:
+                data = json.loads(response.read().decode("utf-8"))
+                check_deadline()
+                return data
         except urllib.error.HTTPError as exc:
             if exc.code in (400, 401, 403, 404):  # retrying will not help
                 raise LLMError(f"HTTP {exc.code} from {url}: {exc.read().decode('utf-8', 'replace')[:200]}") from exc
             last = exc
+        except DeadlineExceeded:
+            raise
         except (urllib.error.URLError, TimeoutError, ConnectionError, json.JSONDecodeError) as exc:
             last = exc
         if attempt < retries:
@@ -380,10 +390,13 @@ def get_provider(name: str, model: Optional[str] = None, manual_dir: Optional[st
         provider = OpenAICompatProvider(model=model)
     elif name == "deepseek":
         provider = DeepSeekProvider(model=model)
+    elif name == "groq":
+        from firewall.groq_judge_provider import GroqJudgeProvider
+        provider = GroqJudgeProvider(model=model)
     elif name == "manual":
         if not manual_dir:
             raise LLMError("manual provider needs --manual-dir")
         provider = ManualProvider(manual_dir)
     else:
-        raise LLMError(f"unknown provider '{name}' (ollama, local, gemini, anthropic, openai, deepseek, manual)")
+        raise LLMError(f"unknown provider '{name}' (ollama, local, gemini, anthropic, openai, deepseek, groq, manual)")
     return BudgetedProvider(provider, max_calls) if max_calls else provider

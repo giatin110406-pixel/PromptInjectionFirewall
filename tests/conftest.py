@@ -5,6 +5,8 @@ import tempfile
 os.environ.setdefault("FIREWALL_REVIEW_QUEUE", os.path.join(tempfile.mkdtemp(prefix="fw_review_"), "review_queue.json"))
 
 os.environ.setdefault("FIREWALL_FEEDBACK_FILE", os.path.join(tempfile.mkdtemp(prefix="fw_feedback_"), "feedback.jsonl"))
+os.environ.setdefault("FIREWALL_INCIDENTS_FILE", os.path.join(tempfile.mkdtemp(prefix="fw_incidents_"), "incidents.json"))
 
 # Tests never call an external judge (it would spend quota and make runs depend on the network).
 os.environ["FIREWALL_JUDGE_PROVIDER"] = "none"
+os.environ["FIREWALL_AUTO_JUDGE"] = "0"

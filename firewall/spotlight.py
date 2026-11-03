@@ -187,6 +187,7 @@ class ContextScanner:
             content_worst, content_reason, content_layer = Decision.ALLOW, "", 0
             hidden_worst, hidden_reason, hidden_layer = Decision.ALLOW, "", 0
             chunk_degraded = False
+            judge_checks = []
             risk = 0.0          # highest Layer 2 score of the chunk or its hidden parts (WP4: exposure_risk)
 
             def record(result):
@@ -194,6 +195,9 @@ class ContextScanner:
                 chunk_degraded = chunk_degraded or bool(result.get("degraded"))
                 risk = max(risk, layer2_score(result))
                 degraded.extend(int(x) for x in result.get("degraded_layers", []) or [])
+                if result.get("judge_adjudication"):
+                    judge_checks.append({"decision": result["decision"], "reason": result.get("final_reason"),
+                                         "judge": result["judge_adjudication"]})
 
             if cleaned.strip():
                 content_worst, result = self._decide(cleaned)
@@ -234,6 +238,8 @@ class ContextScanner:
                      "passed": not removed_whole, "partial": partial, "removed_segments": dropped,
                      "suspicious": sure, "uncertain": flagged and not sure and not chunk_degraded,
                      "stopped_at_layer": layer, "reason": reason, "hidden_removed": hidden, "risk": round(risk, 4)}
+            if judge_checks:
+                entry["judge_checks"] = judge_checks
             report.append(entry)
             if flagged or bool(hidden):
                 overall = max_decision(overall, Decision.SANITIZE)

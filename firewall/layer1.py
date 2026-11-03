@@ -24,6 +24,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from data.scripts.vietnamese_norm import remove_vietnamese_accents
 from firewall.baseline import DEFAULT_BASELINE_PATTERNS, ESCALATE_HINT_PATTERNS, SOFT_BASELINE_PATTERNS
 from firewall.embedder import DEFAULT_MODEL, Embedder, SentenceTransformerEmbedder
+from firewall.progress import emit_progress
 from firewall.normalize import ACCENT_FREE_VIEWS, candidate_views
 from firewall.signature_index import IndexScore, SignatureIndex
 from firewall.text_units import DEFAULT_MAX_UNITS
@@ -193,7 +194,11 @@ class Layer1Prefilter:
                     "confidence": 0.0, "matched_pattern": None}
 
         # 1. Regex signatures over normalized views (sub-millisecond)
+        emit_progress(stage="L0", state="running", message="Chuẩn hóa ký tự và các biến thể văn bản")
         views = candidate_views(text)
+        emit_progress(stage="L0", state="done", decision="NORMALIZED", chars=len(text), variants=len(views),
+                      preview=views[0][1][:200] if views else text[:200])
+        emit_progress(stage="L1", state="running", message="Kiểm tra chữ ký và độ tương đồng ngữ nghĩa")
         hit = self._match_signature(views)
         if hit:
             pattern, view_name = hit

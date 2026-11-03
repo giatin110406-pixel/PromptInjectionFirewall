@@ -88,10 +88,13 @@ class ActionGate:
 
     # ------------------------------------------------------------------
     def evaluate(self, action_type: str, payload: Dict[str, Any], user=None,
-                 session_id: Optional[str] = None, skip=()) -> Dict[str, Any]:
+                 session_id: Optional[str] = None, skip=(), exposure_mode: Optional[str] = None) -> Dict[str, Any]:
         """`skip` (manual testing only): 'L4_HARD' skips the hard rules, 'L4_TAINT' ignores the session state (taint
         and exposure), 'L4_POLICY' skips the review thresholds and the rate limit."""
         started = time.perf_counter()
+        mode = self.exposure_mode if exposure_mode is None else exposure_mode
+        if mode not in EXPOSURE_MODES:
+            raise ValueError(f"exposure_mode must be one of {EXPOSURE_MODES}")
         skip = {str(s).upper() for s in (skip or ())}
         if "L4_HARD" in skip:
             base = {"layer": 4, "decision": "ALLOW", "validated_data": dict(payload or {}), "reason": None}
@@ -104,7 +107,7 @@ class ActionGate:
         values = self.value_provenance(action_type.lower(), payload or {}, session_id, user_id) if exposed else []
         result: Dict[str, Any] = dict(base)
         result.update(layer=4, tainted=tainted, exposed=exposed, session_level=level, provenance=provenance,
-                      value_provenance=values, exposure_mode=self.exposure_mode, review_id=None, review_by=None,
+                      value_provenance=values, exposure_mode=mode, review_id=None, review_by=None,
                       skipped=sorted(x for x in skip if x.startswith("L4")))
 
         rule = self.policy["actions"].get(action_type.lower(), {})
@@ -120,14 +123,15 @@ class ActionGate:
             stop = None
             if egress is not None and "L4_POLICY" not in skip:
                 # the personal-data rule is part of the exposure check: provenance mode only, like `when_exposed`
-                exposure_counts = exposed and use_state and self.exposure_mode == "provenance"
+                exposure_counts = exposed and use_state and mode == "provenance"
                 stop = self._egress_decision(action_type.lower(), egress, exposure_counts, values)
             if stop is not None:
                 decision, reason, check = stop
             else:
                 decision, reason, check = self._policy_decision(action_type.lower(), payload, tainted and use_state,
                                                                 session_id, skip_policy="L4_POLICY" in skip,
-                                                                exposed=exposed and use_state, values=values)
+                                                                exposed=exposed and use_state, values=values,
+                                                                exposure_mode=mode)
             result.update(decision=decision, reason=reason, check=check)
             if decision == "REVIEW":
                 review_by = self.policy["actions"].get(action_type.lower(), {}).get("review_by", "staff")
@@ -189,7 +193,8 @@ class ActionGate:
         return None
 
     def _policy_decision(self, action: str, payload: Dict[str, Any], tainted: bool, session_id: Optional[str],
-                         skip_policy: bool = False, exposed: bool = False, values: Optional[List[Dict[str, Any]]] = None):
+                         skip_policy: bool = False, exposed: bool = False, values: Optional[List[Dict[str, Any]]] = None,
+                         exposure_mode: Optional[str] = None):
         rule = self.policy["actions"].get(action, {})
         sensitive = rule.get("class") in SENSITIVE_CLASSES
 
@@ -200,7 +205,7 @@ class ActionGate:
             if reaction == "review":
                 return "REVIEW", f"tainted_session:{action}_needs_human_confirmation", "taint"
 
-        if exposed and self.exposure_mode == "provenance":
+        if exposed and (self.exposure_mode if exposure_mode is None else exposure_mode) == "provenance":
             # No layer has to recognise the attack: reading untrusted content is enough to ask before a sensitive action.
             reaction = rule.get("when_exposed", "review" if sensitive else "allow")
             if reaction == "block":

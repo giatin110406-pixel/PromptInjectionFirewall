@@ -9,14 +9,20 @@ if PROJECT_ROOT not in sys.path:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from api.routes import auth as auth_routes, chat, security_console
+from fastapi.responses import FileResponse, JSONResponse
+from agent.loop import SessionBusyError
+from api.routes import agent as agent_routes, auth as auth_routes, chat, security_console
 
 app = FastAPI(
     title="AI-Powered Threat Detection API",
     description="Multi-layered defense firewall for conversational agents (Prompt Injection, Jailbreak, Policy Bypass)",
     version="1.0.0"
 )
+
+
+@app.exception_handler(SessionBusyError)
+async def session_busy_handler(request, exc):
+    return JSONResponse(status_code=409, content={"detail": str(exc)})
 
 # Enable CORS for Next.js frontend demo and console
 app.add_middleware(
@@ -30,6 +36,7 @@ app.add_middleware(
 app.include_router(auth_routes.router, prefix="/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/chat", tags=["Chat & Threat Detection"])
 app.include_router(security_console.router, prefix="/console", tags=["Security Console"])
+app.include_router(agent_routes.router, prefix="/agent", tags=["Agent"])
 
 STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "static")
 if os.path.exists(STATIC_DIR):

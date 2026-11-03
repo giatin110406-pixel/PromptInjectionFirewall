@@ -5,7 +5,8 @@ judge) and Layer 4 (Policy Validator), producing a transparent trace.
 
 Contract (see firewall/types.py):
 - Final decisions are ALLOW / SANITIZE / REVIEW / BLOCK. When layers disagree the
-  most severe one wins.
+  most severe one wins, except an explicitly enabled LLM adjudication may
+  clear healthy semantic detector alerts; hard rules still take precedence.
 - Fail closed: a layer that ran without a valid model (`degraded=true`) or that
   raised an error can never produce a final ALLOW. The request becomes REVIEW.
 """
@@ -13,11 +14,15 @@ import time
 from typing import Any, Callable, Dict, List, Optional
 
 from firewall.classifier import MultilingualClassifier
+from firewall.deadline import check_deadline
+from firewall.progress import emit_progress, layer_summary
+from firewall.greeting_intent import plain_greeting
 from firewall.layer1 import Layer1Prefilter
 from firewall.action_gate import ActionGate
 from firewall.layer4 import Layer4Validator
 from firewall.output_guard import OutputGuard
 from firewall.review_queue import ReviewQueue
+from firewall.read_intent import plain_read_request
 from firewall.session import TaintStore
 from firewall.spotlight import Chunk, ContextScanner
 from firewall.state_store import StateStore
@@ -61,6 +66,7 @@ class FirewallOrchestrator:
         layer3: Optional[Any] = None,
         layer4: Optional[Layer4Validator] = None,
         soft_block_below: Any = "auto",
+        auto_judge: bool = False,
     ):
         self.layer1 = layer1 or Layer1Prefilter()
         self.layer2 = layer2 or MultilingualClassifier()
@@ -70,6 +76,7 @@ class FirewallOrchestrator:
         # Layer 3 (an LLM judge) is optional. Without one Layer 2 decides alone; with one, Layer 2's uncertain
         # scores (both edges, see firewall/classifier.py) go to the judge.
         self.layer3 = layer3
+        self.auto_judge = bool(auto_judge)
         if hasattr(layer3, "resolve") and hasattr(self.layer2, "escalate_low"):
             if self.layer2.escalate_low is None:
                 self.layer2.escalate_low = DEFAULT_ESCALATE_LOW
@@ -127,7 +134,15 @@ class FirewallOrchestrator:
         start_total = time.perf_counter()
         trace: List[Dict[str, Any]] = []
         skip = normalize_skip(skip)
-        judge_wanted = use_judge and "L3" not in skip
+        judge_wanted = (use_judge or self.auto_judge) and "L3" not in skip
+        # Automatic mode uses the judge for false positives, including greetings,
+        # rather than the legacy bounded-phrase corrections.
+        read_intent = (not self.auto_judge and source == "user" and isinstance(self.layer2, MultilingualClassifier)
+                       and plain_read_request(text))
+        greeting_intent = (not self.auto_judge and source == "user" and isinstance(self.layer2, MultilingualClassifier)
+                           and plain_greeting(text))
+        bounded_user_intent = read_intent or greeting_intent
+        semantic_block = False
 
         # ---------------- LAYER 1: Fast Prefilter ----------------
         if "L1" in skip:
@@ -136,7 +151,13 @@ class FirewallOrchestrator:
         else:
             r1 = self._run_layer(1, trace, self.layer1.check, text)
             d1 = parse_decision(r1.decision)
-            if d1 in (Decision.BLOCK, Decision.REVIEW):
+            # A bounded read request or greeting can resemble an indexed injection semantically.
+            # Regex hard rules and a degraded L1 still stop it; only this vector false positive is corrected.
+            vector_plain = bounded_user_intent and not r1.degraded and r1.reason.startswith("high_vector_similarity:")
+            semantic_block = (self.auto_judge and judge_wanted and not r1.degraded
+                              and r1.reason.startswith("high_vector_similarity:")
+                              and d1 in (Decision.BLOCK, Decision.REVIEW))
+            if d1 in (Decision.BLOCK, Decision.REVIEW) and not vector_plain and not semantic_block:
                 return self._finalize(d1, 1, r1.reason, trace, start_total)
 
         # ---------------- LAYER 2: Feature Classifier ----------------
@@ -147,7 +168,18 @@ class FirewallOrchestrator:
                 return self._finalize(parse_decision(r3.decision) or Decision.REVIEW, 3, r3.reason, trace, start_total)
             return self._finalize(Decision.ALLOW, 2, "layer2_skipped" + (":layer1_skipped" if "L1" in skip else ""), trace, start_total)
         r2 = self._run_layer(2, trace, self.layer2.check, text, top_similarity=r1.confidence)
+        # Closed grammars contain only a read request or greeting, never arbitrary instructions or content.
+        # Keep the raw model verdict in the trace and fail closed when any layer degraded.
+        if bounded_user_intent and not any(step.get("degraded") for step in trace):
+            reason = "plain_user_read_request" if read_intent else "plain_user_greeting"
+            result = self._finalize(Decision.ALLOW, 2, reason, trace, start_total)
+            result["plain_read_request" if read_intent else "plain_greeting"] = True
+            return result
         d2 = parse_decision(r2.decision)
+        if (self.auto_judge and judge_wanted and not any(step.get("degraded") for step in trace)
+                and (semantic_block or d2 in (None, Decision.BLOCK, Decision.REVIEW))):
+            side = "block" if semantic_block or d2 in (Decision.BLOCK, Decision.REVIEW) else "allow"
+            return self._adjudicate(text, source, side, layer2_score({"trace": trace}), trace, start_total)
         if d2 == Decision.BLOCK and self._unconfirmed_block(r2):
             # Layer 2 alone, not sure enough: hold the request instead of blocking it (Layer 1 did not agree).
             return self._finalize(Decision.REVIEW, 2, f"layer2_unconfirmed:{r2.reason}", trace, start_total)
@@ -175,6 +207,27 @@ class FirewallOrchestrator:
         if d3 is None:  # unknown or non-final answer at the last layer: fail closed
             d3 = Decision.REVIEW
         return self._finalize(d3, 3, r3.reason, trace, start_total)
+
+    def _adjudicate(self, text, source, side, l2_score, trace, started):
+        """The judge reviews the entire text before a semantic alert is cleared.
+
+        This does not confer trust on external content or bypass Layer 4.
+        """
+        if self.layer3 is None or not hasattr(self.layer3, "resolve"):
+            r3 = self._run_layer(3, trace, lambda: {
+                "layer": 3, "decision": "REVIEW", "degraded": True,
+                "reason": "automatic_judge_not_configured"})
+        else:
+            r3 = self._run_layer(3, trace, self.layer3.check, text, side=side, source=source,
+                                 l2_score=l2_score, adjudicate=True)
+        decision = parse_decision(r3.decision)
+        result = self._finalize(Decision.REVIEW if decision is None else decision, 3, r3.reason, trace, started)
+        details = r3.details.get("details", {})
+        result["judge_adjudication"] = {"source": source, "policy_version": "auto_judge_v1",
+                                       "verdict": details.get("verdict"), "confidence": r3.confidence,
+                                       "full_text_reviewed": details.get("full_text_reviewed", False),
+                                       "provider": details.get("provider"), "model": details.get("model")}
+        return result
 
     def _unconfirmed_block(self, r2) -> bool:
         return self.soft_block_below is not None and float(r2.confidence or 0.0) < self.soft_block_below
@@ -221,12 +274,13 @@ class FirewallOrchestrator:
         return self.output_guard.check(text, session_id=session_id, allow_text=allow_text, protected_texts=protected_texts)
 
     def validate_action(self, action_type: str, payload: Dict[str, Any], user=None,
-                        session_id: Optional[str] = None, skip=()) -> Dict[str, Any]:
+                        session_id: Optional[str] = None, skip=(), exposure_mode: Optional[str] = None) -> Dict[str, Any]:
         """
         Layer 4: decide what happens to an action an agent wants to run (ALLOW, REVIEW or BLOCK).
         `session_id` links the action to the context scans of the same session (taint, rate limit).
         """
-        return self.actions.evaluate(action_type, payload, user=user, session_id=session_id, skip=normalize_skip(skip))
+        return self.actions.evaluate(action_type, payload, user=user, session_id=session_id, skip=normalize_skip(skip),
+                                     exposure_mode=exposure_mode)
 
     def health(self) -> Dict[str, Any]:
         """
@@ -260,10 +314,13 @@ class FirewallOrchestrator:
 
     def _layer3_health(self, configured: bool, model_ok: bool) -> Dict[str, Any]:
         if not configured:
-            return {"status": "disabled", "model_loaded": False}
+            return {"status": "degraded" if self.auto_judge else "disabled", "model_loaded": False,
+                    "automatic": self.auto_judge}
         if hasattr(self.layer3, "resolve"):           # LLM judge: ok when a provider is set
             provider = getattr(self.layer3, "provider", None)
-            return {"status": "ok" if provider is not None else "disabled", "provider": getattr(provider, "name", None),
+            return {"status": "ok" if provider is not None else ("degraded" if self.auto_judge else "disabled"),
+                    "provider": getattr(provider, "name", None), "model": getattr(provider, "model", None),
+                    "automatic": self.auto_judge, "policy_version": "auto_judge_v1" if self.auto_judge else None,
                     "calls_today": getattr(getattr(self.layer3, "budget", None), "used", None)}
         return {"status": "ok" if model_ok else "degraded", "model_loaded": model_ok}
 
@@ -277,7 +334,10 @@ class FirewallOrchestrator:
     ) -> LayerResult:
         """Run one layer, time it, normalize its result and append it to the trace."""
         t0 = time.perf_counter()
+        if layer_no != 1:
+            emit_progress(stage=f"L{layer_no}", state="running")
         try:
+            check_deadline()
             result = LayerResult.from_dict(fn(*args, **kwargs))
         except Exception as exc:  # a crashing layer must not become an implicit ALLOW
             result = LayerResult(
@@ -288,6 +348,7 @@ class FirewallOrchestrator:
             )
         result.latency_ms = round((time.perf_counter() - t0) * 1000, 2)
         trace.append(result.to_dict())
+        emit_progress(stage=f"L{layer_no}", state="done", **layer_summary(result.to_dict()))
         return result
 
     def _finalize(
