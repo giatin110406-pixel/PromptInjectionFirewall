@@ -387,7 +387,7 @@ export default function Demo() {
       <main className="page">
         {error && <div className="alert" role="alert">{error}</div>}
         {READ_ONLY_DEMO && <div className="readonly-notice"><strong>Bản demo phát lại</strong><span>Đang xem trace đã lưu từ firewall thật. Không gọi LLM, không gửi dữ liệu và không thực hiện giao dịch. Chat trực tiếp cần backend HTTPS riêng.</span></div>}
-        {real && <AgentPipeline result={agentResult} progress={agentProgress} busy={busy} requestText={requestText} readOnly={READ_ONLY_DEMO} />}
+        {(real || READ_ONLY_DEMO) && <AgentPipeline result={agentResult} progress={agentProgress} busy={busy} requestText={requestText} readOnly={READ_ONLY_DEMO} />}
         {!READ_ONLY_DEMO && <div className="demo-grid">
           <section className={`card chat ${shield ? '' : 'shield-off'}`}>
             <div className="chat-head">

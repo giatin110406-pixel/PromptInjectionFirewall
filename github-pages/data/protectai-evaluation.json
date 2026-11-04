@@ -1,0 +1,22 @@
+{
+  "timestamp_utc": "2026-11-03T10:35:52.597561+00:00",
+  "model": "protectai/deberta-v3-base-prompt-injection-v2",
+  "revision": "90c9989b1a342275dd0d1a95aad283c04e075671",
+  "data": "data/eval/public/deepset.csv",
+  "data_sha256": "b7ecd108f66c8b1d1610cd24b12eed553371e99a0ddf0eca9d76f4928701c6fe",
+  "model_source": "https://huggingface.co/protectai/deberta-v3-base-prompt-injection-v2",
+  "rule": "max attack probability over 300-word windows with 50-word overlap, threshold >= 0.5, tokenizer truncation at 512 tokens",
+  "device": "cuda",
+  "results": {
+    "attacks": {
+      "hits": 109,
+      "n": 263,
+      "rate": 0.414449
+    },
+    "safe": {
+      "hits": 4,
+      "n": 399,
+      "rate": 0.010025
+    }
+  }
+}

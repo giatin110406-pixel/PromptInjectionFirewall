@@ -1,0 +1,86 @@
+{
+  "timestamp_utc": "2026-11-03T10:09:40.839848+00:00",
+  "data": "data\\eval\\public\\deepset.csv",
+  "data_sha256": "b7ecd108f66c8b1d1610cd24b12eed553371e99a0ddf0eca9d76f4928701c6fe",
+  "firewall_code_sha256": "32f6bd1cb10786eb79b1a202e208a1dcaecea4a4c7985fa264b1aeb240c26aa7",
+  "classifier_artifacts": "models\\l2_multilingual\\artifacts",
+  "calibration_sha256": "29f92ae1f7d4e51721a6895f4afbdaa1407f5384b28687fd98b387f684e8d096",
+  "judge": false,
+  "style_threshold": 0.7210194966072748,
+  "xgboost_similarity": 0.0,
+  "note": "deepset text input; source=user; no L3 judge; BLOCK and BLOCK+REVIEW reported separately; XGBoost old similarity feature set to zero.",
+  "results": {
+    "style": {
+      "attacks": {
+        "hits": 8,
+        "n": 263,
+        "rate": 0.030418
+      },
+      "safe": {
+        "hits": 28,
+        "n": 399,
+        "rate": 0.070175
+      }
+    },
+    "regex": {
+      "attacks": {
+        "hits": 20,
+        "n": 263,
+        "rate": 0.076046
+      },
+      "safe": {
+        "hits": 0,
+        "n": 399,
+        "rate": 0.0
+      }
+    },
+    "xgboost_block": {
+      "attacks": {
+        "hits": 70,
+        "n": 263,
+        "rate": 0.26616
+      },
+      "safe": {
+        "hits": 0,
+        "n": 399,
+        "rate": 0.0
+      }
+    },
+    "xgboost_block_or_escalate": {
+      "attacks": {
+        "hits": 97,
+        "n": 263,
+        "rate": 0.368821
+      },
+      "safe": {
+        "hits": 1,
+        "n": 399,
+        "rate": 0.002506
+      }
+    },
+    "firewall_block": {
+      "attacks": {
+        "hits": 177,
+        "n": 263,
+        "rate": 0.673004
+      },
+      "safe": {
+        "hits": 7,
+        "n": 399,
+        "rate": 0.017544
+      }
+    },
+    "firewall_block_or_review": {
+      "attacks": {
+        "hits": 198,
+        "n": 263,
+        "rate": 0.752852
+      },
+      "safe": {
+        "hits": 10,
+        "n": 399,
+        "rate": 0.025063
+      }
+    }
+  }
+}
