@@ -15,7 +15,7 @@ Người xem có thể theo dõi một yêu cầu thật đang đi qua từng l�
 5. **Trạng thái trung thực** — phân biệt ALLOW, nghi ngờ, REVIEW, BLOCK, lỗi LLM và lớp chưa chạy. L5 được gắn “chưa tích hợp vào vòng lặp Agent”.
 6. **Chống treo khi LLM chậm/hết quota** — giới hạn thời gian, không ngủ chờ retry 429, giải phóng nút gửi và hiện thông báo tiếng Việt có thể hiểu được.
 7. **Hoàn thiện giao diện** — đồng bộ card, khoảng cách, màu, responsive, bàn phím và hỗ trợ reduced-motion; không che khuất chat trên màn hình nhỏ.
-8. **Đóng gói và phát hành** — chạy test offline và build frontend; publish bản đọc trace trên hosting riêng tư. Chat Agent trực tiếp chỉ bật khi có backend HTTPS được triển khai riêng và cấu hình đúng; không đưa key hoặc endpoint localhost lên hosting.
+8. **Đóng gói và phát hành** — kiểm tra frontend và giữ demo Agent chạy local. Chỉ xuất bản trang giới thiệu nhóm lên GitHub Pages từ thư mục `github-pages`; không đưa key, API hay dữ liệu phiên của demo lên hosting.
 
 ## Tiêu chí nghiệm thu
 
@@ -28,4 +28,4 @@ Người xem có thể theo dõi một yêu cầu thật đang đi qua từng l�
 
 ## Giới hạn phát hành
 
-Frontend hiện gọi API FastAPI tại máy local. Bản web riêng tư có thể phát lại các trace đã lưu, nhưng không thể gọi Agent trực tiếp cho người xem cho đến khi có backend HTTPS được triển khai và cấu hình. LLM Judge và Power Agent giữ key riêng; không đưa secret vào JavaScript phía trình duyệt.
+Theo yêu cầu cập nhật ngày 04/11/2026, demo dùng tại máy local và gọi API FastAPI local. Trang nhóm được xuất bản riêng qua GitHub Pages. LLM Judge và Power Agent giữ key riêng ở backend; không đưa secret vào JavaScript phía trình duyệt. Hai bản ChatGPT Sites trước đó đã được tắt quyền truy cập công khai.
