@@ -2,6 +2,8 @@
 
 [Trang giới thiệu nhóm trên GitHub Pages](https://giatin110406-pixel.github.io/PromptInjectionFirewall/) · [Hướng dẫn demo Agent chạy local](docs/agent_plan_vi.md). Demo không được triển khai công khai.
 
+[Thử file/link có injection và xem biên nhận thực thi](docs/demo_files_and_receipts_vi.md): PDF, DOCX, HTML, EML, TXT/MD, CSV/JSON và link web; nhật ký backend có trạng thái cùng thay đổi trước–sau.
+
 A production-grade, multi-layer AI Security and LLM Safety system designed to detect and neutralize **prompt injection, jailbreak attempts, privilege escalation, and unsafe agent actions** across both **international benchmarks** and **Vietnamese conversational environments**.
 
 > **Status note (01/11/2026):** the diagram and metrics below describe the old v1 pipeline. The current engine is v3: L0 Normalize, L1 Signatures (regex + multilingual index), L2 mDeBERTa trained on public data, optional L3 judge, Spotlighting, L4 Action Firewall with provenance-based safety (a session that read untrusted content needs a confirmation before sensitive actions), L5 Output Guard. Status and measured results: [docs/engine_architecture_vi.md](docs/engine_architecture_vi.md) section 6; next steps: [docs/implementation_plan_v4_vi.md](docs/implementation_plan_v4_vi.md). Treat the v1 accuracy figures in this README as withdrawn (see [docs/data_audit_report.md](docs/data_audit_report.md)).

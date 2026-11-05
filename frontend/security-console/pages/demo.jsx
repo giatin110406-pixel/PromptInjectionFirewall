@@ -6,6 +6,8 @@ import { api, asRole } from '../lib/api';
 import { DecisionBadge } from '../components/ui';
 import ProvenanceChain, { LevelBadge, ReviewByBadge, actionLabel, vnd } from '../components/ProvenanceChain';
 import AgentPipeline from '../components/AgentPipeline';
+import BackendDashboard from '../components/BackendDashboard';
+import AttachmentComposer from '../components/AttachmentComposer';
 
 // Chat demo for the pitch: one firewall, three settings. Scenarios come from lib/demo_scenarios.json.
 // Two modes (the toggle in the header). "Kịch bản": the agent is scripted in the browser (no LLM): it does what the scenario
@@ -81,6 +83,7 @@ function Message({ m, onDecide }) {
         )}
         {m.status === 'pending' && !mine && <div className="small alert info">Đang chờ nhân viên duyệt trên Security Console (tab Hàng chờ duyệt).</div>}
         {m.status === 'approved' && <div className="msg ok sys">Đã xác nhận: lệnh được thực hiện.</div>}
+        {m.status === 'failed' && <div className="msg bad sys">{m.message || 'Lệnh đã được duyệt nhưng backend thực thi lỗi. Xem biên nhận bên phải.'}</div>}
         {m.status === 'rejected' && <div className="msg bad sys">Đã hủy: lệnh không được thực hiện.</div>}
       </div>
     );
@@ -151,16 +154,19 @@ export default function Demo() {
     const id = setInterval(async () => {
       try {
         const sid = sessionRef.current;
+        let refreshedBackend = null;
         if (real) {
           const state = await api(`/agent/state/${sid}`, { token: await token() });
           if (sid !== sessionRef.current) return;
           setBackend(state.backend_state);
+          refreshedBackend = state.backend_state;
         }
         const items = await api('/chat/review?status=all', { token: await token() });
         if (sid !== sessionRef.current) return;
         setMessages((list) => list.map((m) => {
           const found = m.type === 'confirm' && items.find((i) => i.id === m.result.review_id);
-          return found && found.status !== 'pending' ? { ...m, status: found.status } : m;
+          const receipt = found && refreshedBackend?.transactions?.find((t) => t.review_id === found.id && t.status !== 'pending');
+          return found && found.status !== 'pending' ? { ...m, status: receipt?.execution_ok === false ? 'failed' : found.status, message: receipt?.message } : m;
         }));
       } catch (e) { /* keep polling */ }
     }, 3000);
@@ -196,12 +202,14 @@ export default function Demo() {
         const action = { type: st.tool, payload: st.payload };
         push({ role: 'bot', tag: `${conf.bot} · gọi tool`, text: `${actionLabel(st.tool)}: ${describe(action)}` });
         if (st.check === 'firewall_off') {
-          push({ role: 'sys', tone: 'bad', tag: 'Không có firewall', text: `Agent đã ${describe(action)}. Không ai được hỏi lại.` });
+          push({ role: 'sys', tone: st.execution?.ok ? 'ok' : 'warn', tag: 'Backend · firewall tắt',
+            text: st.execution ? `${st.execution.message} · Biên nhận ${st.execution.transaction_id || ''}` : 'Chưa có biên nhận thực thi.' });
           continue;
         }
         setLevel(st.session_level || 'clean');
         log(`Hành động ${actionLabel(st.tool)}`, st.decision, st.reason, st.ms);
-        if (st.decision === 'ALLOW') push({ role: 'sys', tone: 'ok', tag: 'Firewall · L4', text: `Đã thực hiện: ${describe(action)}.` });
+        if (st.decision === 'ALLOW') push({ role: 'sys', tone: st.execution?.ok ? 'ok' : 'warn', tag: st.execution?.ok ? 'Backend · Đã thực thi' : 'Backend · Kết quả',
+          text: st.execution ? `${st.execution.message} · Biên nhận ${st.execution.transaction_id || ''}` : 'Firewall đã cho phép, nhưng chưa có biên nhận từ backend.' });
         else if (st.decision === 'BLOCK') push({ role: 'sys', tone: 'bad', tag: 'Firewall · L4', text: `Đã chặn: ${st.check === 'taint' ? 'phiên vừa đọc tài liệu mang chỉ thị, lệnh nhạy cảm không được chạy.' : st.reason}` });
         else push({ type: 'confirm', action, result: { review_id: st.review_id, review_by: st.review_by, provenance: st.provenance, value_provenance: st.value_provenance }, status: 'pending' });
       } else if (st.kind === 'agent_error') {
@@ -290,7 +298,7 @@ export default function Demo() {
     const r = await api('/chat/action', { method: 'POST', token: await token(), body: { action_type: full.type, payload: full.payload, session_id: sessionRef.current } });
     setLevel(r.session_level);
     log(`Hành động ${actionLabel(full.type)}`, r.decision, r.reason, r.latency_ms);
-    if (r.decision === 'ALLOW') push({ role: 'sys', tone: 'ok', tag: 'Firewall · L4', text: `Đã thực hiện: ${describe(full)}.` });
+    if (r.decision === 'ALLOW') push({ role: 'sys', tone: 'ok', tag: 'Firewall · L4', text: `Được phép: ${describe(full)}. Chế độ kịch bản chỉ kiểm tra quyết định; dùng Agent thật để xem backend thực thi.` });
     else if (r.decision === 'BLOCK') push({ role: 'sys', tone: 'bad', tag: 'Firewall · L4', text: `Đã chặn: ${r.check === 'taint' ? 'phiên vừa đọc tài liệu mang chỉ thị, lệnh nhạy cảm không được chạy.' : r.reason}` });
     else push({ type: 'confirm', action: full, result: r, status: 'pending' });
   }
@@ -298,12 +306,44 @@ export default function Demo() {
   const guard = (fn) => async (...args) => {
     setBusy(true);
     setError('');
-    try { await fn(...args); } catch (e) {
+    try { return await fn(...args); } catch (e) {
       const message = e.message || String(e);
       setError(message);
       push({ role: 'sys', tone: 'warn', tag: 'Yêu cầu chưa hoàn tất', text: message });
     } finally { setBusy(false); }
   };
+
+  function showAttachments(out) {
+    setBackend(out.backend_state);
+    for (const item of out.attachments || []) push({ role: 'attach', tag: `Đã đính kèm · ${item.id}`,
+      text: `${item.name} · ${item.format.toUpperCase()} · ${item.chars.toLocaleString('vi-VN')} ký tự. Chưa đọc/quét; gửi yêu cầu để Agent mở tài liệu.` });
+    const last = out.attachments?.[out.attachments.length - 1];
+    const suggested = last?.channel === 'web' ? 'Bạn đọc trang web latest rồi tóm tắt giúp mình.'
+      : last?.channel === 'email' ? 'Bạn đọc email latest rồi tóm tắt giúp mình.'
+        : last?.channel === 'tool_json' ? 'Bạn xem kết quả tra cứu latest rồi tóm tắt giúp mình.'
+          : `Bạn đọc tài liệu ${last?.id || 'latest'} rồi tóm tắt giúp mình.`;
+    setInput((value) => value || suggested);
+    return out;
+  }
+
+  const attachFiles = guard(async (files) => {
+    if (files.length > 5) throw new Error('Mỗi lần tải tối đa 5 file.');
+    const body = new FormData();
+    body.append('session_id', sessionRef.current); body.append('domain', domain);
+    files.forEach((file) => body.append('files', file));
+    return showAttachments(await api('/agent/attachments/upload', { method: 'POST', body, token: await token(), timeoutMs: 30000 }));
+  });
+  const attachLink = guard(async (url) => showAttachments(await api('/agent/attachments/link', {
+    method: 'POST', token: await token(), body: { session_id: sessionRef.current, domain, url }, timeoutMs: 15000,
+  })));
+  const attachText = guard(async (text, channel = 'document') => showAttachments(await api('/agent/attachments/text', {
+    method: 'POST', token: await token(), body: { session_id: sessionRef.current, domain, text, channel },
+  })));
+  const refreshBackend = guard(async () => {
+    if (!backend) { await agentReset(); return; }
+    const out = await api(`/agent/state/${sessionRef.current}`, { token: await token() });
+    setBackend(out.backend_state);
+  });
 
   // Each scenario starts a fresh session, so a taint left by the previous one cannot change its outcome.
   const runCase = guard(async (c) => {
@@ -339,10 +379,7 @@ export default function Demo() {
     setPaste('');
     setShowPaste(false);
     if (real) {
-      await agentReset([{ channel: 'document', text }]);
-      push({ role: 'attach', tag: 'Tài liệu đưa cho agent', text: text.length > 420 ? `${text.slice(0, 420)}…` : text });
-      push({ role: 'user', text: NEUTRAL_DOC_REQUEST });
-      await agentSend(NEUTRAL_DOC_REQUEST);
+      await attachText(text);
       return;
     }
     await readDoc({ id: 'tai-lieu-khan-gia', source: 'document', text });
@@ -356,7 +393,13 @@ export default function Demo() {
       const out = await api('/agent/confirm', { method: 'POST', token: await token(), body: { session_id: sessionRef.current, review_id: m.result.review_id, approve } });
       log('Khách quyết định', approve ? 'ALLOW' : 'BLOCK', out.message, null);
       setBackend(out.backend_state);
-      setMessages((list) => list.map((x) => (x.key === m.key ? { ...x, status: approve ? 'approved' : 'rejected' } : x)));
+      setAgentResult((previous) => previous ? { ...previous, pending_review: null,
+        executed: out.executed ? [...(previous.executed || []), { type: out.action, payload: m.action.payload }] : previous.executed } : previous);
+      setAgentProgress((previous) => previous ? { ...previous, events: [...(previous.events || []), {
+        id: (previous.cursor || 0) + 1, stage: 'L4', phase: 'action', state: 'done',
+        decision: out.status === 'approved' ? 'ALLOW' : 'BLOCK', reason: out.message,
+      }], cursor: (previous.cursor || 0) + 1 } : previous);
+      setMessages((list) => list.map((x) => (x.key === m.key ? { ...x, status: out.status === 'approved' ? (out.executed ? 'approved' : 'failed') : 'rejected', message: out.message } : x)));
       return;
     }
     await api(`/chat/review/${m.result.review_id}/decision`, { method: 'POST', token: await token(), body: { approve, note: approve ? 'khách xác nhận trong chat' : 'khách hủy trong chat' } });
@@ -394,11 +437,14 @@ export default function Demo() {
               <strong>{conf.bot}</strong>
               <span className="small">đăng nhập: <span className="mono">{conf.login}</span>{real && ' · agent gọi tool qua /agent/chat'}</span>
             </div>
+            {real && backend?.attachments?.length > 0 && <div className="attached-strip">{backend.attachments.map((a, i) =>
+              <span key={`${a.id}-${i}`} title={a.name}>{a.format.toUpperCase()} · {a.id} · {a.read ? 'Đã đọc' : 'Chưa đọc'}</span>)}</div>}
             <div className="chat-body" ref={bodyRef}>
               {messages.map((m) => <Message key={m.key} m={m} onDecide={decide} />)}
               {busy && <div className="small muted">Đang xử lý…</div>}
             </div>
-            {showPaste && (
+            {showPaste && real && <AttachmentComposer busy={busy} onFiles={attachFiles} onLink={attachLink} onText={attachText} onClose={() => setShowPaste(false)} />}
+            {showPaste && !real && (
               <div style={{ padding: 12, borderTop: 'var(--border)', display: 'flex', flexDirection: 'column', gap: 8, background: 'var(--pink)' }}>
                 <label>Dán một tài liệu (email, tin nhắn, trang web) cho agent đọc</label>
                 <textarea rows={4} value={paste} onChange={(e) => setPaste(e.target.value)} placeholder="Agent sẽ ngây thơ làm theo số tài khoản / mã đơn / email đầu tiên nó thấy trong tài liệu." />
@@ -409,13 +455,15 @@ export default function Demo() {
               </div>
             )}
             <form className="chat-foot" onSubmit={(e) => { e.preventDefault(); sendFree(); }}>
-              <button type="button" className="btn pink sm" onClick={() => setShowPaste((v) => !v)} title="Đưa tài liệu cho agent đọc">+ Tài liệu</button>
-              <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Nhắn cho trợ lý…" />
+              <button type="button" disabled={busy} className="btn pink sm" onClick={() => setShowPaste((v) => !v)} title="Tải file, link hoặc dán tài liệu">+ Tài liệu</button>
+              <input disabled={busy} aria-label="Tin nhắn cho Agent" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Nhắn cho trợ lý…" />
               <button className="btn green" disabled={busy}>Gửi</button>
             </form>
           </section>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {real && <BackendDashboard key={session} backend={backend} busy={busy} onRefresh={refreshBackend}
+              onReadAttachment={async (id) => api(`/agent/attachments/${encodeURIComponent(sessionRef.current)}/${encodeURIComponent(id)}`, { token: await token() })} />}
             <section className="card">
               <div className="card-head">
                 <h2>Kịch bản</h2>
@@ -446,17 +494,6 @@ export default function Demo() {
                 <div className="small" style={{ margin: '8px 0' }}>
                   Agent tự chọn tool. Hết lượt free tier thì chọn "scripted" hoặc chuyển về chế độ Kịch bản.
                 </div>
-                <h3>Backend giả lập</h3>
-                {!backend && <div className="small muted">Chưa có phiên. Chạy một ca hoặc nhắn cho agent.</div>}
-                {backend && (
-                  <div className="small" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    {Object.entries(backend.balances || {}).map(([a, v]) => <div key={a}>Tài khoản <span className="mono">{a}</span>: <strong>{vnd(v)}</strong></div>)}
-                    {Object.entries(backend.external_received || {}).map(([a, v]) => <div key={a} style={{ color: 'var(--red)' }}>Tiền đã tới <span className="mono">{a}</span>: <strong>{vnd(v)}</strong></div>)}
-                    {Object.entries(backend.orders || {}).filter(([, o]) => o.refunded > 0).map(([id, o]) => <div key={id}>Đơn <span className="mono">{id}</span> đã hoàn <strong>{o.refunded}$</strong></div>)}
-                    <div>Hành động đã thực hiện: <strong>{(backend.executed || []).length}</strong></div>
-                    {(backend.executed || []).map((e, i) => <div key={i} className="mono">{actionLabel(e.type)}: {describe(e)}</div>)}
-                  </div>
-                )}
               </section>
             )}
 

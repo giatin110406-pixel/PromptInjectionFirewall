@@ -2,7 +2,7 @@
 fastapi>=0.110.0
 uvicorn[standard]>=0.28.0
 pydantic>=2.6.0
-python-multipart>=0.0.9
+python-multipart>=0.0.18
 httpx>=0.27.0
 
 # Data Processing & ML
@@ -28,3 +28,4 @@ pytest-asyncio>=0.23.0
 # Tokenizer for mDeBERTa (Layer 2 training)
 sentencepiece>=0.2.0
 python-docx>=1.1
+pypdf>=6.0,<7

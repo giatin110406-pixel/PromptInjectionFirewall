@@ -137,6 +137,22 @@ class Agent:
         return self.session(session_id).progress.snapshot(after)
 
     @_serial_session
+    def attachment_text(self, session_id: str, resource_id: str):
+        return self.session(session_id).backend.attachment_text(resource_id)
+
+    @_serial_session
+    def attach(self, session_id: str, items) -> Dict[str, Any]:
+        session = self.session(session_id)
+        if len(session.backend.attachments) + len(items) > 10:
+            raise ValueError('Mỗi phiên tối đa 10 tài liệu. Hãy tạo phiên mới để tải thêm.')
+        if sum(a['chars'] for a in session.backend.attachments) + sum(len(i['text']) for i in items) > 50_000:
+            raise ValueError('Tổng nội dung tài liệu trong phiên vượt 50.000 ký tự; hãy tách tài liệu hoặc tạo phiên mới.')
+        attached = [session.backend.add_attachment(item) for item in items]
+        session.messages[0]['content'] = system_prompt(session.domain, session.lang, session.backend.identity,
+                                                       session.backend.describe_resources())
+        return {'attachments': attached, 'backend_state': session.backend.snapshot()}
+
+    @_serial_session
     def state(self, session_id: str) -> Dict[str, Any]:
         session = self.session(session_id)
         self.sync(session_id)
@@ -271,6 +287,7 @@ class Agent:
     def _read(self, session, sid, call, args, mode, result) -> str:
         text = session.backend.read(call.name, args)
         step = {"kind": "tool_read", "tool": call.name, "arguments": args, "chars": len(text)}
+        step['attachment'] = session.backend.attachment_for_read(call.name, args)
         if mode == "off":
             step["firewall"] = None
             result.steps.append(step)
@@ -291,7 +308,9 @@ class Agent:
         if mode == "off":
             step.update(decision="ALLOW", check="firewall_off")
             result.steps.append(step)
-            return self._execute(session, call.name, payload, result), False
+            outcome = self._execute(session, call.name, payload, result)
+            step['execution'] = outcome
+            return outcome, False
         emit_progress(stage="L4", phase="action", state="running", tool=call.name)
         with deadline_lock(_ENGINE_LOCK), progress_phase("action", tool=call.name):
             # Mode belongs to this call; never temporarily weaken the shared engine for other API requests.
@@ -304,12 +323,16 @@ class Agent:
                     provenance=r.get("provenance"), value_provenance=r.get("value_provenance"))
         result.steps.append(step)
         if r["decision"] == "ALLOW":
-            return self._execute(session, call.name, payload, result), False
+            outcome = self._execute(session, call.name, payload, result)
+            step['execution'] = outcome
+            return outcome, False
         if r["decision"] == "BLOCK":
+            session.backend.record_decision(call.name, payload, 'blocked', r.get('reason'))
             return {"error": f"Firewall từ chối hành động và không thực hiện: {r.get('reason')}"}, False
         review = {"action": call.name, "payload": payload, "review_by": r.get("review_by"), "reason": r.get("reason"),
                   "provenance": r.get("provenance"), "value_provenance": r.get("value_provenance")}
         session.pending[r["review_id"]] = review
+        session.backend.record_decision(call.name, payload, 'pending', r.get('reason'), r['review_id'])
         result.pending_review = dict(review, review_id=r["review_id"])
         return {"status": "chờ khách xác nhận", "review_id": r["review_id"]}, True
 
@@ -348,6 +371,8 @@ class Agent:
             note = f"Khách đã xác nhận. {message}" if outcome["ok"] else f"Không thực hiện được: {message}"
         else:
             outcome, note = {"ok": False, "message": "đã hủy"}, "Khách đã hủy lệnh; không có gì được thực hiện."
+        session.backend.resolve_receipt(review_id, 'approved' if approved else 'cancelled', note,
+                                        outcome if approved else None)
         session.messages.append({"role": "assistant", "content": note})
         return {"review_id": review_id, "status": "approved" if approved else "rejected", "executed": bool(approved and outcome["ok"]),
                 "message": note, "action": pending["action"], "backend_state": session.backend.snapshot()}

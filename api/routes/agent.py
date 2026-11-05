@@ -7,10 +7,11 @@ import os
 import threading
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 
 from agent.backend import DOMAINS
+from agent.attachments import AttachmentError, MAX_BYTES, fetch_attachment, parse_attachment
 from agent.llm import AgentLLMError, ToolLLM, get_tool_llm
 from agent.loop import MODES, Agent, ReviewNotFound
 from api.dependencies.auth import get_current_user
@@ -62,6 +63,95 @@ class AgentResetRequest(BaseModel):
     scenario_id: Optional[str] = None       # a case id of lib/demo_scenarios.json: its document is put in the inbox / document store
     contents: List[ContentIn] = Field(default_factory=list)
     lang: str = "vi"
+
+
+class AttachmentTextRequest(BaseModel):
+    session_id: str = Field(..., min_length=1, max_length=100)
+    domain: str = 'bank'
+    channel: str = Field('document', pattern='^(email|web|document|review|tool_json)$')
+    text: str = Field(..., min_length=1, max_length=MAX_CONTENT_CHARS)
+    name: str = Field('Nội dung dán', min_length=1, max_length=160)
+
+
+class AttachmentLinkRequest(BaseModel):
+    session_id: str = Field(..., min_length=1, max_length=100)
+    domain: str = 'bank'
+    url: str = Field(..., min_length=1, max_length=2048)
+
+
+def _attachment_access(session_id, domain, user):
+    _check_domain(domain)
+    with _OWNER_LOCK:
+        _own(session_id, user)
+        if session_id in agent.sessions and agent.session(session_id).domain != domain:
+            raise HTTPException(status_code=409, detail='Bối cảnh khác phiên hiện tại; hãy tạo phiên mới.')
+
+
+def _store_attachments(session_id, domain, user, items):
+    with _OWNER_LOCK:
+        _attachment_access(session_id, domain, user)
+        if session_id not in agent.sessions:
+            agent.reset(session_id, domain, identity={'user_id': user.user_id})
+            _owners[session_id] = user.user_id
+        try:
+            return agent.attach(session_id, items)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc))
+
+
+@router.post('/attachments/upload')
+def upload_attachments(session_id: str = Form(..., min_length=1, max_length=100),
+                       domain: str = Form('bank'), files: List[UploadFile] = File(...),
+                       current_user: AuthUser = Depends(get_current_user)):
+    _attachment_access(session_id, domain, current_user)
+    try:
+        if not 1 <= len(files) <= 5:
+            raise AttachmentError('Mỗi lần tải từ 1 đến 5 file.')
+        items, total = [], 0
+        for upload in files:
+            data = upload.file.read(MAX_BYTES + 1)
+            total += len(data)
+            if total > 10 * 1024 * 1024:
+                raise AttachmentError('Tổng file mỗi lần tải tối đa 10 MB.')
+            items.append(parse_attachment(upload.filename, data))
+        return _store_attachments(session_id, domain, current_user, items)
+    except AttachmentError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    finally:
+        for upload in files:
+            upload.file.close()
+
+
+@router.post('/attachments/link')
+def attach_link(req: AttachmentLinkRequest, current_user: AuthUser = Depends(get_current_user)):
+    _attachment_access(req.session_id, req.domain, current_user)
+    try:
+        item = fetch_attachment(req.url)
+        return _store_attachments(req.session_id, req.domain, current_user, [item])
+    except AttachmentError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+
+@router.post('/attachments/text')
+def attach_text(req: AttachmentTextRequest, current_user: AuthUser = Depends(get_current_user)):
+    _attachment_access(req.session_id, req.domain, current_user)
+    try:
+        item = parse_attachment('text.txt', req.text.encode('utf-8'), source='paste')
+        item.update(name=req.name, channel='document' if req.channel == 'review' else req.channel)
+        return _store_attachments(req.session_id, req.domain, current_user, [item])
+    except AttachmentError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+
+@router.get('/attachments/{session_id}/{resource_id}')
+def inspect_attachment(session_id: str, resource_id: str, current_user: AuthUser = Depends(get_current_user)):
+    _own(session_id, current_user)
+    if session_id not in agent.sessions:
+        raise HTTPException(status_code=404, detail='Unknown agent session')
+    try:
+        return agent.attachment_text(session_id, resource_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail='Unknown attachment')
 
 
 def _llm(provider: Optional[str], domain: str) -> ToolLLM:

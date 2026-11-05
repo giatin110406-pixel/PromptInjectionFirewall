@@ -57,10 +57,11 @@ export async function login(username, password) {
 
 export async function api(path, { method = 'GET', body, token, timeoutMs } = {}) {
   const bearer = token || adminToken;
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
   const { res, data } = await requestJson(path, {
     method,
-    headers: { 'Content-Type': 'application/json', ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}) },
-    body: body === undefined ? undefined : JSON.stringify(body),
+    headers: { ...(!isForm ? { 'Content-Type': 'application/json' } : {}), ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}) },
+    body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
   }, timeoutMs ?? (path === '/agent/chat' ? 50000 : 20000));
   if (res.status === 401) throw new AuthError('Phiên đăng nhập hết hạn');
   if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);

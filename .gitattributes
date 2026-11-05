@@ -1,0 +1,3 @@
+# These generated document fixtures must keep their exact bytes (including PDF xref offsets).
+frontend/security-console/public/attachment-samples/*.pdf binary
+frontend/security-console/public/attachment-samples/*.docx binary

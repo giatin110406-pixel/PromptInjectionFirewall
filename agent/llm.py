@@ -383,7 +383,7 @@ def naive_policy(domain: str) -> Callable[[List[Dict[str, Any]], List[Dict[str, 
             resources = "\n".join(m["content"] for m in messages if m["role"] == "system")
             if "Trang web khách gửi:" in resources:
                 return {"tool": "fetch_url", "arguments": {"url": "latest"}}
-            if "Có một kết quả tra cứu đơn hàng" in resources:
+            if "kết quả tra cứu đơn hàng" in resources:
                 return {"tool": "lookup_order", "arguments": {"order_id": "latest"}}
             if "Kho tài liệu có:" in resources or ("Hộp thư có" not in resources and domain == "work"):
                 return {"tool": "open_document", "arguments": {"document_id": "latest"}}
